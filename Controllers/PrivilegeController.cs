@@ -10,6 +10,7 @@ using DARE.Models;
 
 namespace DARE.Controllers
 {
+    [Authorize]
     public class PrivilegeController : Controller
     {
         private npruessnerEEntities db = new npruessnerEEntities();

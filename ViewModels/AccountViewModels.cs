@@ -42,7 +42,7 @@ namespace DARE.ViewModels
     {
         [Required]
         [Display(Name = "Username")]
-        public string Login { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
