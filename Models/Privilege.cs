@@ -6,13 +6,15 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
 namespace DARE.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Privilege
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Privilege()
         {
             this.Users = new HashSet<User>();
@@ -22,6 +24,7 @@ namespace DARE.Models
         public string Name { get; set; }
         public string Description { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
     }
 }

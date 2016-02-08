@@ -6,15 +6,14 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Core.Objects;
-using System.Linq;
-using System.Globalization;
 
 namespace DARE.Models
 {
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class npruessnerEEntities : DbContext
     {
@@ -35,7 +34,7 @@ namespace DARE.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<SensorData> SensorDatas { get; set; }
-        public virtual DbSet<System> Systems { get; set; }
+        public virtual DbSet<DARESystem> DARESystems { get; set; }
         public virtual DbSet<User> Users { get; set; }
     
         public virtual int AddPrivilegeToUser(Nullable<long> userID, string privilegeName)
@@ -64,7 +63,7 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AuthenticateUser", usernameParameter, hashParameter);
         }
     
-        public virtual int CreateUser(string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, DateTime? dateOfBirth, string firstName, string lastName)
+        public virtual int CreateUser(string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string firstName, string lastName)
         {
             var usernameParameter = username != null ?
                 new ObjectParameter("Username", username) :
@@ -96,7 +95,7 @@ namespace DARE.Models
     
             var dateOfBirthParameter = dateOfBirth.HasValue ?
                 new ObjectParameter("DateOfBirth", dateOfBirth) :
-                new ObjectParameter("DateOfBirth", typeof(DateTime));
+                new ObjectParameter("DateOfBirth", typeof(System.DateTime));
     
             var firstNameParameter = firstName != null ?
                 new ObjectParameter("FirstName", firstName) :
@@ -131,7 +130,7 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RemovePrivilegeFromUser", userIDParameter, nameParameter);
         }
     
-        public virtual int SetupSystem(string systemName, string homeAddress, string city, string state, string zIP, string description, string familyName, string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, DateTime? dateOfBirth, string firstName, string lastName)
+        public virtual int SetupSystem(string systemName, string homeAddress, string city, string state, string zIP, string description, string familyName, string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string firstName, string lastName)
         {
             var systemNameParameter = systemName != null ?
                 new ObjectParameter("SystemName", systemName) :
@@ -191,7 +190,7 @@ namespace DARE.Models
     
             var dateOfBirthParameter = dateOfBirth.HasValue ?
                 new ObjectParameter("DateOfBirth", dateOfBirth) :
-                new ObjectParameter("DateOfBirth", typeof(DateTime));
+                new ObjectParameter("DateOfBirth", typeof(System.DateTime));
     
             var firstNameParameter = firstName != null ?
                 new ObjectParameter("FirstName", firstName) :

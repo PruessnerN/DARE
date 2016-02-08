@@ -6,12 +6,11 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
 namespace DARE.Models
 {
-
+    using System;
+    using System.Collections.Generic;
     
     public partial class Note
     {
@@ -23,8 +22,8 @@ namespace DARE.Models
         public string Message { get; set; }
         public Nullable<bool> Alert { get; set; }
         public Nullable<bool> PushNotification { get; set; }
-        public DateTime? CreationDate { get; set; }
-        public DateTime? AlertDate { get; set; }
+        public Nullable<System.DateTime> CreationDate { get; set; }
+        public Nullable<System.DateTime> AlertDate { get; set; }
     
         public virtual User User { get; set; }
     }

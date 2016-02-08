@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="npruessnerEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="npruessnerEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Device">
           <Key>
             <PropertyRef Name="DeviceID" />
@@ -294,6 +294,7 @@
           <Parameter Name="UserID" Type="bigint" Mode="In" />
           <Parameter Name="PrivilegeID" Type="int" Mode="In" />
         </Function>
+        <Function Name="ufn_HaveUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit" />
         <Function Name="UpdateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NewEmail" Type="varchar" Mode="In" />
           <Parameter Name="Email" Type="varchar" Mode="In" />
@@ -347,8 +348,7 @@
             <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="npruessnerEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -434,7 +434,7 @@
           <Property Name="Date" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Device" Relationship="Self.FK_SensorData_Device" FromRole="SensorData" ToRole="Device" />
         </EntityType>
-        <EntityType Name="System">
+        <EntityType Name="DARESystem">
           <Key>
             <PropertyRef Name="SystemID" />
           </Key>
@@ -542,7 +542,7 @@
           <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Schedules" EntityType="Self.Schedule" />
           <EntitySet Name="SensorDatas" EntityType="Self.SensorData" />
-          <EntitySet Name="Systems" EntityType="Self.System" />
+          <EntitySet Name="DARESystems" EntityType="npruessnerEModel.DARESystem" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK_Event_Device" Association="Self.FK_Event_Device">
             <End Role="Device" EntitySet="Devices" />
@@ -589,7 +589,7 @@
             <Parameter Name="LastName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetIdFromEmail">
-            <Parameter Name="Email" Mode="In" Type="String" />
+          <Parameter Name="Email" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="RemovePrivilegeFromUser">
             <Parameter Name="UserID" Mode="In" Type="Int64" />
@@ -709,8 +709,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Systems">
-            <EntityTypeMapping TypeName="npruessnerEModel.System">
+          <EntitySetMapping Name="DARESystems">
+            <EntityTypeMapping TypeName="npruessnerEModel.DARESystem">
               <MappingFragment StoreEntitySet="System">
                 <ScalarProperty Name="SystemID" ColumnName="SystemID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

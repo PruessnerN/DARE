@@ -6,11 +6,11 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
 namespace DARE.Models
 {
+    using System;
+    using System.Collections.Generic;
     
     public partial class SensorData
     {
@@ -19,7 +19,7 @@ namespace DARE.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public Nullable<int> Data { get; set; }
-        public DateTime? Date { get; set; }
+        public Nullable<System.DateTime> Date { get; set; }
     
         public virtual Device Device { get; set; }
     }

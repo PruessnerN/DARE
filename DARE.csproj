@@ -170,6 +170,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DARESystemController.cs" />
     <Compile Include="Controllers\HashSaltController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -194,6 +195,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DAREModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DARESystem.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Device.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
@@ -220,9 +224,6 @@
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\States.cs" />
-    <Compile Include="Models\System.cs">
-      <DependentUpon>DAREModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
@@ -305,6 +306,9 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\DARESystem\Create.cshtml" />
+    <Content Include="Views\DARESystem\Details.cshtml" />
+    <Content Include="Views\DARESystem\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

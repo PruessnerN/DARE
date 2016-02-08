@@ -7,11 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace DARE.Models
 {
+    using System;
+    using System.Collections.Generic;
     
     public partial class Schedule
     {
@@ -19,7 +18,7 @@ namespace DARE.Models
         public int DeviceID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime? DateSequence { get; set; }
+        public Nullable<System.DateTime> DateSequence { get; set; }
     
         public virtual Device Device { get; set; }
     }

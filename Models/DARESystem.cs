@@ -6,17 +6,17 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
 namespace DARE.Models
 {
-
-    public partial class System
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class DARESystem
     {
         public int SystemID { get; set; }
         public string Name { get; set; }
-        public DateTime? DateInitiated { get; set; }
+        public Nullable<System.DateTime> DateInitiated { get; set; }
         public string HomeAddress { get; set; }
         public string City { get; set; }
         public string State { get; set; }

@@ -6,15 +6,15 @@
 //     Manual changes to this file will be overwritten if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
 
 namespace DARE.Models
 {
-    
+    using System;
+    using System.Collections.Generic;
     
     public partial class User
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
             this.Notes = new HashSet<Note>();
@@ -27,13 +27,13 @@ namespace DARE.Models
         public string Email { get; set; }
         public string Hash { get; set; }
         public byte[] Salt { get; set; }
-        public DateTime? CreationDate { get; set; }
-        public DateTime? LastLoginDate { get; set; }
+        public Nullable<System.DateTime> CreationDate { get; set; }
+        public Nullable<System.DateTime> LastLoginDate { get; set; }
         public bool IsLocked { get; set; }
         public string PasswordQuestion { get; set; }
         public string PasswordAnswer { get; set; }
         public string ActivationToken { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        public Nullable<System.DateTime> DateOfBirth { get; set; }
         public string PhoneNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -41,8 +41,11 @@ namespace DARE.Models
         public int AccessFailedCount { get; set; }
         public string TempAccessCode { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Note> Notes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Privilege> Privileges { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
     }
 }

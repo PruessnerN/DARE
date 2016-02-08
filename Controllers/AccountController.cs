@@ -20,9 +20,15 @@ namespace DARE.Controllers
 
         public ActionResult Login(string ReturnUrl)
         {
+            bool noUsers = db.ufn_HaveUsers();
+            
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
+            }
+            else if (!User.Identity.IsAuthenticated && !noUsers)
+            {
+                return RedirectToAction("Create", "DARESystem");
             }
             else
             {
