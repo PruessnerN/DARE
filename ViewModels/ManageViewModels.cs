@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using System.Web.WebPages.Html;
 
-namespace DARE.Models
+namespace DARE.ViewModels
 {
     public class IndexViewModel
     {

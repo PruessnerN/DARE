@@ -2,7 +2,7 @@
 using DARE.Models;
 using System;
 
-namespace DARE.Models
+namespace DARE.ViewModels
 {
     public class ExternalLoginConfirmationViewModel
     {
@@ -17,7 +17,6 @@ namespace DARE.Models
         public string Action { get; set; }
         public string ReturnUrl { get; set; }
     }
-
 
 
     public class ChangePasswordViewModelAlternative
