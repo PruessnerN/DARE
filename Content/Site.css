@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -22,3 +23,22 @@ select,
 textarea {
     max-width: 280px;
 }
+@media (min-width: 922px) { 
+    .navbar-left-custom {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 220px;
+        margin-top: 0;
+        margin-bottom: 0;
+        background-color: #30343E;
+        overflow-y: auto;
+        border-radius: 0;
+    }
+
+    .navbar-brand-custom {
+
+    }
+}
+

@@ -10,6 +10,7 @@ using DARE.Models;
 
 namespace DARE.Controllers
 {
+    
     public class DARESystemController : Controller
     {
         private npruessnerEEntities db = new npruessnerEEntities();
@@ -38,7 +39,21 @@ namespace DARE.Controllers
         // GET: DARESystem/Create
         public ActionResult Create()
         {
-            return View();
+            if(TempData["setupAccessKey"] != null)
+            {
+                if(TempData["setupAccessKey"].ToString() == "EYEv8gaP3Ys30IMCM9mE")
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("UnauthorizedAccess", "Account");
+                }
+            }
+            else
+            {
+                return RedirectToAction("UnauthorizedAccess", "Account");
+            }
         }
 
         // POST: DARESystem/Create
@@ -46,7 +61,7 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SystemID,Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] DARESystem dARESystem)
+        public ActionResult Create([Bind(Include = "Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] DARESystem dARESystem)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +93,7 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SystemID,Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] DARESystem dARESystem)
+        public ActionResult Edit([Bind(Include = "Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] DARESystem dARESystem)
         {
             if (ModelState.IsValid)
             {

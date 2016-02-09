@@ -239,6 +239,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Logo220x89.png" />
     <Content Include="Models\DAREModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DAREModel.edmx</DependentUpon>
@@ -309,6 +310,7 @@
     <Content Include="Views\DARESystem\Create.cshtml" />
     <Content Include="Views\DARESystem\Details.cshtml" />
     <Content Include="Views\DARESystem\Edit.cshtml" />
+    <Content Include="Views\Account\UnauthorizedAccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

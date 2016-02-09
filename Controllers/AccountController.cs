@@ -20,6 +20,7 @@ namespace DARE.Controllers
 
         public ActionResult Login(string ReturnUrl)
         {
+            //has the system been setup yet
             bool noUsers = db.ufn_HaveUsers();
             
             if (User.Identity.IsAuthenticated)
@@ -28,6 +29,7 @@ namespace DARE.Controllers
             }
             else if (!User.Identity.IsAuthenticated && !noUsers)
             {
+                TempData["setupAccessKey"] = "EYEv8gaP3Ys30IMCM9mE";
                 return RedirectToAction("Create", "DARESystem");
             }
             else
@@ -107,6 +109,11 @@ namespace DARE.Controllers
         }
 
         public ActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        public ActionResult UnauthorizedAccess()
         {
             return View();
         }
