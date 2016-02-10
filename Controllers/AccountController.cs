@@ -18,7 +18,7 @@ namespace DARE.Controllers
         npruessnerEEntities db = new npruessnerEEntities();
         private int SALT_BYTE_SIZE = 24;
 
-        public ActionResult Login(string ReturnUrl)
+        public ActionResult Login()
         {
             //has the system been setup yet
             bool noUsers = db.ufn_HaveUsers();
@@ -34,36 +34,43 @@ namespace DARE.Controllers
             }
             else
             {
-                ViewBag.ReturnUrl = ReturnUrl;
                 return View();
             }
 
         }
 
-        [HttpPost]
-        public ActionResult Login(User U, string ReturnUrl)
+        public string ValidateUser(string username, string password)
         {
-            byte[] salt = db.ufn_GetSalt(U.Username);
-            
-            var hashedPassword = Hash.CreateHash(U.Hash, salt);
-
-            var count = db.AuthenticateUser(U.Username, hashedPassword);
-            if (count == 1)
+            int count;
+            if (username != null)
             {
-                FormsAuthentication.SetAuthCookie(U.Username, false);
-                string username = U.Username;
-                Session["Username"] = username;
-
-                if (Url.IsLocalUrl(ReturnUrl) && ReturnUrl.Length > 1 && ReturnUrl.StartsWith("/") && !ReturnUrl.StartsWith("//") && !ReturnUrl.StartsWith("/\\"))
+                byte[] salt = db.ufn_GetSalt(username);
+                if (salt != null)
                 {
-                    return Redirect(ReturnUrl);
+                    var hashedPassword = Hash.CreateHash(password, salt);
+                    count = db.AuthenticateUser(username, hashedPassword);
                 }
-                return RedirectToLocal(ReturnUrl);
+                else
+                {
+                    count = 0;
+                }
             }
             else
             {
-                ViewBag.LoginMsg = "Incorrect Username or Password";
-                return View();
+                count = 0;
+            }
+            
+
+            
+            if (count == 1)
+            {
+                FormsAuthentication.SetAuthCookie(username, false);
+                Session["Username"] = username;
+                return "1";
+            }
+            else
+            {
+                return "0";
             }
         }
 

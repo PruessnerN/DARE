@@ -2,46 +2,129 @@
 @model LoginViewModel
 @{
     ViewBag.Title = "Log in";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DARE - Login</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/prefixfree.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <meta name="description" content="The description of my page" />
+</head>
+<body>
+    @*
+    <div id="loginPage">
+        <h2>@ViewBag.Title</h2>
 
-<h2>@ViewBag.Title.</h2>
-<div class="row">
-    <div class="col-md-8">
         <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="">
+                        <div class="">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    <div class="">
+                        <div class="">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Log in" class="btn btn-default" />
+                    <div class="">
+                        <div class="">
+                            <input type="submit" value="Log in" class="btn btn-default" />
+                        </div>
                     </div>
-                </div>
-                @* Enable this once you have account confirmation enabled for password reset functionality
-                    <p>
-                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
+
+
             }
         </section>
     </div>
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    *@
+    <div class="wrapper">
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login", role = "form" }))
+        {
+            <img id="loginImage" src="~/Images/Logo220x89.png" />
+            <hr style="margin-top: 10px; margin-bottom: 10px;" />
+            <h2 id="pleaseLogIn" class="slideExpandUp">Log In</h2>
+            @Html.TextBoxFor(m => m.Username, new { @class = "", @placeholder = "Username", @required = "true", @autofocus = "true" })
+            <i class="fa fa-user"></i>
+            @Html.PasswordFor(m => m.Password, new { @class = "", @placeholder = "Password", @required = "true" })
+            <i class="fa fa-key"></i>
+            <a href="#"><h5 class="underline" style="padding-top: 10px; color:grey">Forgot your password?</h5></a>
+            <button onclick="ValidateUser()">
+                <i class="spinner"></i>
+                <span id="submit" class="state">Submit</span>
+            </button>
+        }
+    </div>
+    @*<script>
+        var working = false;
+        function submitLoginForm() {
+            if (working) return;
+            working = true;
+            var $this = $('.login'),
+              $state = $this.find('button > .state');
+            $this.addClass('loading');
+            $state.html('Authenticating');
+            setTimeout(function () {
+                $('.login').submit();
+            }, 4000);
+            var msg = '@ViewBag.LoginMsg';
+            if (msg == "Welcome back!") {
+                
+            } else {
+                
+            }
+        };
+    </script>*@
+    <script>
+        function ValidateUser() {
+            var userid = $("#Username").attr('value');
+            var pass = $("#Password").attr('value');
+            var url = "/Account/ValidateUser";
+            var $this = $('.login'),
+              $state = $this.find('button > .state');
+            $this.addClass('loading');
+            $state.html('Authenticating');
+            setTimeout(function () {
+                $.ajax({
+                    url: url,
+                    data: { username: userid, password: pass },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        if (data == "1") {
+                            $this.addClass('ok');
+                            $state.html('Welcome back!');
+                            window.location.href = "Home/Index";
+                        } else {
+                            $state.html('Incorrect username or password!');
+                            $this.addClass('loginError');
+                            $this.removeClass('ok loading');
+                        }
+                        $("#txtuserid").attr({ 'value': '' });
+                        $("#txtpassword").attr({ 'value': '' });
+                    },
+                    error: function (reponse) {
+                        alert(response);
+                        $state.html('An unknown error has occurred!');
+                        $this.addClass('loginError');
+                        $this.removeClass('ok loading');
+                    }
+                });
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
