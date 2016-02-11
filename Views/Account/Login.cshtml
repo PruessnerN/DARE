@@ -19,38 +19,6 @@
     <meta name="description" content="The description of my page" />
 </head>
 <body>
-    @*
-    <div id="loginPage">
-        <h2>@ViewBag.Title</h2>
-
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="">
-                        <div class="">
-                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="">
-                            <input type="submit" value="Log in" class="btn btn-default" />
-                        </div>
-                    </div>
-
-
-            }
-        </section>
-    </div>
-    *@
     <div class="wrapper">
         @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login", role = "form" }))
         {
@@ -63,33 +31,14 @@
             <i class="fa fa-key"></i>
             <a href="#"><h5 class="underline" style="padding-top: 10px; color:grey">Forgot your password?</h5></a>
             <button onclick="ValidateUser()">
-                <i class="spinner"></i>
+                <i id="animation" class="spinner"></i>
                 <span id="submit" class="state">Submit</span>
             </button>
         }
     </div>
-    @*<script>
-        var working = false;
-        function submitLoginForm() {
-            if (working) return;
-            working = true;
-            var $this = $('.login'),
-              $state = $this.find('button > .state');
-            $this.addClass('loading');
-            $state.html('Authenticating');
-            setTimeout(function () {
-                $('.login').submit();
-            }, 4000);
-            var msg = '@ViewBag.LoginMsg';
-            if (msg == "Welcome back!") {
-                
-            } else {
-                
-            }
-        };
-    </script>*@
     <script>
         function ValidateUser() {
+            $('.login').on("submit", function (e) { e.preventDefault(); });
             var userid = $("#Username").attr('value');
             var pass = $("#Password").attr('value');
             var url = "/Account/ValidateUser";
@@ -99,7 +48,7 @@
             $state.html('Authenticating');
             setTimeout(function () {
                 $.ajax({
-                    url: url,
+                    url: "/Account/ValidateUser",
                     data: { username: userid, password: pass },
                     cache: false,
                     type: "POST",
@@ -107,23 +56,33 @@
                         if (data == "1") {
                             $this.addClass('ok');
                             $state.html('Welcome back!');
-                            window.location.href = "Home/Index";
+                            setTimeout(function () {
+                                window.location.href = "Home/Index";
+                            }, 1000)
                         } else {
                             $state.html('Incorrect username or password!');
                             $this.addClass('loginError');
-                            $this.removeClass('ok loading');
+                            $('#animation').removeClass('spinner');
+                            $('#animation').addClass('close');
+                            setTimeout(function () {
+                                $this.removeClass('loading ok loginError');
+                                $('#animation').removeClass('close');
+                                $state.html('Submit');
+                            }, 2000)
                         }
                         $("#txtuserid").attr({ 'value': '' });
                         $("#txtpassword").attr({ 'value': '' });
                     },
                     error: function (reponse) {
-                        alert(response);
                         $state.html('An unknown error has occurred!');
                         $this.addClass('loginError');
-                        $this.removeClass('ok loading');
+                        setTimeout(function () {
+                            $this.removeClass('ok loading loginError');
+                            $state.html('Submit');
+                        }, 3000);
                     }
                 });
-            }, 5000);
+            }, 1000);
         }
     </script>
 </body>

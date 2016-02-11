@@ -47,12 +47,12 @@ namespace DARE.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("UnauthorizedAccess", "Account");
+                    return RedirectToAction("Login", "Account");
                 }
             }
             else
             {
-                return RedirectToAction("UnauthorizedAccess", "Account");
+                return RedirectToAction("Login", "Account");
             }
         }
 
