@@ -1,6 +1,4 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
     font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
     background-color: #252830;
     color: #FFFFFF;
@@ -446,6 +444,59 @@ textarea {
     #SetupLogo {
         margin: 0 auto;
         display: block;
+        font-family: 'Audiowide', cursive;
+        font-size: 10em;
+        color: #F41710;
+        text-align:center;
+        height: 170px;
+
+    }
+    #SubSetupLogo {
+        margin: 0 auto;
+        display: block;
+        font-family: 'Audiowide', cursive;
+        font-size: 2em;
+        color: #F41710;
+        text-align:center;
+        margin-bottom: 100px;
+    }
+    #ForwardButton {
+        height: 40px;
+        width: 40px;
+        color:white;
+        border:none;
+        float:right;
+        opacity: 0.35
+    }
+    #BackButton {
+        height: 40px;
+        width: 40px;
+        border:none;
+        color: white;
+        float:left;
+        opacity: 0.35;
+    }
+    #SetupHeading {
+        text-align:center;
+        color:white;
+        letter-spacing: 5px;
+    }
+    .activeButton {
+        opacity: 1 !important;
+        cursor: pointer;
+    }
+    .activeButton:hover {
+        color: #F41710 !important;
+    }
+    .SetupField {
+        display: block;
+        width: 400px;
+        text-align:center;
+        margin: 30px auto;
+    }
+    #buttons {
+        margin-top: -10%;
+        position:relative;
     }
     .form-group {
         margin: 20px auto;
@@ -453,6 +504,9 @@ textarea {
     }
     .form-control-alternative {
         display: inline;
+    }
+    *::-moz-placeholder {
+        font-size: 1.3em;
     }
 }
 
