@@ -65,7 +65,8 @@ namespace DARE.ViewModels
         [Required]
         public string State { get; set; }
         [Required]
-        public int ZIP { get; set; }
+        [StringLength(5, ErrorMessage = "Please enter only 5 digit ZIP codes.")]
+        public string ZIP { get; set; }
         [Required]
         [Display(Name = "System Description")]
         public string Description { get; set; }

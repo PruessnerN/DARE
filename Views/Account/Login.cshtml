@@ -30,7 +30,7 @@
             @Html.PasswordFor(m => m.Password, new { @class = "", @placeholder = "Password", @required = "true" })
             <i class="fa fa-key"></i>
             <a href="#"><h5 class="underline" style="padding-top: 10px; color:grey">Forgot your password?</h5></a>
-            <button onclick="ValidateUser()">
+            <button type="submit">
                 <i id="animation" class="spinner"></i>
                 <span id="submit" class="state">Submit</span>
             </button>
@@ -38,7 +38,7 @@
     </div>
     <script>
         function ValidateUser() {
-            $('.login').on("submit", function (e) { e.preventDefault(); });
+            //$('.login').on("submit", function (e) { e.preventDefault(); });
             var userid = $("#Username").attr('value');
             var pass = $("#Password").attr('value');
             var url = "/Account/ValidateUser";
@@ -52,12 +52,12 @@
                     data: { username: userid, password: pass },
                     cache: false,
                     type: "POST",
-                    success: function (data) {
-                        if (data == "1") {
+                    success: function (status) {
+                        if (status.message == "1") {
                             $this.addClass('ok');
                             $state.html('Welcome back!');
                             setTimeout(function () {
-                                window.location.href = "Home/Index";
+                                window.top.location = status.redirecturl;
                             }, 1000)
                         } else {
                             $state.html('Incorrect username or password!');

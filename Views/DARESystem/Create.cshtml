@@ -30,157 +30,208 @@
             <hr style="margin: 0 auto; padding: 0; width: 700px; border-color: rgb(244, 23, 16);border-width: medium;" />
             <div id="SubSetupLogo">Digitally Automated Residence Ecosystem</div>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    <span style="color: black; display:block; width: 100px; height: 100%;">0% Progress</span>
+                </div>
+            </div>
             <div id="SetupGeneral">
-                    <div class="SetupField">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control form-control-alternative", @placeholder = "System Name" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                    </div>
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control form-control-alternative", @placeholder = "System Name" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger slideDown" })
+                </div>
 
-                    <div class="SetupField">
-                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "System Description" } })
-                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                    </div>
+                <div class="SetupField">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control form-control-alternative", @placeholder = "System Description" })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
 
-                    <div class="SetupField">
-                        @Html.EditorFor(model => model.FamilyName, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Family Name" } })
-                        @Html.ValidationMessageFor(model => model.FamilyName, "", new { @class = "text-danger" })
-                    </div>
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.FamilyName, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Family Name" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.FamilyName, "", new { @class = "text-danger" })
+                </div>
             </div>
 
             <div id="SetupAddress">
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.HomeAddress, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.HomeAddress, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.HomeAddress, "", new { @class = "text-danger" })
-                    </div>
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.HomeAddress, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Home Address" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.HomeAddress, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "City" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.DropDownListFor(model => model.State, DARE.Models.StatesClass.States, "State", new { @class = "form-control form-control-alternative", @placeholder = "Select State", @style = "color: #999999;" })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.ZIP, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.ZIP, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.ZIP, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.ZIP, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "ZIP" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.ZIP, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div id="SetupAdmin">
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                    </div>
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Username" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Email" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Password" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.PasswordQuestion, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.PasswordQuestion, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.PasswordQuestion, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Confirm Password" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.PasswordAnswer, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.PasswordAnswer, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.PasswordAnswer, "", new { @class = "text-danger" })
-                    </div>
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.PasswordQuestion, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Password Question" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.PasswordQuestion, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.PasswordAnswer, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Password Answer" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.PasswordAnswer, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Phone Number" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <div class="SetupField">
-                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control form-control-alternative " } })
-                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+
+                <div class="SetupField">
+                    <!--CUSTOM DATE FIELD-->
+                    <div class="input-group date" style="display:block;">
+                        <input type="text" readonly placeholder="Date of Birth" for="DateOfBirth" name="DateOfBirth" data-val-required="The Date of Birth field is required." class="form-control" style="cursor: not-allowed;border-top-right-radius: 4px;border-bottom-right-radius: 4px;"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
+                    @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "First Name" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="SetupField">
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control form-control-alternative ", @placeholder = "Last Name" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                 </div>
             </div>
+            <div id="SetupConfirm">
+                <h4>Please confirm your submission. <br /><br />Note: All information inputted can be changed<br /> at a later date by the Super Administrator only.</h4>
+                <br />
+                <button type="submit" class="btn btn-lg">Submit</button>
+            </div>
+
             <div class="form-group" id="buttons">
-                <div class="">
-                    <i class="fa fa-5x fa-chevron-left" id="BackButton" onclick="back()"></i>
-                    <i class="fa fa-5x fa-chevron-right activeButton" id="ForwardButton" onclick="forward()"></i>
-                </div>
+                <i class="fa fa-5x fa-chevron-left" id="BackButton" onclick="back()"></i>
+                <i class="fa fa-5x fa-chevron-right activeButton" id="ForwardButton" onclick="forward()"></i>
             </div>
         </div>
     }
 
     <script>
+        $('.input-group.date').datepicker({
+            format: "mm/dd/yyyy",
+            startView: 1,
+            autoclose: true
+        });
+        var page = 1;
+
         function forward() {
-            
+            switch (page) {
+                case 1:
+                    $('#SetupGeneral').hide({ "margin-left": "800px" }, "fast");
+                    $('#SetupAddress').show({ "margin-right": "800px" }, "fast");
+                    $('#BackButton').addClass("activeButton");
+                    $('.progress-bar').css("width", "18%");
+                    $('.progress-bar span').text("18% Progress");
+                    page = 2;
+                    break;
+                case 2:
+                    $('#SetupAddress').hide({ "margin-right": "800px" }, "fast");
+                    $('#SetupAdmin').show({ "margin-left": "800px" }, "fast");
+                    $('.progress-bar').css("width", "41%");
+                    $('.progress-bar span').text("41% Progress");
+                    page = 3;
+                    break;
+
+                case 3:
+                    $('#SetupAdmin').hide({ "margin-right": "800px" }, "fast");
+                    $('#SetupConfirm').show({ "margin-left": "800px" }, "fast");
+                    $('#ForwardButton').removeClass("activeButton");
+                    $('.progress-bar').css("width", "100%");
+                    $('.progress-bar span').text("100% Progress");
+                    page = 4;
+                    break;
+                default:
+            }
+
         }
 
         function back() {
+            switch (page) {
+                case 1:
+                    break;
+                case 2:
+                    $('#SetupAddress').hide({ "margin-right": "800px" }, "fast");
+                    $('#SetupGeneral').show({ "margin-left": "800px" }, "fast");
+                    $('#BackButton').removeClass("activeButton");
+                    page = 1;
+                    break;
 
-        }
-
-        function submit() {
-
+                case 3:
+                    $('#SetupAdmin').hide({ "margin-right": "800px" }, "fast");
+                    $('#SetupAddress').show({ "margin-left": "800px" }, "fast");
+                    page = 2;
+                    break;
+                case 4:
+                    $('#SetupConfirm').hide({ "margin-right": "800px" }, "fast");
+                    $('#SetupAdmin').show({ "margin-left": "800px" }, "fast");
+                    $('#ForwardButton').addClass("activeButton");
+                    page = 3;
+                    break;
+                default:
+            }
         }
     </script>
 </body>
+
 </html>

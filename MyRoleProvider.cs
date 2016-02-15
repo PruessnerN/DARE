@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 
-namespace DARE.Controllers
+namespace DARE
 {
     public class MyRoleProvider : RoleProvider
     {

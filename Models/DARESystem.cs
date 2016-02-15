@@ -20,7 +20,7 @@ namespace DARE.Models
         public string HomeAddress { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public Nullable<int> ZIP { get; set; }
+        public string ZIP { get; set; }
         public string Description { get; set; }
         public string FamilyName { get; set; }
     }

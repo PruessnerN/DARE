@@ -88,7 +88,7 @@
           <Property Name="HomeAddress" Type="nvarchar" MaxLength="200" />
           <Property Name="City" Type="nvarchar" MaxLength="50" />
           <Property Name="State" Type="nvarchar" MaxLength="50" />
-          <Property Name="ZIP" Type="int" />
+          <Property Name="ZIP" Type="nvarchar" MaxLength="50" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="FamilyName" Type="nvarchar" MaxLength="50" />
         </EntityType>
@@ -444,7 +444,7 @@
           <Property Name="HomeAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ZIP" Type="Int32" />
+          <Property Name="ZIP" Type="String" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FamilyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>

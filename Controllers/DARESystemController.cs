@@ -7,12 +7,16 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DARE.Models;
+using DARE.ViewModels;
+using System.Security.Cryptography;
 
 namespace DARE.Controllers
 {
     
     public class DARESystemController : Controller
     {
+        private int SALT_BYTE_SIZE = 24;
+
         private npruessnerEEntities db = new npruessnerEEntities();
 
         // GET: DARESystem
@@ -61,16 +65,32 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] DARESystem dARESystem)
+        public ActionResult Create([Bind(Include = "Name,Description,FamilyName,HomeAddress,City,State,ZIP,Username,Email,Password,ConfirmPassword,PasswordQuestion,PasswordAnswer,PhoneNumber,DateOfBirth,FirstName,LastName")] SetupSystemViewModel setupInfo)
         {
-            if (ModelState.IsValid)
-            {
-                db.DARESystems.Add(dARESystem);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            return View(dARESystem);
+            if (setupInfo.Password == setupInfo.ConfirmPassword)
+            {
+                RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
+                byte[] salt = new byte[SALT_BYTE_SIZE];
+                csprng.GetBytes(salt);
+
+                var hashedPassword = Hash.CreateHash(setupInfo.Password.ToString(), salt);
+                if (ModelState.IsValid)
+                {
+                    db.SetupSystem(setupInfo.Name, setupInfo.HomeAddress, setupInfo.City, setupInfo.State, setupInfo.ZIP, setupInfo.Description, setupInfo.FamilyName, setupInfo.Username, setupInfo.Email, hashedPassword, salt, setupInfo.PhoneNumber, setupInfo.PasswordQuestion, setupInfo.PasswordAnswer, setupInfo.DateOfBirth, setupInfo.FirstName, setupInfo.LastName);
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    ViewBag.LoginError = "Error: Invalid Information";
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.LoginError = "Error: Invalid Information";
+                return View(setupInfo);
+            }
         }
 
         // GET: DARESystem/Edit/5

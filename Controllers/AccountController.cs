@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using System.Data.Entity;
 using System.Text;
+using System.Web.UI.WebControls;
 
 namespace DARE.Controllers
 {
@@ -17,8 +18,9 @@ namespace DARE.Controllers
         //create an instance of the database (model)
         npruessnerEEntities db = new npruessnerEEntities();
         private int SALT_BYTE_SIZE = 24;
-
-        public ActionResult Login()
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult Login(string ReturnUrl)
         {
             //has the system been setup yet
             bool noUsers = db.ufn_HaveUsers();
@@ -36,10 +38,47 @@ namespace DARE.Controllers
             {
                 return View();
             }
-
         }
 
-        public string ValidateUser(string username, string password)
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult Login(LoginViewModel U)
+        {
+            int count;
+            if (U.Username != null)
+            {
+                byte[] salt = db.ufn_GetSalt(U.Username);
+                if (salt != null)
+                {
+                    var hashedPassword = Hash.CreateHash(U.Password, salt);
+                    count = db.AuthenticateUser(U.Username, hashedPassword);
+                }
+                else
+                {
+                    count = 0;
+                }
+            }
+            else
+            {
+                count = 0;
+            }
+            if (count == 1)
+            {
+                FormsAuthentication.SetAuthCookie(U.Username, false);
+                string username = U.Username;
+                Session["Username"] = username;
+                bool authenticated = User.Identity.IsAuthenticated;
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.LoginMsg = "Incorrect Username or Password";
+                return View();
+            }
+        }
+
+        /*[HttpPost]
+        public JsonResult ValidateUser(string username, string password)
         {
             int count;
             if (username != null)
@@ -59,29 +98,27 @@ namespace DARE.Controllers
             {
                 count = 0;
             }
-            
-
-            
             if (count == 1)
             {
                 FormsAuthentication.SetAuthCookie(username, false);
+                string url = FormsAuthentication.GetRedirectUrl(username, false);
                 Session["Username"] = username;
-                return "1";
+                var status = new jsonObject { message = "1", redirecturl = url };
+                return Json(status);
             }
             else
             {
-                return "0";
+                var status = new jsonObject { message = "0", redirecturl = null };
+                return Json(status);
             }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl)
+        public class jsonObject
         {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
+            public string message { get; set; }
+            public string redirecturl { get; set; }
+        }*/
+
 
         public ActionResult Logout()
         {
