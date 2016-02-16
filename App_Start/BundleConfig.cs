@@ -9,7 +9,7 @@ namespace DARE
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-2.2.0.js",
                         "~/Scripts/bootstrap-datepicker.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

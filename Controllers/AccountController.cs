@@ -20,7 +20,7 @@ namespace DARE.Controllers
         private int SALT_BYTE_SIZE = 24;
         [AllowAnonymous]
         [HttpGet]
-        public ActionResult Login(string ReturnUrl)
+        public ActionResult Login()
         {
             //has the system been setup yet
             bool noUsers = db.ufn_HaveUsers();
@@ -40,44 +40,9 @@ namespace DARE.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult Login(LoginViewModel U)
-        {
-            int count;
-            if (U.Username != null)
-            {
-                byte[] salt = db.ufn_GetSalt(U.Username);
-                if (salt != null)
-                {
-                    var hashedPassword = Hash.CreateHash(U.Password, salt);
-                    count = db.AuthenticateUser(U.Username, hashedPassword);
-                }
-                else
-                {
-                    count = 0;
-                }
-            }
-            else
-            {
-                count = 0;
-            }
-            if (count == 1)
-            {
-                FormsAuthentication.SetAuthCookie(U.Username, false);
-                string username = U.Username;
-                Session["Username"] = username;
-                bool authenticated = User.Identity.IsAuthenticated;
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ViewBag.LoginMsg = "Incorrect Username or Password";
-                return View();
-            }
-        }
+       
 
-        /*[HttpPost]
+        [HttpPost]
         public JsonResult ValidateUser(string username, string password)
         {
             int count;
@@ -108,7 +73,7 @@ namespace DARE.Controllers
             }
             else
             {
-                var status = new jsonObject { message = "0", redirecturl = null };
+                var status = new jsonObject { message = "0", redirecturl = "Account/Login" };
                 return Json(status);
             }
         }
@@ -117,13 +82,13 @@ namespace DARE.Controllers
         {
             public string message { get; set; }
             public string redirecturl { get; set; }
-        }*/
+        }
 
 
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         public ActionResult Register()
