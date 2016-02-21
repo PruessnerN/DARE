@@ -143,6 +143,8 @@ namespace DARE.ViewModels
         public string FirstName { get; set; }
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        [Display(Name ="Role")]
+        public int RoleID { get; set; }
     }
 
     public class RegisterAdminViewModel

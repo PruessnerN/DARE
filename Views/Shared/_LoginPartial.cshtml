@@ -3,24 +3,36 @@
 {
     using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="nav nav-tabs nav-stacked">
-        <li style="border-top:none;">
-            @Html.ActionLink(User.Identity.Name, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @id = "userIconParent", @class = "icon fa-user" })
-        </li>
-        <li><a id="userIconChild" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#userIconParent').on({'mouseenter':function () {
-                $('#userIconChild').css("visibility","visible");
-                },'mouseleave':function() {
-                    $('#userIconChild').css("visibility", "hidden");
+        <ul id="userIconParent" class="nav nav-tabs nav-stacked">
+            <li style="border-top:none;">
+                @if (Session["Name"] != null)
+                {
+                    @Html.ActionLink(Session["Name"].ToString(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @id = "", @class = "icon fa-user" })
                 }
+                else
+                {
+                    @Html.ActionLink("User", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @id = "", @class = "icon fa-user" })
+                }
+            </li>
+            @if (User.IsInRole("3"))
+            {
+                <li class="userIconChild">@Html.ActionLink("Manage Users", "Index", "User")</li>
+            }
+            <li class="userIconChild"><a id="" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#userIconParent').on({
+                    'mouseenter': function () {
+                        $('.userIconChild').css("left", "0");
+                    }, 'mouseleave': function () {
+                        $('.userIconChild').css("left", "-300px");
+                    }
+                });
             });
-        });
-    </script>
+        </script>
     }
 }
 else

@@ -8,6 +8,7 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    margin-left: 350px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -73,23 +74,26 @@ textarea {
         -ms-transform: translate(2em,0);
         transform: translate(2em,0);
     }
-    #userIconChild {
-        visibility:hidden;
+    .dropdownAnim:hover {
+        border-color: #252830 !important;
+        -webkit-transform: translate(60px,0);
+        -moz-transform: translate(60px,0);
+        -o-transform: translate(60px,0);
+        -ms-transform: translate(60px,0);
+        transform: translate(60px,0);
+    }
+
+    .userIconChild {
         border-color: #252830 !important;
         -webkit-transition:all .25s ease-in-out;
         -moz-transition:all .25s ease-in-out;
         -o-transition: .25s ease-in-out;
         transition:all .25s ease-in-out;
         font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
-        color: #FFFFFF;
-        border-radius: 0;
-        margin: 0;
-        line-height: 1.42857143;
-        position: relative;
-        padding: 10px 15px;
+        left: -300px;
     }
 
-    #userIconParent {
+    #userIconParent>li>a {
         border-color: #252830 !important;
         -webkit-transition: all .25s ease-in-out;
         -moz-transition: all .25s ease-in-out;
@@ -120,7 +124,6 @@ textarea {
     }
     #userIconParent:hover {
         text-decoration: none;
-
     }
     
     /*.nav-tabs > li > a:hover {
@@ -409,7 +412,6 @@ textarea {
             opacity: 1;
         }
 
-
         .close:before, .close:after {
             position: absolute;
             content: ' ';
@@ -588,6 +590,128 @@ textarea {
     }
     .text-danger span {
         color: white;
+    }
+
+    /*########## START USER PAGES STYLING ###########*/
+
+    .userSquareBody {
+        color: #252830;
+        margin: auto;
+        text-align:center;
+    }
+    .userSquare {
+        height:250px; 
+        width:250px;
+        float:left;
+        -webkit-transition: -webkit-transform 1s;
+        -moz-transition: -moz-transform 1s;
+        -o-transition: -o-transform 1s;
+        transition: transform 1s;
+        border-radius:0;
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        position: relative;
+    }
+    .userSquare>div{
+        display: block;
+        height: 100%;
+        width: 100%;
+        color: #252830;
+        position: absolute;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -o-backface-visibility: hidden;
+        backface-visibility: hidden;
+        background-color: white;
+    }
+    .userSquare.front{
+
+    }
+    .userSquare .back {
+        -webkit-transform: rotateY( 180deg );
+        -moz-transform: rotateY( 180deg );
+        -o-transform: rotateY( 180deg );
+        -ms-transform: rotateY( 180deg );
+        transform: rotateY( 180deg );
+        text-align:center;
+    }
+    .userSquareBody > .icon::before {
+        font-size: 13em;
+        color: #252830;
+        margin: auto;
+    }
+    .userSquareFooter {
+        padding: 10px 15px;
+        background-color: #f5f5f5;
+        border-top: 1px solid #ddd;
+        position: relative;
+        margin-right: -1px;
+        margin-left: -1px;
+        margin-top: -4px;
+        color: #252830;
+        text-align:center;
+        font-size: 1.2em;
+        font-weight:bold;
+        border-radius: 0;
+    }
+    .squarePlaceholder {
+        -webkit-perspective: 2000px;
+        -moz-perspective: 2000px;
+        -ms-perspective: 2000px;
+        perspective: 2000px;
+        position:relative;
+        border-radius:0;
+        display: inline-block;
+        margin-right: 30px;
+    }
+    .userSquare.flipped {
+        -moz-transform: rotateY( 180deg );
+        -ms-transform: rotateY( 180deg );
+        -o-transform: rotateY( 180deg );
+        -webkit-transform: rotateY( 180deg );
+        transform: rotateY( 180deg );
+    }
+
+    .btn {
+      border-radius: 0;
+      padding: 3px 15px;
+      font-size: 22px;
+      text-decoration: none;
+      margin: 10px auto;
+      color: #fff !important;
+      position: relative;
+      display: inline-block;
+    }
+
+    .btn>a {
+        color:white;
+    }
+
+    .btn:active {
+        -moz-transform: translate(0, 5px);
+        -ms-transform: translate(0, 5px);
+        -o-transform: translate(0, 5px);
+        -webkit-transform: translate(0, 5px);
+        transform: translate(0, 5px);
+        box-shadow: 0 1px 0 0;
+    }
+    .red {
+      background-color: #F41710;
+      box-shadow: 0 5px 0 0 #c30f09;
+    }
+
+    .red:hover {
+      background-color: #FF6656;
+    }
+    .header {
+        margin-bottom: 40px;
+    }
+    .text-danger {
+        color: #F41710;
+        font-weight: bold;
+        font-size: 1.6em;
     }
 }
 

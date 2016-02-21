@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DARE.Models;
 using DARE.ViewModels;
+using System.Security.Cryptography;
 
 namespace DARE.Controllers
 {
@@ -16,6 +17,7 @@ namespace DARE.Controllers
     {
         private npruessnerEEntities db = new npruessnerEEntities();
         private PrivilegeProvider pp = new PrivilegeProvider();
+        private int SALT_BYTE_SIZE = 24;
 
         // GET: Users
         public ActionResult Index()
@@ -44,23 +46,28 @@ namespace DARE.Controllers
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "3")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Login,EMail,Password,CreationDate,ApprovalDate,LastLoginDate,IsLocked,PasswordQuestion,PasswordAnswer,ActivationToken,EmailConfirmed,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount")] User user, int roleID)
+        public ActionResult Create(RegisterViewModel U)
         {
-            if (ModelState.IsValid)
+            if (U.Password == U.ConfirmPassword)
             {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
+                byte[] salt = new byte[SALT_BYTE_SIZE];
+                csprng.GetBytes(salt);
 
-            return View(user);
+                var hashedPassword = Hash.CreateHash(U.Password.ToString(), salt);
+                db.CreateUser(U.Username, U.Email, hashedPassword, salt, U.PhoneNumber, U.PasswordQuestion, U.PasswordAnswer, U.DateOfBirth, U.FirstName, U.LastName, U.RoleID);
+            }
+            else
+            {
+                ViewBag.LoginError = "Error: Invalid Information";
+                return View();
+            }
+            return RedirectToAction("Index", "User");
         }
 
+        [HttpGet]
         public ActionResult Permissions(long? id)
         {
             if (id == null)
@@ -109,7 +116,6 @@ namespace DARE.Controllers
             {
                 return View(userPriv);
             }
-
         }
 
         // GET: Users/Edit/5
@@ -132,7 +138,7 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Login,EMail,Password,CreationDate,ApprovalDate,LastLoginDate,IsLocked,PasswordQuestion,PasswordAnswer,ActivationToken,EmailConfirmed,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount")] User user)
+        public ActionResult Edit([Bind(Include = "Username,Email,Hash,PasswordQuestion,PasswordAnswer,DateOfBirth,PhoneNumber,FirstName,LastName")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -159,8 +165,6 @@ namespace DARE.Controllers
         }
 
         // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(long id)
         {
             User user = db.Users.Find(id);

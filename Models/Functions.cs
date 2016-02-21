@@ -47,7 +47,7 @@ namespace DARE.Models
             parameters.Add(new ObjectParameter("UserID", userid));
             parameters.Add(new ObjectParameter("PrivilegeID", privilegeid));
             var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
-            bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_IsUserInPermission(@UserID, @PrivilegeID)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
+            bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HavePrivilege(@UserID, @PrivilegeID)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
             return output;
         }
 

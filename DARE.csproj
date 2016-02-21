@@ -411,6 +411,10 @@
     <Content Include="Views\DARESystem\Edit.cshtml" />
     <Content Include="Views\Account\UnauthorizedAccess.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Permissions.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

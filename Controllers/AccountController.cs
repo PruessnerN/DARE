@@ -13,11 +13,11 @@ using System.Web.UI.WebControls;
 
 namespace DARE.Controllers
 {
+    [RequireHttps]
     public class AccountController : Controller
     {
         //create an instance of the database (model)
         npruessnerEEntities db = new npruessnerEEntities();
-        private int SALT_BYTE_SIZE = 24;
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Login()
@@ -67,7 +67,9 @@ namespace DARE.Controllers
             {
                 FormsAuthentication.SetAuthCookie(username, false);
                 string url = FormsAuthentication.GetRedirectUrl(username, false);
-                Session["Username"] = username;
+                User user = db.Users.Where(m => m.Username == username).Single();
+                db.LastLoginUpdate(username);
+                Session["Name"] = user.FirstName + " " + user.LastName;
                 var status = new jsonObject { message = "1", redirecturl = url };
                 return Json(status);
             }
@@ -96,26 +98,7 @@ namespace DARE.Controllers
             return View();
         }
 
-        [Authorize(Roles = "3")]
-        [HttpPost]
-        public ActionResult Register(RegisterViewModel U)
-        {
-            if (U.Password == U.ConfirmPassword)
-            {
-                RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
-                byte[] salt = new byte[SALT_BYTE_SIZE];
-                csprng.GetBytes(salt);
-
-                var hashedPassword = Hash.CreateHash(U.Password.ToString(), salt);
-                db.CreateUser(U.Username, U.Email, hashedPassword, salt, U.PhoneNumber, U.PasswordQuestion, U.PasswordAnswer, U.DateOfBirth, U.FirstName, U.LastName);
-            }
-            else
-            {
-                ViewBag.LoginError = "Error: Invalid Information";
-                return View();
-            }
-            return RedirectToAction("Index", "Home");
-        }
+        
 
         public ActionResult ResetPassword()
         {

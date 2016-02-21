@@ -82,7 +82,7 @@
           <Key>
             <PropertyRef Name="SystemID" />
           </Key>
-          <Property Name="SystemID" Type="int" Nullable="false" />
+          <Property Name="SystemID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="DateInitiated" Type="datetime" />
           <Property Name="HomeAddress" Type="nvarchar" MaxLength="200" />
@@ -254,9 +254,13 @@
           <Parameter Name="DateOfBirth" Type="date" Mode="In" />
           <Parameter Name="FirstName" Type="nvarchar" Mode="In" />
           <Parameter Name="LastName" Type="nvarchar" Mode="In" />
+          <Parameter Name="RoleID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetIdFromEmail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="LastLoginUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="username" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="RemovePrivilegeFromUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
@@ -444,7 +448,7 @@
           <Property Name="HomeAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ZIP" Type="String" />
+          <Property Name="ZIP" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FamilyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
@@ -587,6 +591,7 @@
             <Parameter Name="DateOfBirth" Mode="In" Type="DateTime" />
             <Parameter Name="FirstName" Mode="In" Type="String" />
             <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="RoleID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetIdFromEmail">
           <Parameter Name="Email" Mode="In" Type="String" />
@@ -621,6 +626,9 @@
             <Parameter Name="FirstName" Mode="In" Type="String" />
             <Parameter Name="LastName" Mode="In" Type="String" />
             <Parameter Name="Phone" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="LastLoginUpdate">
+          <Parameter Name="username" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>
@@ -771,6 +779,7 @@
           <FunctionImportMapping FunctionImportName="RemovePrivilegeFromUser" FunctionName="npruessnerEModel.Store.RemovePrivilegeFromUser" />
           <FunctionImportMapping FunctionImportName="SetupSystem" FunctionName="npruessnerEModel.Store.SetupSystem" />
           <FunctionImportMapping FunctionImportName="UpdateUser" FunctionName="npruessnerEModel.Store.UpdateUser" />
+          <FunctionImportMapping FunctionImportName="LastLoginUpdate" FunctionName="npruessnerEModel.Store.LastLoginUpdate" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

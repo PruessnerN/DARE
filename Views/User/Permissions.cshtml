@@ -1,0 +1,44 @@
+﻿@model DARE.ViewModels.UserPrivilegeViewModel
+@{
+    ViewBag.Title = "Edit Privileges";
+}
+
+<h2 style="margin-bottom: 75px; margin-top: 50px; width: 800px;">Edit Privileges - @Model.User.FirstName @Model.User.LastName</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.User.UserID)
+        <div class="">
+            @for (int i = 0; i < Model.UserPrivilegeArray.Length; i++)
+            {
+                <div class="row" style="margin-top:30px; width: 900px;">
+                    <div class="col-md-2">
+                        @Html.Label(Model.UserPrivilegeArray[i].Name, new { @class = "" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownListFor(model => Model.UserPrivilegeArray[i].IsSet, new SelectList(DARE.ViewModels.PermissionOptionList.options, "Value", "Text", Model.UserPrivilegeArray[i].IsSet), new { @class = "form-control small" })
+                        @Html.HiddenFor(model => model.UserPrivilegeArray[i].Name)
+                    </div>
+                    <div class="col-md-8">
+                        <p>@Model.UserPrivilegeArray[i].Description.ToString()</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn red" })
+                &emsp;&emsp;&emsp;
+                <button type="submit" value="Save" class="btn red">Save</button>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+   
+</div>

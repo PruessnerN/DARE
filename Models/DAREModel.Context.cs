@@ -63,7 +63,7 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AuthenticateUser", usernameParameter, hashParameter);
         }
     
-        public virtual int CreateUser(string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string firstName, string lastName)
+        public virtual int CreateUser(string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string firstName, string lastName, Nullable<int> roleID)
         {
             var usernameParameter = username != null ?
                 new ObjectParameter("Username", username) :
@@ -105,7 +105,11 @@ namespace DARE.Models
                 new ObjectParameter("LastName", lastName) :
                 new ObjectParameter("LastName", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateUser", usernameParameter, emailParameter, passwordParameter, saltParameter, phoneNumberParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, firstNameParameter, lastNameParameter);
+            var roleIDParameter = roleID.HasValue ?
+                new ObjectParameter("RoleID", roleID) :
+                new ObjectParameter("RoleID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateUser", usernameParameter, emailParameter, passwordParameter, saltParameter, phoneNumberParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, firstNameParameter, lastNameParameter, roleIDParameter);
         }
     
         public virtual int GetIdFromEmail(string email)
@@ -230,6 +234,15 @@ namespace DARE.Models
                 new ObjectParameter("Phone", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUser", newEmailParameter, emailParameter, passwordHashParameter, firstNameParameter, lastNameParameter, phoneParameter);
+        }
+    
+        public virtual int LastLoginUpdate(string username)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("username", username) :
+                new ObjectParameter("username", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LastLoginUpdate", usernameParameter);
         }
     }
 }

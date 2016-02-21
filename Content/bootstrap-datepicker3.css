@@ -19,8 +19,8 @@
   float: right;
 }
 .datepicker-dropdown {
-  top: 352px !important;
-  left: 650px !important;
+  top: 352px;
+  left: 650px;
   padding: 4px;
 }
 .datepicker-dropdown:before {
