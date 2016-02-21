@@ -9,11 +9,11 @@
             <li style="border-top:none;">
                 @if (Session["Name"] != null)
                 {
-                    @Html.ActionLink(Session["Name"].ToString(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @id = "", @class = "icon fa-user" })
+                    @Html.ActionLink(Session["Name"].ToString(), "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
                 }
                 else
                 {
-                    @Html.ActionLink("User", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @id = "", @class = "icon fa-user" })
+                    @Html.ActionLink("User", "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
                 }
             </li>
             @if (User.IsInRole("3"))

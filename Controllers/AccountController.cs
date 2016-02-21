@@ -80,7 +80,7 @@ namespace DARE.Controllers
             }
         }
 
-        public class jsonObject
+        private class jsonObject
         {
             public string message { get; set; }
             public string redirecturl { get; set; }
@@ -97,8 +97,6 @@ namespace DARE.Controllers
         {
             return View();
         }
-
-        
 
         public ActionResult ResetPassword()
         {

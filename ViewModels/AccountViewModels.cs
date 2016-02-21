@@ -110,6 +110,7 @@ namespace DARE.ViewModels
 
     public class RegisterViewModel
     {
+        public long? UserID { get; set; }
         [Required]
         [Display(Name = "Username")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]

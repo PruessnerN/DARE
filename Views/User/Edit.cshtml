@@ -1,19 +1,18 @@
 ﻿@model DARE.ViewModels.RegisterViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="header">
-    <h2>Create New User</h2>
+    <h2>Edit User - @Model.FirstName @Model.LastName</h2>
 </div>
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-
+        @Html.HiddenFor(model => model.UserID)
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -28,22 +27,6 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -68,7 +51,7 @@
             <div class="col-md-10">
                 <!--CUSTOM DATE FIELD-->
                 <div class="input-group date" style="display:block;">
-                    <input type="text" readonly for="DateOfBirth" placeholder="Click To Select Date" name="DateOfBirth" data-val-required="The Date of Birth field is required." class="form-control" style="cursor: pointer;border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                    <input type="text" value="@Model.DateOfBirth.ToShortDateString()" readonly for="DateOfBirth" name="DateOfBirth" data-val-required="The Date of Birth field is required." class="form-control" style="cursor: pointer;border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
                 </div>
                 @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
             </div>
@@ -117,11 +100,10 @@
                 @Html.ValidationMessageFor(model => model.RoleID, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 @Html.ActionLink("Back to List", "Index", null, new { @class = "btn red" })
-                <button type="submit" class="btn red">Create</button>
+                <button type="submit" class="btn red">Update</button>
             </div>
         </div>
     </div>
@@ -133,6 +115,7 @@
         autoclose: true
     });
 </script>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -207,19 +207,35 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SetupSystem", systemNameParameter, homeAddressParameter, cityParameter, stateParameter, zIPParameter, descriptionParameter, familyNameParameter, usernameParameter, emailParameter, passwordParameter, saltParameter, phoneNumberParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, firstNameParameter, lastNameParameter);
         }
     
-        public virtual int UpdateUser(string newEmail, string email, string passwordHash, string firstName, string lastName, string phone)
+        public virtual int UpdateUser(Nullable<long> userID, string username, string email, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string phoneNumber, string firstName, string lastName, Nullable<int> roleID)
         {
-            var newEmailParameter = newEmail != null ?
-                new ObjectParameter("NewEmail", newEmail) :
-                new ObjectParameter("NewEmail", typeof(string));
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(long));
+    
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
     
             var emailParameter = email != null ?
                 new ObjectParameter("Email", email) :
                 new ObjectParameter("Email", typeof(string));
     
-            var passwordHashParameter = passwordHash != null ?
-                new ObjectParameter("PasswordHash", passwordHash) :
-                new ObjectParameter("PasswordHash", typeof(string));
+            var passwordQuestionParameter = passwordQuestion != null ?
+                new ObjectParameter("PasswordQuestion", passwordQuestion) :
+                new ObjectParameter("PasswordQuestion", typeof(string));
+    
+            var passwordAnswerParameter = passwordAnswer != null ?
+                new ObjectParameter("PasswordAnswer", passwordAnswer) :
+                new ObjectParameter("PasswordAnswer", typeof(string));
+    
+            var dateOfBirthParameter = dateOfBirth.HasValue ?
+                new ObjectParameter("DateOfBirth", dateOfBirth) :
+                new ObjectParameter("DateOfBirth", typeof(System.DateTime));
+    
+            var phoneNumberParameter = phoneNumber != null ?
+                new ObjectParameter("PhoneNumber", phoneNumber) :
+                new ObjectParameter("PhoneNumber", typeof(string));
     
             var firstNameParameter = firstName != null ?
                 new ObjectParameter("FirstName", firstName) :
@@ -229,11 +245,11 @@ namespace DARE.Models
                 new ObjectParameter("LastName", lastName) :
                 new ObjectParameter("LastName", typeof(string));
     
-            var phoneParameter = phone != null ?
-                new ObjectParameter("Phone", phone) :
-                new ObjectParameter("Phone", typeof(string));
+            var roleIDParameter = roleID.HasValue ?
+                new ObjectParameter("RoleID", roleID) :
+                new ObjectParameter("RoleID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUser", newEmailParameter, emailParameter, passwordHashParameter, firstNameParameter, lastNameParameter, phoneParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUser", userIDParameter, usernameParameter, emailParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, phoneNumberParameter, firstNameParameter, lastNameParameter, roleIDParameter);
         }
     
         public virtual int LastLoginUpdate(string username)

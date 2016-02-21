@@ -12,7 +12,6 @@ using System.Security.Cryptography;
 
 namespace DARE.Controllers
 {
-    [Authorize(Roles = "3")]
     public class UserController : Controller
     {
         private npruessnerEEntities db = new npruessnerEEntities();
@@ -20,11 +19,40 @@ namespace DARE.Controllers
         private int SALT_BYTE_SIZE = 24;
 
         // GET: Users
+        [Authorize(Roles = "3")]
         public ActionResult Index()
         {
             return View(db.Users.ToList());
         }
-
+        [Authorize]
+        public ActionResult UserProfile()
+        {
+            var id = db.ufn_GetUserID(User.Identity.Name);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            User user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            RegisterViewModel pertinentUser = new RegisterViewModel()
+            {
+                UserID = user.UserID,
+                Username = user.Username,
+                Email = user.Email,
+                PasswordQuestion = user.PasswordQuestion,
+                PasswordAnswer = user.PasswordAnswer,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = (DateTime)user.DateOfBirth,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                RoleID = user.Roles.Single().RoleID
+            };
+            return View(pertinentUser);
+        }
+        [Authorize(Roles = "3")]
         // GET: Users/Details/5
         public ActionResult Details(long? id)
         {
@@ -39,7 +67,7 @@ namespace DARE.Controllers
             }
             return View(user);
         }
-
+        [Authorize(Roles = "3")]
         // GET: Users/Create
         public ActionResult Create()
         {
@@ -66,7 +94,7 @@ namespace DARE.Controllers
             }
             return RedirectToAction("Index", "User");
         }
-
+        [Authorize(Roles = "3")]
         [HttpGet]
         public ActionResult Permissions(long? id)
         {
@@ -88,7 +116,7 @@ namespace DARE.Controllers
             });
             return View(viewmodel);
         }
-
+        [Authorize(Roles = "3")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Permissions([Bind(Include = "User, UserPermissionsArray")] UserPrivilegeViewModel userPriv)
@@ -117,7 +145,7 @@ namespace DARE.Controllers
                 return View(userPriv);
             }
         }
-
+        [Authorize]
         // GET: Users/Edit/5
         public ActionResult Edit(long? id)
         {
@@ -130,26 +158,41 @@ namespace DARE.Controllers
             {
                 return HttpNotFound();
             }
-            return View(user);
+            RegisterViewModel pertinentUser = new RegisterViewModel() {
+                UserID = user.UserID,
+                Username = user.Username,
+                Email = user.Email,
+                PasswordQuestion = user.PasswordQuestion,
+                PasswordAnswer = user.PasswordAnswer,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = (DateTime)user.DateOfBirth,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                RoleID = user.Roles.Single().RoleID
+            };
+            return View(pertinentUser);
         }
 
         // POST: Users/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Username,Email,Hash,PasswordQuestion,PasswordAnswer,DateOfBirth,PhoneNumber,FirstName,LastName")] User user)
+        public ActionResult Edit([Bind(Include = "UserID,Username,Email,PasswordQuestion,PasswordAnswer,DateOfBirth,PhoneNumber,FirstName,LastName,RoleID")] RegisterViewModel user)
         {
-            if (ModelState.IsValid)
+            if (user != null )
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                db.UpdateUser(user.UserID, user.Username, user.Email, user.PasswordQuestion, user.PasswordAnswer, user.DateOfBirth, user.PhoneNumber, user.FirstName, user.LastName, user.RoleID);
                 return RedirectToAction("Index");
             }
-            return View(user);
+            else
+            {
+                return View(user);
+            }
         }
-
         // GET: Users/Delete/5
+        [Authorize(Roles = "3")]
         public ActionResult Delete(long? id)
         {
             if (id == null)
@@ -165,6 +208,7 @@ namespace DARE.Controllers
         }
 
         // POST: Users/Delete/5
+        [Authorize(Roles = "3")]
         public ActionResult DeleteConfirmed(long id)
         {
             User user = db.Users.Find(id);

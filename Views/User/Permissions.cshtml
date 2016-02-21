@@ -2,9 +2,9 @@
 @{
     ViewBag.Title = "Edit Privileges";
 }
-
-<h2 style="margin-bottom: 75px; margin-top: 50px; width: 800px;">Edit Privileges - @Model.User.FirstName @Model.User.LastName</h2>
-
+<div class="header">
+    <h2>Edit Privileges - @Model.User.FirstName @Model.User.LastName</h2>
+</div>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -14,7 +14,7 @@
         @Html.HiddenFor(model => model.User.UserID)
         <div class="">
             @for (int i = 0; i < Model.UserPrivilegeArray.Length; i++)
-            {
+                {
                 <div class="row" style="margin-top:30px; width: 900px;">
                     <div class="col-md-2">
                         @Html.Label(Model.UserPrivilegeArray[i].Name, new { @class = "" })
@@ -40,5 +40,5 @@
 }
 
 <div>
-   
+
 </div>

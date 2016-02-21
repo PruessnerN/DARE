@@ -300,12 +300,16 @@
         </Function>
         <Function Name="ufn_HaveUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit" />
         <Function Name="UpdateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="NewEmail" Type="varchar" Mode="In" />
+          <Parameter Name="UserID" Type="bigint" Mode="In" />
+          <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="Email" Type="varchar" Mode="In" />
-          <Parameter Name="PasswordHash" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="PasswordQuestion" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="PasswordAnswer" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="DateOfBirth" Type="date" Mode="In" />
+          <Parameter Name="PhoneNumber" Type="nvarchar" Mode="In" />
           <Parameter Name="FirstName" Type="varchar" Mode="In" />
           <Parameter Name="LastName" Type="varchar" Mode="In" />
-          <Parameter Name="Phone" Type="varchar" Mode="In" />
+          <Parameter Name="RoleID" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="npruessnerEModelStoreContainer">
           <EntitySet Name="Device" EntityType="Self.Device" Schema="dbo" store:Type="Tables" />
@@ -620,12 +624,16 @@
             <Parameter Name="LastName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="UpdateUser">
-            <Parameter Name="NewEmail" Mode="In" Type="String" />
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Email" Mode="In" Type="String" />
-            <Parameter Name="PasswordHash" Mode="In" Type="String" />
+            <Parameter Name="PasswordQuestion" Mode="In" Type="String" />
+            <Parameter Name="PasswordAnswer" Mode="In" Type="String" />
+            <Parameter Name="DateOfBirth" Mode="In" Type="DateTime" />
+            <Parameter Name="PhoneNumber" Mode="In" Type="String" />
             <Parameter Name="FirstName" Mode="In" Type="String" />
             <Parameter Name="LastName" Mode="In" Type="String" />
-            <Parameter Name="Phone" Mode="In" Type="String" />
+            <Parameter Name="RoleID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="LastLoginUpdate">
           <Parameter Name="username" Mode="In" Type="String" />
