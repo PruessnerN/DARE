@@ -96,7 +96,7 @@ namespace DARE.Controllers
         }
         [Authorize(Roles = "3")]
         [HttpGet]
-        public ActionResult Permissions(long? id)
+        public ActionResult Privileges(long? id)
         {
             if (id == null)
             {
@@ -119,7 +119,7 @@ namespace DARE.Controllers
         [Authorize(Roles = "3")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Permissions([Bind(Include = "User, UserPermissionsArray")] UserPrivilegeViewModel userPriv)
+        public ActionResult Privileges([Bind(Include = "User, UserPrivilegeArray")] UserPrivilegeViewModel userPriv)
         {
             try
             {
@@ -145,10 +145,12 @@ namespace DARE.Controllers
                 return View(userPriv);
             }
         }
+        
         [Authorize]
         // GET: Users/Edit/5
-        public ActionResult Edit(long? id)
+        public ActionResult UserProfileEdit()
         {
+            var id = db.ufn_GetUserID(User.Identity.Name);
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -158,7 +160,8 @@ namespace DARE.Controllers
             {
                 return HttpNotFound();
             }
-            RegisterViewModel pertinentUser = new RegisterViewModel() {
+            RegisterViewModel pertinentUser = new RegisterViewModel()
+            {
                 UserID = user.UserID,
                 Username = user.Username,
                 Email = user.Email,
@@ -173,9 +176,53 @@ namespace DARE.Controllers
             return View(pertinentUser);
         }
 
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserProfileEdit([Bind(Include = "UserID,Username,Email,PasswordQuestion,PasswordAnswer,DateOfBirth,PhoneNumber,FirstName,LastName,RoleID")] RegisterViewModel user)
+        {
+            if (user != null)
+            {
+                db.UpdateUser(user.UserID, user.Username, user.Email, user.PasswordQuestion, user.PasswordAnswer, user.DateOfBirth, user.PhoneNumber, user.FirstName, user.LastName, user.RoleID);
+                return RedirectToAction("UserProfile");
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
         // POST: Users/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
+        // GET: Users/Edit/5
+        public ActionResult Edit(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            User user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            RegisterViewModel pertinentUser = new RegisterViewModel()
+            {
+                UserID = user.UserID,
+                Username = user.Username,
+                Email = user.Email,
+                PasswordQuestion = user.PasswordQuestion,
+                PasswordAnswer = user.PasswordAnswer,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = (DateTime)user.DateOfBirth,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                RoleID = user.Roles.Single().RoleID
+            };
+            return View(pertinentUser);
+        }
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -209,12 +256,10 @@ namespace DARE.Controllers
 
         // POST: Users/Delete/5
         [Authorize(Roles = "3")]
-        public ActionResult DeleteConfirmed(long id)
+        public ActionResult DeleteConfirmed(long? id)
         {
-            User user = db.Users.Find(id);
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+                var deleted = db.DeleteUser(id);
+                return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

@@ -137,6 +137,8 @@ namespace DARE.ViewModels
         public string PasswordAnswer { get; set; }
         [Required]
         [Display(Name = "Phone")]
+        [DataType(DataType.PhoneNumber,ErrorMessage = "Incorrect Format. Please do not include dashes or parantheses.")]
+        [RegularExpression("^[0-9]{10}$",ErrorMessage = "Incorrect Format. Example: 1112223333")]
         public string PhoneNumber { get; set; }
         [Display(Name = "Date Of Birth")]
         public DateTime DateOfBirth { get; set; }

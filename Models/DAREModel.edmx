@@ -243,6 +243,11 @@
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="Hash" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="ChangePassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewSalt" Type="binary" Mode="In" />
+        </Function>
         <Function Name="CreateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
@@ -255,6 +260,9 @@
           <Parameter Name="FirstName" Type="nvarchar" Mode="In" />
           <Parameter Name="LastName" Type="nvarchar" Mode="In" />
           <Parameter Name="RoleID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="bigint" Mode="In" />
         </Function>
         <Function Name="GetIdFromEmail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
@@ -638,7 +646,39 @@
           <FunctionImport Name="LastLoginUpdate">
           <Parameter Name="username" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="ChangePassword">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="NewPassword" Mode="In" Type="String" />
+            <Parameter Name="NewSalt" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteUser" ReturnType="Collection(npruessnerEModel.DeleteUser_Result1)">
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="DeleteUser_Result">
+          <Property Type="Int64" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="PrivilegeID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="DeleteUser_Result1">
+          <Property Type="Int64" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Hash" Nullable="true" MaxLength="500" />
+          <Property Type="Binary" Name="Salt" Nullable="true" MaxLength="24" />
+          <Property Type="DateTime" Name="CreationDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="LastLoginDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="IsLocked" Nullable="false" />
+          <Property Type="String" Name="PasswordQuestion" Nullable="true" />
+          <Property Type="String" Name="PasswordAnswer" Nullable="true" />
+          <Property Type="String" Name="ActivationToken" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="DateOfBirth" Nullable="true" />
+          <Property Type="String" Name="PhoneNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="LockoutEnabled" Nullable="false" />
+          <Property Type="Int32" Name="AccessFailedCount" Nullable="false" />
+          <Property Type="String" Name="TempAccessCode" Nullable="true" MaxLength="100" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -788,6 +828,31 @@
           <FunctionImportMapping FunctionImportName="SetupSystem" FunctionName="npruessnerEModel.Store.SetupSystem" />
           <FunctionImportMapping FunctionImportName="UpdateUser" FunctionName="npruessnerEModel.Store.UpdateUser" />
           <FunctionImportMapping FunctionImportName="LastLoginUpdate" FunctionName="npruessnerEModel.Store.LastLoginUpdate" />
+          <FunctionImportMapping FunctionImportName="ChangePassword" FunctionName="npruessnerEModel.Store.ChangePassword" />
+          <FunctionImportMapping FunctionImportName="DeleteUser" FunctionName="npruessnerEModel.Store.DeleteUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="npruessnerEModel.DeleteUser_Result1">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Hash" ColumnName="Hash" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+                <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+                <ScalarProperty Name="ActivationToken" ColumnName="ActivationToken" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="TempAccessCode" ColumnName="TempAccessCode" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

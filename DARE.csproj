@@ -177,6 +177,12 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PrivilegeController.cs" />
     <Compile Include="Controllers\PrivilegeProvider.cs" />
+    <Compile Include="Models\DeleteUser_Result.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeleteUser_Result1.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="MyRoleProvider.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -399,7 +405,7 @@
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\ManageLogins.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
@@ -412,12 +418,13 @@
     <Content Include="Views\Account\UnauthorizedAccess.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\User\Permissions.cshtml" />
+    <Content Include="Views\User\Privileges.cshtml" />
     <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\User\UserProfile.cshtml" />
+    <Content Include="Views\User\UserProfileEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

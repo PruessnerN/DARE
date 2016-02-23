@@ -54,12 +54,12 @@
                     data: { username: userid, password: pass },
                     cache: false,
                     type: "POST",
-                    success: function (status) {
-                        if (status.message == "1") {
+                    success: function (message) {
+                        if (message == 1) {
                             $this.addClass('ok');
                             $state.html('Welcome back!');
                             setTimeout(function () {
-                                window.top.location = status.redirecturl;
+                                window.top.location = '/Home/Index';
                             }, 1000)
                         } else {
                             $state.html('Incorrect username or password!');

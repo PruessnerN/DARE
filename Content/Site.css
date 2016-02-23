@@ -109,6 +109,7 @@ textarea {
         padding: 10px 15px;
     }
     .icon::before {
+        cursor: default;
         display: inline-block;
         margin-right: .2em;
         font: normal normal normal 14px/1 FontAwesome;
@@ -707,12 +708,38 @@ textarea {
     }
     .header {
         margin-bottom: 40px;
+        margin-top: 40px;
     }
     .text-danger {
         color: #F41710;
         font-weight: bold;
-        font-size: 1.6em;
+        font-size: 1em;
     }
+/*########## START USER PROFILE STYLING #########*/
+    .profileInputGroup {
+        display: inline-block !important;
+        width: 45%;
+    }
+    .form-control {
+        border-radius: 0 !important;
+    }
+    #profileImage {
+        float:left;
+    }
+    #profileImage * {
+        margin: 7px;
+    }
+    #profileInfo {
+        float:left;
+    }
+    .largeIcon {
+        font-size: 4em;
+    }
+    .largeIcon::before {
+        text-align:center;
+        margin: 30px auto 0 auto;
+    }
+
 }
 
 

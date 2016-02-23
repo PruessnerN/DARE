@@ -7,9 +7,9 @@
 
         <ul id="userIconParent" class="nav nav-tabs nav-stacked">
             <li style="border-top:none;">
-                @if (Session["Name"] != null)
+                @if (User.Identity.IsAuthenticated)
                 {
-                    @Html.ActionLink(Session["Name"].ToString(), "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
+                    @Html.ActionLink(User.Identity.Name, "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
                 }
                 else
                 {

@@ -8,106 +8,70 @@
     <h2>Details - @Model.FirstName @Model.LastName</h2>
 </div>
 <div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreationDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreationDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastLoginDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastLoginDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsLocked)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsLocked)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PasswordQuestion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PasswordQuestion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PasswordAnswer)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PasswordAnswer)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.AccessFailedCount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AccessFailedCount)
-        </dd>
-
-    </dl>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.UserID)" type="button">@Html.DisplayNameFor(model => model.UserID)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.UserID">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.Username)" type="button">@Html.DisplayNameFor(model => model.Username)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.Username">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.Email)" type="button">@Html.DisplayNameFor(model => model.Email)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.Email">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.CreationDate)" type="button">@Html.DisplayNameFor(model => model.CreationDate)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.CreationDate">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.LastLoginDate)" type="button">@Html.DisplayNameFor(model => model.LastLoginDate)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.LastLoginDate">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.PasswordQuestion)" type="button">@Html.DisplayNameFor(model => model.PasswordQuestion)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.PasswordQuestion">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.PasswordAnswer)" type="button">@Html.DisplayNameFor(model => model.PasswordAnswer)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.PasswordAnswer">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.DateOfBirth)" type="button">@Html.DisplayNameFor(model => model.DateOfBirth)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.DateOfBirth.Value.ToShortDateString()">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.PhoneNumber)" type="button">@Html.DisplayNameFor(model => model.PhoneNumber)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@String.Format("{0:(###) ###-####}", Convert.ToInt64(Model.PhoneNumber))">
+    </div>
+    <div class="input-group profileInputGroup">
+        <span class="input-group-btn">
+            <button class="btn red" onclick="window.location.href='/User/UserProfileEdit'" data-toggle="tooltip" data-placement="right" title="Change @Html.DisplayNameFor(model => model.AccessFailedCount)" type="button">@Html.DisplayNameFor(model => model.AccessFailedCount)</button>
+        </span>
+        <input type="text" readonly class="form-control" value="@Model.AccessFailedCount">
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserID }, new { @class = "red btn" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "red btn" })
-</p>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.UserID }, new { @class = "red btn" })
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "red btn" })
+    </div>
+</div>

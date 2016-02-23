@@ -10,6 +10,7 @@ using System.Web.Security;
 using System.Data.Entity;
 using System.Text;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json.Linq;
 
 namespace DARE.Controllers
 {
@@ -18,6 +19,8 @@ namespace DARE.Controllers
     {
         //create an instance of the database (model)
         npruessnerEEntities db = new npruessnerEEntities();
+        private int SALT_BYTE_SIZE = 24;
+
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Login()
@@ -43,26 +46,10 @@ namespace DARE.Controllers
        
 
         [HttpPost]
-        public JsonResult ValidateUser(string username, string password)
+        public int ValidateUser(string username, string password)
         {
-            int count;
-            if (username != null)
-            {
-                byte[] salt = db.ufn_GetSalt(username);
-                if (salt != null)
-                {
-                    var hashedPassword = Hash.CreateHash(password, salt);
-                    count = db.AuthenticateUser(username, hashedPassword);
-                }
-                else
-                {
-                    count = 0;
-                }
-            }
-            else
-            {
-                count = 0;
-            }
+            int count = CheckUser(username, password);
+            
             if (count == 1)
             {
                 FormsAuthentication.SetAuthCookie(username, false);
@@ -70,22 +57,35 @@ namespace DARE.Controllers
                 User user = db.Users.Where(m => m.Username == username).Single();
                 db.LastLoginUpdate(username);
                 Session["Name"] = user.FirstName + " " + user.LastName;
-                var status = new jsonObject { message = "1", redirecturl = url };
-                return Json(status);
+                return 1;
             }
             else
             {
-                var status = new jsonObject { message = "0", redirecturl = "Account/Login" };
-                return Json(status);
+                return 0;
             }
         }
 
-        private class jsonObject
+        public int CheckUser(string username, string password)
         {
-            public string message { get; set; }
-            public string redirecturl { get; set; }
+            if (username != null)
+            {
+                byte[] salt = db.ufn_GetSalt(username);
+                if (salt != null)
+                {
+                    var hashedPassword = Hash.CreateHash(password, salt);
+                    int authenticated = db.AuthenticateUser(username, hashedPassword);
+                    return authenticated;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
         }
-
 
         public ActionResult Logout()
         {
@@ -101,6 +101,39 @@ namespace DARE.Controllers
         public ActionResult ResetPassword()
         {
             return View();
+        }
+        // GET: /Manage/ChangePassword
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var username = User.Identity.Name;            
+            if ((CheckUser(username, model.OldPassword) == 1) && (model.NewPassword == model.ConfirmPassword) && (username != null))
+            {
+                RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
+                byte[] salt = new byte[SALT_BYTE_SIZE];
+                csprng.GetBytes(salt);
+
+                var hashedPassword = Hash.CreateHash(model.NewPassword, salt);
+                db.ChangePassword(username,hashedPassword, salt);
+
+                return RedirectToAction("Logout");
+            } else {
+                ViewBag.Error = "Incorrect Information!";
+                return View();
+            }
         }
 
         public ActionResult UnauthorizedAccess()

@@ -260,5 +260,31 @@ namespace DARE.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LastLoginUpdate", usernameParameter);
         }
+    
+        public virtual int ChangePassword(string username, string newPassword, byte[] newSalt)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            var newPasswordParameter = newPassword != null ?
+                new ObjectParameter("NewPassword", newPassword) :
+                new ObjectParameter("NewPassword", typeof(string));
+    
+            var newSaltParameter = newSalt != null ?
+                new ObjectParameter("NewSalt", newSalt) :
+                new ObjectParameter("NewSalt", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ChangePassword", usernameParameter, newPasswordParameter, newSaltParameter);
+        }
+    
+        public virtual ObjectResult<DeleteUser_Result1> DeleteUser(Nullable<long> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DeleteUser_Result1>("DeleteUser", userIDParameter);
+        }
     }
 }
