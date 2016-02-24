@@ -4,13 +4,42 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Security;
 
 namespace DARE.Controllers
 {
-    public class PrivilegeProvider
+    public class AuthorizeUserAttribute : AuthorizeAttribute
     {
-        npruessnerEEntities db = new npruessnerEEntities();
+        AccessProvider pp = new AccessProvider();
+        npruessnerEEntities1 db = new npruessnerEEntities1();
+        // Custom property
+        public int Privilege { get; set; }
+
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            var isAuthorized = base.AuthorizeCore(httpContext);
+            if (!isAuthorized)
+            {
+                return false;
+            }
+
+            bool privileged = pp.HavePrivilege(db.ufn_GetUserID(httpContext.User.Identity.Name.ToString()), this.Privilege);
+            
+            if (privileged)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    public class AccessProvider
+    {
+        npruessnerEEntities1 db = new npruessnerEEntities1();
 
         public void AddPrivilegeToUser(long? id, string permName)
         {
@@ -39,15 +68,15 @@ namespace DARE.Controllers
 
         public UserPrivilege[] GetUserPrivileges(long? id)
         {
-            int permCount = db.Privileges.Count();
+            int permCount = db.Entities.Count();
             UserPrivilege[] userPriv = new UserPrivilege[permCount];
-            Privilege[] priv = new Privilege[permCount];
+            Entity[] priv = new Entity[permCount];
 
-            priv = db.Privileges.SqlQuery("SELECT * FROM PRIVILEGE").ToArray();
+            priv = db.Entities.SqlQuery("SELECT * FROM PRIVILEGE").ToArray();
 
             for (int j = 0; j < permCount; j++)
             {
-                if (HavePrivilege(id, priv[j]))
+                if (HavePrivilege(id, priv[j].EntityID))
                 {
                     userPriv[j] = new UserPrivilege
                     {
@@ -74,9 +103,9 @@ namespace DARE.Controllers
             throw new NotImplementedException();
         }
 
-        public bool HavePrivilege(long? id, Privilege priv)
+        public bool HavePrivilege(long? id, int priv)
         {
-            return db.ufn_HavePrivilege(id, priv.PrivilegeID);
+            return db.ufn_HavePrivilege(id, priv);
         }
 
         public void RemovePrivilegeFromUser(long? id, string privName)
@@ -89,9 +118,9 @@ namespace DARE.Controllers
             throw new NotImplementedException();
         }
 
-        public Privilege GetPrivilege(int privilegeID)
+        public Entity GetPrivilege(int privilegeID)
         {
-            Privilege perm = db.Privileges.Find(privilegeID);
+            Entity perm = db.Entities.Find(privilegeID);
             return perm;
         }
     }

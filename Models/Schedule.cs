@@ -20,6 +20,6 @@ namespace DARE.Models
         public string Description { get; set; }
         public Nullable<System.DateTime> DateSequence { get; set; }
     
-        public virtual Device Device { get; set; }
+        public virtual Client Client { get; set; }
     }
 }

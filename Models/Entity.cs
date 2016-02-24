@@ -12,19 +12,25 @@ namespace DARE.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Privilege
+    public partial class Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Privilege()
+        public Entity()
         {
             this.Users = new HashSet<User>();
+            this.Actions = new HashSet<Action>();
         }
     
-        public int PrivilegeID { get; set; }
+        public int EntityID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string StateDescriptor { get; set; }
+        public Nullable<int> ClientID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
+        public virtual Client Client { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Action> Actions { get; set; }
     }
 }

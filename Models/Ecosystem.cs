@@ -12,15 +12,16 @@ namespace DARE.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Event
+    public partial class Ecosystem
     {
-        public int EventID { get; set; }
-        public int DeviceID { get; set; }
+        public int SystemID { get; set; }
         public string Name { get; set; }
-        public string Type { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public Nullable<System.DateTime> DateInitiated { get; set; }
+        public string HomeAddress { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZIP { get; set; }
         public string Description { get; set; }
-    
-        public virtual Client Client { get; set; }
+        public string FamilyName { get; set; }
     }
 }

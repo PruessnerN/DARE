@@ -12,16 +12,19 @@ namespace DARE.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DARESystem
+    public partial class Action
     {
-        public int SystemID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Action()
+        {
+            this.Entities = new HashSet<Entity>();
+        }
+    
+        public int ActionID { get; set; }
         public string Name { get; set; }
-        public Nullable<System.DateTime> DateInitiated { get; set; }
-        public string HomeAddress { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string ZIP { get; set; }
         public string Description { get; set; }
-        public string FamilyName { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Entity> Entities { get; set; }
     }
 }

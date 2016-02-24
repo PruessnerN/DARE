@@ -15,10 +15,10 @@ namespace DARE.Models
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class npruessnerEEntities : DbContext
+    public partial class npruessnerEEntities1 : DbContext
     {
-        public npruessnerEEntities()
-            : base("name=npruessnerEEntities")
+        public npruessnerEEntities1()
+            : base("name=npruessnerEEntities1")
         {
         }
     
@@ -27,15 +27,16 @@ namespace DARE.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Device> Devices { get; set; }
+        public virtual DbSet<Action> Actions { get; set; }
+        public virtual DbSet<Entity> Entities { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
-        public virtual DbSet<Privilege> Privileges { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<SensorData> SensorDatas { get; set; }
-        public virtual DbSet<DARESystem> DARESystems { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
+        public virtual DbSet<Ecosystem> Ecosystems { get; set; }
     
         public virtual int AddPrivilegeToUser(Nullable<long> userID, string privilegeName)
         {
@@ -61,6 +62,23 @@ namespace DARE.Models
                 new ObjectParameter("Hash", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AuthenticateUser", usernameParameter, hashParameter);
+        }
+    
+        public virtual int ChangePassword(string username, string newPassword, byte[] newSalt)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            var newPasswordParameter = newPassword != null ?
+                new ObjectParameter("NewPassword", newPassword) :
+                new ObjectParameter("NewPassword", typeof(string));
+    
+            var newSaltParameter = newSalt != null ?
+                new ObjectParameter("NewSalt", newSalt) :
+                new ObjectParameter("NewSalt", typeof(byte[]));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ChangePassword", usernameParameter, newPasswordParameter, newSaltParameter);
         }
     
         public virtual int CreateUser(string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string firstName, string lastName, Nullable<int> roleID)
@@ -112,6 +130,15 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateUser", usernameParameter, emailParameter, passwordParameter, saltParameter, phoneNumberParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, firstNameParameter, lastNameParameter, roleIDParameter);
         }
     
+        public virtual int DeleteUser(Nullable<long> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteUser", userIDParameter);
+        }
+    
         public virtual int GetIdFromEmail(string email)
         {
             var emailParameter = email != null ?
@@ -119,6 +146,15 @@ namespace DARE.Models
                 new ObjectParameter("Email", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetIdFromEmail", emailParameter);
+        }
+    
+        public virtual int LastLoginUpdate(string username)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("username", username) :
+                new ObjectParameter("username", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LastLoginUpdate", usernameParameter);
         }
     
         public virtual int RemovePrivilegeFromUser(Nullable<long> userID, string name)
@@ -250,41 +286,6 @@ namespace DARE.Models
                 new ObjectParameter("RoleID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUser", userIDParameter, usernameParameter, emailParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, phoneNumberParameter, firstNameParameter, lastNameParameter, roleIDParameter);
-        }
-    
-        public virtual int LastLoginUpdate(string username)
-        {
-            var usernameParameter = username != null ?
-                new ObjectParameter("username", username) :
-                new ObjectParameter("username", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LastLoginUpdate", usernameParameter);
-        }
-    
-        public virtual int ChangePassword(string username, string newPassword, byte[] newSalt)
-        {
-            var usernameParameter = username != null ?
-                new ObjectParameter("Username", username) :
-                new ObjectParameter("Username", typeof(string));
-    
-            var newPasswordParameter = newPassword != null ?
-                new ObjectParameter("NewPassword", newPassword) :
-                new ObjectParameter("NewPassword", typeof(string));
-    
-            var newSaltParameter = newSalt != null ?
-                new ObjectParameter("NewSalt", newSalt) :
-                new ObjectParameter("NewSalt", typeof(byte[]));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ChangePassword", usernameParameter, newPasswordParameter, newSaltParameter);
-        }
-    
-        public virtual ObjectResult<DeleteUser_Result1> DeleteUser(Nullable<long> userID)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DeleteUser_Result1>("DeleteUser", userIDParameter);
         }
     }
 }

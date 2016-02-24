@@ -13,26 +13,26 @@ using System.Security.Cryptography;
 namespace DARE.Controllers
 {
     
-    public class DARESystemController : Controller
+    public class EcosystemController : Controller
     {
         private int SALT_BYTE_SIZE = 24;
 
-        private npruessnerEEntities db = new npruessnerEEntities();
+        private npruessnerEEntities1 db = new npruessnerEEntities1();
 
-        // GET: DARESystem
+        // GET: Ecosystem
         public ActionResult Index()
         {
-            return View(db.DARESystems.ToList());
+            return View(db.Ecosystems.ToList());
         }
 
-        // GET: DARESystem/Details/5
+        // GET: Ecosystem/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DARESystem dARESystem = db.DARESystems.Find(id);
+            Ecosystem dARESystem = db.Ecosystems.Find(id);
             if (dARESystem == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace DARE.Controllers
             return View(dARESystem);
         }
 
-        // GET: DARESystem/Create
+        // GET: Ecosystem/Create
         public ActionResult Create()
         {
             if(TempData["setupAccessKey"] != null)
@@ -60,7 +60,7 @@ namespace DARE.Controllers
             }
         }
 
-        // POST: DARESystem/Create
+        // POST: Ecosystem/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -93,14 +93,14 @@ namespace DARE.Controllers
             }
         }
 
-        // GET: DARESystem/Edit/5
+        // GET: Ecosystem/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DARESystem dARESystem = db.DARESystems.Find(id);
+            Ecosystem dARESystem = db.Ecosystems.Find(id);
             if (dARESystem == null)
             {
                 return HttpNotFound();
@@ -108,12 +108,12 @@ namespace DARE.Controllers
             return View(dARESystem);
         }
 
-        // POST: DARESystem/Edit/5
+        // POST: Ecosystem/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] DARESystem dARESystem)
+        public ActionResult Edit([Bind(Include = "Name,DateInitiated,HomeAddress,City,State,ZIP,Description,FamilyName")] Ecosystem dARESystem)
         {
             if (ModelState.IsValid)
             {
@@ -124,14 +124,14 @@ namespace DARE.Controllers
             return View(dARESystem);
         }
 
-        // GET: DARESystem/Delete/5
+        // GET: Ecosystem/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DARESystem dARESystem = db.DARESystems.Find(id);
+            Ecosystem dARESystem = db.Ecosystems.Find(id);
             if (dARESystem == null)
             {
                 return HttpNotFound();
@@ -139,13 +139,13 @@ namespace DARE.Controllers
             return View(dARESystem);
         }
 
-        // POST: DARESystem/Delete/5
+        // POST: Ecosystem/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            DARESystem dARESystem = db.DARESystems.Find(id);
-            db.DARESystems.Remove(dARESystem);
+            Ecosystem dARESystem = db.Ecosystems.Find(id);
+            db.Ecosystems.Remove(dARESystem);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

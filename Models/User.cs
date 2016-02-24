@@ -18,7 +18,7 @@ namespace DARE.Models
         public User()
         {
             this.Notes = new HashSet<Note>();
-            this.Privileges = new HashSet<Privilege>();
+            this.Entities = new HashSet<Entity>();
             this.Roles = new HashSet<Role>();
         }
     
@@ -44,7 +44,7 @@ namespace DARE.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Note> Notes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Privilege> Privileges { get; set; }
+        public virtual ICollection<Entity> Entities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
     }

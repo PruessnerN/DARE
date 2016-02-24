@@ -21,6 +21,6 @@ namespace DARE.Models
         public Nullable<int> Data { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     
-        public virtual Device Device { get; set; }
+        public virtual Client Client { get; set; }
     }
 }

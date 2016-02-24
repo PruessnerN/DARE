@@ -18,7 +18,7 @@ namespace DARE.Controllers
     public class AccountController : Controller
     {
         //create an instance of the database (model)
-        npruessnerEEntities db = new npruessnerEEntities();
+        npruessnerEEntities1 db = new npruessnerEEntities1();
         private int SALT_BYTE_SIZE = 24;
 
         [AllowAnonymous]

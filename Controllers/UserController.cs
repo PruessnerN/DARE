@@ -14,8 +14,8 @@ namespace DARE.Controllers
 {
     public class UserController : Controller
     {
-        private npruessnerEEntities db = new npruessnerEEntities();
-        private PrivilegeProvider pp = new PrivilegeProvider();
+        private npruessnerEEntities1 db = new npruessnerEEntities1();
+        private AccessProvider pp = new AccessProvider();
         private int SALT_BYTE_SIZE = 24;
 
         // GET: Users
@@ -104,15 +104,15 @@ namespace DARE.Controllers
             }
             var viewmodel = new UserPrivilegeViewModel
             {
-                User = db.Users.Include(i => i.Privileges).First(i => i.UserID == id),
+                User = db.Users.Include(i => i.Entities).First(i => i.UserID == id),
                 UserPrivilegeArray = pp.GetUserPrivileges(id)
             };
 
-            var allPermissionsList = db.Privileges.ToList();
+            var allPermissionsList = db.Entities.ToList();
             viewmodel.AllPrivileges = allPermissionsList.Select(o => new SelectListItem
             {
                 Text = o.Name,
-                Value = o.PrivilegeID.ToString()
+                Value = o.EntityID.ToString()
             });
             return View(viewmodel);
         }

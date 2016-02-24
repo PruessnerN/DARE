@@ -12,22 +12,25 @@ namespace DARE.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Device
+    public partial class Client
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Device()
+        public Client()
         {
+            this.Entities = new HashSet<Entity>();
             this.Events = new HashSet<Event>();
             this.Schedules = new HashSet<Schedule>();
             this.SensorDatas = new HashSet<SensorData>();
         }
     
-        public int DeviceID { get; set; }
+        public int ClientID { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string ClientCode { get; set; }
         public string Description { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Entity> Entities { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Event> Events { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

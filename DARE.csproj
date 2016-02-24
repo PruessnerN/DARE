@@ -175,18 +175,12 @@
     <Compile Include="Controllers\HashSaltController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PrivilegeController.cs" />
-    <Compile Include="Controllers\PrivilegeProvider.cs" />
-    <Compile Include="Models\DeleteUser_Result.cs">
+    <Compile Include="Controllers\AccessProvider.cs" />
+    <Compile Include="Models\Action.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DeleteUser_Result1.cs">
+    <Compile Include="Models\Client.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MyRoleProvider.cs" />
-    <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DAREModel.Context.cs">
       <AutoGen>True</AutoGen>
@@ -203,22 +197,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DAREModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\DARESystem.cs">
+    <Compile Include="Models\Ecosystem.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Device.cs">
+    <Compile Include="Models\Entity.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Event.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Functions.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Note.cs">
-      <DependentUpon>DAREModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Privilege.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Role.cs">
@@ -230,10 +218,18 @@
     <Compile Include="Models\SensorData.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\States.cs" />
     <Compile Include="Models\User.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="MyRoleProvider.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Functions.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\ManageViewModels.cs" />
+    <Compile Include="Models\States.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -265,13 +261,6 @@
       <LastGenOutput>DAREModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap-datepicker.js" />
-    <EntityDeploy Include="Models\DAREModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DAREModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\DAREModel.edmx.diagram">
-      <DependentUpon>DAREModel.edmx</DependentUpon>
-    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -355,6 +344,13 @@
     <Content Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
+    <EntityDeploy Include="Models\DAREModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DAREModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DAREModel.edmx.diagram">
+      <DependentUpon>DAREModel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -425,6 +421,11 @@
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\User\UserProfile.cshtml" />
     <Content Include="Views\User\UserProfileEdit.cshtml" />
+    <Content Include="Views\Devices\Create.cshtml" />
+    <Content Include="Views\Devices\Delete.cshtml" />
+    <Content Include="Views\Devices\Details.cshtml" />
+    <Content Include="Views\Devices\Edit.cshtml" />
+    <Content Include="Views\Devices\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

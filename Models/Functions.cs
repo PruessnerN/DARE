@@ -8,7 +8,7 @@ using System.Web;
 
 namespace DARE.Models
 {
-    public partial class npruessnerEEntities
+    public partial class npruessnerEEntities1
     {
         [DbFunction("npruessnerEModel.Store", "ufn_GetSalt")]
         public byte[] ufn_GetSalt(string username)

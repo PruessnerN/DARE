@@ -49,7 +49,7 @@ namespace DARE
 
         public override string[] GetRolesForUser(string username)
         {
-            npruessnerEEntities db = new npruessnerEEntities();
+            npruessnerEEntities1 db = new npruessnerEEntities1();
             int i = db.ufn_GetRoleForUser(username);
             string[] resultS = { i.ToString() };
             return resultS;
