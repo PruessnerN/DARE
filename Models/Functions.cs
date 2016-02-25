@@ -30,27 +30,6 @@ namespace DARE.Models
             return output;
         }
 
-        [DbFunction("npruessnerEModel.Store", "ufn_GetCartID")]
-        public int ufn_GetCartID(string username)
-        {
-            List<ObjectParameter> parameters = new List<ObjectParameter>();
-            parameters.Add(new ObjectParameter("Username", username));
-            var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
-            int output = lObjectContext.CreateQuery<int>("npruessnerEModel.Store.ufn_GetCartID(@Username)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
-            return output;
-        }
-
-        [DbFunction("npruessnerEModel.Store", "ufn_HavePrivilege")]
-        public bool ufn_HavePrivilege(long? userid, int privilegeid)
-        {
-            List<ObjectParameter> parameters = new List<ObjectParameter>();
-            parameters.Add(new ObjectParameter("UserID", userid));
-            parameters.Add(new ObjectParameter("PrivilegeID", privilegeid));
-            var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
-            bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HavePrivilege(@UserID, @PrivilegeID)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
-            return output;
-        }
-
         [DbFunction("npruessnerEModel.Store", "ufn_GetUserID")]
         public long? ufn_GetUserID(string username)
         {
@@ -66,6 +45,17 @@ namespace DARE.Models
         {
             var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
             bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HaveUsers()").Execute(MergeOption.NoTracking).FirstOrDefault();
+            return output;
+        }
+
+        [DbFunction("npruessnerEModel.Store", "ufn_HaveAccess")]
+        public bool ufn_HaveAccess(long? userid, int entityid)
+        {
+            List<ObjectParameter> parameters = new List<ObjectParameter>();
+            parameters.Add(new ObjectParameter("UserID", userid));
+            parameters.Add(new ObjectParameter("EntityID", entityid));
+            var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
+            bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HaveAccess(@UserID, @EntityID)").Execute(MergeOption.NoTracking).FirstOrDefault();
             return output;
         }
     }

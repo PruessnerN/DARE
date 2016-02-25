@@ -7,21 +7,22 @@ using System.Web.Mvc;
 
 namespace DARE.ViewModels
 {
-    public class UserPrivilege
+    public class UserAccess
     {
+        public int EntityID { get; set; }
         public string Name { get; set; }
         public bool IsSet { get; set; }
         public string Description { get; set; }
     }
 
-    public class UserPrivilegeViewModel
+    public class UserAccessViewModel
     {
-        public UserPrivilege[] UserPrivilegeArray { get; set; }
-        public IEnumerable<SelectListItem> AllPrivileges { get; set; }
+        public UserAccess[] UserAccessArray { get; set; }
+        public IEnumerable<SelectListItem> AllEntities { get; set; }
         public User User { get; set; }
     }
 
-    public class PermissionOptionList
+    public class EntityOptionList
     {
         public static List<SelectListItem> options = new List<SelectListItem>()
         {

@@ -96,20 +96,21 @@ namespace DARE.Controllers
         }
         [Authorize(Roles = "3")]
         [HttpGet]
-        public ActionResult Privileges(long? id)
+        public ActionResult UserAccess(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var viewmodel = new UserPrivilegeViewModel
+            UserAccess[] userAccessArray = pp.GetUserAccess(id);
+            var viewmodel = new UserAccessViewModel
             {
-                User = db.Users.Include(i => i.Entities).First(i => i.UserID == id),
-                UserPrivilegeArray = pp.GetUserPrivileges(id)
+                UserAccessArray = userAccessArray,
+                User = db.Users.Find(id)
             };
 
-            var allPermissionsList = db.Entities.ToList();
-            viewmodel.AllPrivileges = allPermissionsList.Select(o => new SelectListItem
+            var allEntitiesList = db.Entities.ToList();
+            viewmodel.AllEntities = allEntitiesList.Select(o => new SelectListItem
             {
                 Text = o.Name,
                 Value = o.EntityID.ToString()
@@ -119,30 +120,31 @@ namespace DARE.Controllers
         [Authorize(Roles = "3")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Privileges([Bind(Include = "User, UserPrivilegeArray")] UserPrivilegeViewModel userPriv)
+        public ActionResult UserAccess([Bind(Include = "User, UserAccessArray")] UserAccessViewModel userAccess)
         {
             try
             {
-                UserPrivilege[] oldPermissions = pp.GetUserPrivileges(userPriv.User.UserID);
-
-                for (int i = 0; i < userPriv.UserPrivilegeArray.Length; i++)
+                UserAccess[] oldAccess = pp.GetUserAccess(userAccess.User.UserID);
+                for (int i = 0; i < userAccess.UserAccessArray.Length; i++)
                 {
-                    if (userPriv.UserPrivilegeArray[i].Name.ToString() == oldPermissions[i].Name.ToString() && userPriv.UserPrivilegeArray[i].IsSet.ToString() != oldPermissions[i].IsSet.ToString())
+                    if ((userAccess.UserAccessArray[i].Name.ToString() == oldAccess[i].Name.ToString()) && (userAccess.UserAccessArray[i].IsSet.ToString() != oldAccess[i].IsSet.ToString()))
                     {
-                        if (userPriv.UserPrivilegeArray[i].IsSet == true)
+                        if (userAccess.UserAccessArray[i].IsSet == true)
                         {
-                            pp.AddPrivilegeToUser(userPriv.User.UserID, userPriv.UserPrivilegeArray[i].Name);
+                            pp.AddAccessToUser(userAccess.User.UserID, userAccess.UserAccessArray[i].EntityID);
                         }
-                        else {
-                            pp.RemovePrivilegeFromUser(userPriv.User.UserID, userPriv.UserPrivilegeArray[i].Name);
+                        else
+                        {
+                            pp.RemoveAccessFromUser(userAccess.User.UserID, userAccess.UserAccessArray[i].EntityID);
                         }
                     }
                 }
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception e)
             {
-                return View(userPriv);
+                ViewBag.Error = e;
+                return RedirectToAction("UserAccess");
             }
         }
         

@@ -17,20 +17,20 @@ namespace DARE.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Entity()
         {
-            this.Users = new HashSet<User>();
             this.Actions = new HashSet<Action>();
+            this.Users = new HashSet<User>();
         }
     
         public int EntityID { get; set; }
+        public Nullable<int> ClientID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string StateDescriptor { get; set; }
-        public Nullable<int> ClientID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> Users { get; set; }
         public virtual Client Client { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Action> Actions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> Users { get; set; }
     }
 }

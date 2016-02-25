@@ -136,10 +136,10 @@
         <EntityType Name="UserEntity">
           <Key>
             <PropertyRef Name="UserID" />
-            <PropertyRef Name="PrivilegeID" />
+            <PropertyRef Name="EntityID" />
           </Key>
           <Property Name="UserID" Type="bigint" Nullable="false" />
-          <Property Name="PrivilegeID" Type="int" Nullable="false" />
+          <Property Name="EntityID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
@@ -249,7 +249,7 @@
               <PropertyRef Name="EntityID" />
             </Principal>
             <Dependent Role="UserEntity">
-              <PropertyRef Name="PrivilegeID" />
+              <PropertyRef Name="EntityID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -293,10 +293,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="AddPrivilegeToUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserID" Type="bigint" Mode="In" />
-          <Parameter Name="PrivilegeName" Type="nvarchar" Mode="In" />
-        </Function>
         <Function Name="AuthenticateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="Hash" Type="nvarchar" Mode="In" />
@@ -322,16 +318,27 @@
         <Function Name="DeleteUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
         </Function>
-        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
-        <Function Name="GetIdFromEmail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+        <Function Name="GetEntityAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="bigint" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="UserID" Type="bigint" Nullable="false" />
+                <Property Name="PrivilegeID" Type="int" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GiveEntityAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="bigint" Mode="In" />
+          <Parameter Name="EntityID" Type="int" Mode="In" />
         </Function>
         <Function Name="LastLoginUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="username" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="RemovePrivilegeFromUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="RemoveEntityAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
-          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="EntityID" Type="int" Mode="In" />
         </Function>
         <Function Name="SetupSystem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SystemName" Type="nvarchar" Mode="In" />
@@ -361,9 +368,9 @@
         <Function Name="ufn_GetUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bigint">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="ufn_HavePrivilege" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit">
+        <Function Name="ufn_HaveAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
-          <Parameter Name="PrivilegeID" Type="int" Mode="In" />
+          <Parameter Name="EntityID" Type="int" Mode="In" />
         </Function>
         <Function Name="ufn_HaveUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit" />
         <Function Name="UpdateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -450,19 +457,6 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Entities" Relationship="npruessnerEModel.EntityAction" FromRole="Action" ToRole="Entity" />
         </EntityType>
-        <EntityType Name="Entity">
-          <Key>
-            <PropertyRef Name="EntityID" />
-          </Key>
-          <Property Name="EntityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="StateDescriptor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Users" Relationship="Self.UserEntity" FromRole="Entity" ToRole="User" />
-          <Property Name="ClientID" Type="Int32" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Entity" ToRole="Client" />
-          <NavigationProperty Name="Actions" Relationship="npruessnerEModel.EntityAction" FromRole="Entity" ToRole="Action" />
-        </EntityType>
         <EntityType Name="Event">
           <Key>
             <PropertyRef Name="EventID" />
@@ -546,8 +540,8 @@
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="TempAccessCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Notes" Relationship="Self.FK_Note_User" FromRole="User" ToRole="Note" />
-          <NavigationProperty Name="Entities" Relationship="Self.UserEntity" FromRole="User" ToRole="Entity" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Entities" Relationship="npruessnerEModel.UserEntity" FromRole="User" ToRole="Entity" />
         </EntityType>
         <Association Name="FK_Note_User">
           <End Role="User" Type="Self.User" Multiplicity="1">
@@ -563,17 +557,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="UserEntity">
-          <End Role="Entity" Type="Self.Entity" Multiplicity="*" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-        </Association>
         <Association Name="UserRole">
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
         </Association>
         <EntityContainer Name="npruessnerEEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Actions" EntityType="Self.Action" />
-          <EntitySet Name="Entities" EntityType="Self.Entity" />
           <EntitySet Name="Events" EntityType="Self.Event" />
           <EntitySet Name="Notes" EntityType="Self.Note" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
@@ -584,18 +573,10 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Note" EntitySet="Notes" />
           </AssociationSet>
-          <AssociationSet Name="UserEntity" Association="Self.UserEntity">
-            <End Role="Entity" EntitySet="Entities" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
           <AssociationSet Name="UserRole" Association="Self.UserRole">
             <End Role="Role" EntitySet="Roles" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
-          <FunctionImport Name="AddPrivilegeToUser">
-            <Parameter Name="UserID" Mode="In" Type="Int64" />
-            <Parameter Name="PrivilegeName" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="AuthenticateUser">
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Hash" Mode="In" Type="String" />
@@ -621,15 +602,8 @@
           <FunctionImport Name="DeleteUser">
           <Parameter Name="UserID" Mode="In" Type="Int64" />
           </FunctionImport>
-          <FunctionImport Name="GetIdFromEmail">
-          <Parameter Name="Email" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="LastLoginUpdate">
           <Parameter Name="username" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="RemovePrivilegeFromUser">
-            <Parameter Name="UserID" Mode="In" Type="Int64" />
-            <Parameter Name="Name" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SetupSystem">
             <Parameter Name="SystemName" Mode="In" Type="String" />
@@ -663,10 +637,6 @@
             <Parameter Name="RoleID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Clients" EntityType="npruessnerEModel.Client" />
-          <AssociationSet Name="FK_Entity_Controller" Association="npruessnerEModel.FK_Entity_Controller">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Entity" EntitySet="Entities" />
-          </AssociationSet>
           <AssociationSet Name="FK_Event_Device" Association="npruessnerEModel.FK_Event_Device">
             <End Role="Client" EntitySet="Clients" />
             <End Role="Event" EntitySet="Events" />
@@ -679,11 +649,31 @@
             <End Role="Client" EntitySet="Clients" />
             <End Role="SensorData" EntitySet="SensorDatas" />
           </AssociationSet>
+          <EntitySet Name="Ecosystems" EntityType="npruessnerEModel.Ecosystem" />
+          <EntitySet Name="Entities" EntityType="npruessnerEModel.Entity" />
+          <AssociationSet Name="FK_Entity_Controller" Association="npruessnerEModel.FK_Entity_Controller">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Entity" EntitySet="Entities" />
+          </AssociationSet>
           <AssociationSet Name="EntityAction" Association="npruessnerEModel.EntityAction">
             <End Role="Action" EntitySet="Actions" />
             <End Role="Entity" EntitySet="Entities" />
           </AssociationSet>
-          <EntitySet Name="Ecosystems" EntityType="npruessnerEModel.Ecosystem" />
+          <AssociationSet Name="UserEntity" Association="npruessnerEModel.UserEntity">
+            <End Role="Entity" EntitySet="Entities" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <FunctionImport Name="GiveEntityAccess">
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="EntityID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RemoveEntityAccess">
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="EntityID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetEntityAccess" IsComposable="true" ReturnType="Collection(npruessnerEModel.GetEntityAccess_Result)">
+            <Parameter Name="userID" Mode="In" Type="Int64" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Client">
           <Key>
@@ -694,25 +684,11 @@
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ClientCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Entities" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Client" ToRole="Entity" />
           <NavigationProperty Name="Events" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Client" ToRole="Event" />
           <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Device" FromRole="Client" ToRole="Schedule" />
           <NavigationProperty Name="SensorDatas" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="Client" ToRole="SensorData" />
+          <NavigationProperty Name="Entities" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Client" ToRole="Entity" />
         </EntityType>
-        <Association Name="FK_Entity_Controller">
-          <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="Entity">
-              <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Event_Device">
           <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="1" />
           <End Type="npruessnerEModel.Event" Role="Event" Multiplicity="*" />
@@ -751,10 +727,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="EntityAction">
-          <End Type="npruessnerEModel.Action" Role="Action" Multiplicity="*" />
-          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
-        </Association>
         <EntityType Name="Ecosystem">
           <Key>
             <PropertyRef Name="SystemID" />
@@ -769,6 +741,45 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FamilyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Entity">
+          <Key>
+            <PropertyRef Name="EntityID" />
+          </Key>
+          <Property Name="EntityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientID" Type="Int32" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StateDescriptor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Entity" ToRole="Client" />
+          <NavigationProperty Name="Actions" Relationship="npruessnerEModel.EntityAction" FromRole="Entity" ToRole="Action" />
+          <NavigationProperty Name="Users" Relationship="npruessnerEModel.UserEntity" FromRole="Entity" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Entity_Controller">
+          <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientID" />
+            </Principal>
+            <Dependent Role="Entity">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EntityAction">
+          <End Type="npruessnerEModel.Action" Role="Action" Multiplicity="*" />
+          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
+        </Association>
+        <Association Name="UserEntity">
+          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
+          <End Type="npruessnerEModel.User" Role="User" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="GetEntityAccess_Result">
+          <Property Type="Int64" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="PrivilegeID" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -781,17 +792,6 @@
                 <ScalarProperty Name="ActionID" ColumnName="ActionID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Entities">
-            <EntityTypeMapping TypeName="npruessnerEModel.Entity">
-              <MappingFragment StoreEntitySet="Entity">
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="EntityID" ColumnName="EntityID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="StateDescriptor" ColumnName="StateDescriptor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -879,14 +879,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="UserEntity" TypeName="npruessnerEModel.UserEntity" StoreEntitySet="UserEntity">
-            <EndProperty Name="Entity">
-              <ScalarProperty Name="EntityID" ColumnName="PrivilegeID" />
-            </EndProperty>
-            <EndProperty Name="User">
-              <ScalarProperty Name="UserID" ColumnName="UserID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="UserRole" TypeName="npruessnerEModel.UserRole" StoreEntitySet="UserRole">
             <EndProperty Name="Role">
               <ScalarProperty Name="RoleID" ColumnName="RoleID" />
@@ -895,14 +887,11 @@
               <ScalarProperty Name="UserID" ColumnName="UserID" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="AddPrivilegeToUser" FunctionName="npruessnerEModel.Store.AddPrivilegeToUser" />
           <FunctionImportMapping FunctionImportName="AuthenticateUser" FunctionName="npruessnerEModel.Store.AuthenticateUser" />
           <FunctionImportMapping FunctionImportName="ChangePassword" FunctionName="npruessnerEModel.Store.ChangePassword" />
           <FunctionImportMapping FunctionImportName="CreateUser" FunctionName="npruessnerEModel.Store.CreateUser" />
           <FunctionImportMapping FunctionImportName="DeleteUser" FunctionName="npruessnerEModel.Store.DeleteUser" />
-          <FunctionImportMapping FunctionImportName="GetIdFromEmail" FunctionName="npruessnerEModel.Store.GetIdFromEmail" />
           <FunctionImportMapping FunctionImportName="LastLoginUpdate" FunctionName="npruessnerEModel.Store.LastLoginUpdate" />
-          <FunctionImportMapping FunctionImportName="RemovePrivilegeFromUser" FunctionName="npruessnerEModel.Store.RemovePrivilegeFromUser" />
           <FunctionImportMapping FunctionImportName="SetupSystem" FunctionName="npruessnerEModel.Store.SetupSystem" />
           <FunctionImportMapping FunctionImportName="UpdateUser" FunctionName="npruessnerEModel.Store.UpdateUser" />
           <EntitySetMapping Name="Clients">
@@ -916,14 +905,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="EntityAction" TypeName="npruessnerEModel.EntityAction" StoreEntitySet="EntityAction">
-            <EndProperty Name="Entity">
-              <ScalarProperty Name="EntityID" ColumnName="EntityID" />
-            </EndProperty>
-            <EndProperty Name="Action">
-              <ScalarProperty Name="ActionID" ColumnName="ActionID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="Ecosystems">
             <EntityTypeMapping TypeName="npruessnerEModel.Ecosystem">
               <MappingFragment StoreEntitySet="Ecosystem">
@@ -939,6 +920,43 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Entities">
+            <EntityTypeMapping TypeName="npruessnerEModel.Entity">
+              <MappingFragment StoreEntitySet="Entity">
+                <ScalarProperty Name="StateDescriptor" ColumnName="StateDescriptor" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="EntityAction" TypeName="npruessnerEModel.EntityAction" StoreEntitySet="EntityAction">
+            <EndProperty Name="Entity">
+              <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+            </EndProperty>
+            <EndProperty Name="Action">
+              <ScalarProperty Name="ActionID" ColumnName="ActionID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserEntity" TypeName="npruessnerEModel.UserEntity" StoreEntitySet="UserEntity">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+            <EndProperty Name="Entity">
+              <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="GiveEntityAccess" FunctionName="npruessnerEModel.Store.GiveEntityAccess" />
+          <FunctionImportMapping FunctionImportName="RemoveEntityAccess" FunctionName="npruessnerEModel.Store.RemoveEntityAccess" />
+          <FunctionImportMapping FunctionImportName="GetEntityAccess" FunctionName="npruessnerEModel.Store.GetEntityAccess">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="npruessnerEModel.GetEntityAccess_Result">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="PrivilegeID" ColumnName="PrivilegeID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

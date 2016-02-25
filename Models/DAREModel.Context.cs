@@ -28,7 +28,6 @@ namespace DARE.Models
         }
     
         public virtual DbSet<Action> Actions { get; set; }
-        public virtual DbSet<Entity> Entities { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
@@ -37,19 +36,7 @@ namespace DARE.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Ecosystem> Ecosystems { get; set; }
-    
-        public virtual int AddPrivilegeToUser(Nullable<long> userID, string privilegeName)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(long));
-    
-            var privilegeNameParameter = privilegeName != null ?
-                new ObjectParameter("PrivilegeName", privilegeName) :
-                new ObjectParameter("PrivilegeName", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddPrivilegeToUser", userIDParameter, privilegeNameParameter);
-        }
+        public virtual DbSet<Entity> Entities { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
         {
@@ -139,15 +126,6 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteUser", userIDParameter);
         }
     
-        public virtual int GetIdFromEmail(string email)
-        {
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetIdFromEmail", emailParameter);
-        }
-    
         public virtual int LastLoginUpdate(string username)
         {
             var usernameParameter = username != null ?
@@ -155,19 +133,6 @@ namespace DARE.Models
                 new ObjectParameter("username", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LastLoginUpdate", usernameParameter);
-        }
-    
-        public virtual int RemovePrivilegeFromUser(Nullable<long> userID, string name)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(long));
-    
-            var nameParameter = name != null ?
-                new ObjectParameter("Name", name) :
-                new ObjectParameter("Name", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RemovePrivilegeFromUser", userIDParameter, nameParameter);
         }
     
         public virtual int SetupSystem(string systemName, string homeAddress, string city, string state, string zIP, string description, string familyName, string username, string email, string password, byte[] salt, string phoneNumber, string passwordQuestion, string passwordAnswer, Nullable<System.DateTime> dateOfBirth, string firstName, string lastName)
@@ -286,6 +251,42 @@ namespace DARE.Models
                 new ObjectParameter("RoleID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUser", userIDParameter, usernameParameter, emailParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, phoneNumberParameter, firstNameParameter, lastNameParameter, roleIDParameter);
+        }
+    
+        public virtual int GiveEntityAccess(Nullable<long> userID, Nullable<int> entityID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(long));
+    
+            var entityIDParameter = entityID.HasValue ?
+                new ObjectParameter("EntityID", entityID) :
+                new ObjectParameter("EntityID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GiveEntityAccess", userIDParameter, entityIDParameter);
+        }
+    
+        public virtual int RemoveEntityAccess(Nullable<long> userID, Nullable<int> entityID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(long));
+    
+            var entityIDParameter = entityID.HasValue ?
+                new ObjectParameter("EntityID", entityID) :
+                new ObjectParameter("EntityID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RemoveEntityAccess", userIDParameter, entityIDParameter);
+        }
+    
+        [DbFunction("npruessnerEEntities1", "GetEntityAccess")]
+        public virtual IQueryable<GetEntityAccess_Result> GetEntityAccess(Nullable<long> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetEntityAccess_Result>("[npruessnerEEntities1].[GetEntityAccess](@userID)", userIDParameter);
         }
     }
 }

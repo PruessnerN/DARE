@@ -5,24 +5,24 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="31fa35fca5b542b1bd993e7b6d7f2096" Name="Diagram1" ZoomLevel="59">
-        <EntityTypeShape EntityType="npruessnerEModel.Action" Width="1.5" PointX="5" PointY="8.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.Entity" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.Event" Width="1.5" PointX="3" PointY="6.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.Note" Width="1.5" PointX="7.5" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.Role" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.Schedule" Width="1.5" PointX="3" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.SensorData" Width="1.5" PointX="0.875" PointY="11.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="npruessnerEModel.User" Width="1.5" PointX="5.25" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.Action" Width="1.5" PointX="3.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.Event" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.Note" Width="1.5" PointX="10.5" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.Role" Width="1.5" PointX="6" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.Schedule" Width="1.5" PointX="3" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.SensorData" Width="1.5" PointX="3" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.User" Width="1.5" PointX="8.25" PointY="6.125" IsExpanded="true" />
         <AssociationConnector Association="npruessnerEModel.FK_Note_User" ManuallyRouted="false" />
-        <AssociationConnector Association="npruessnerEModel.UserEntity" ManuallyRouted="false" />
         <AssociationConnector Association="npruessnerEModel.UserRole" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="npruessnerEModel.Client" Width="1.5" PointX="0.75" PointY="7.875" />
-        <AssociationConnector Association="npruessnerEModel.FK_Entity_Controller" />
+        <EntityTypeShape EntityType="npruessnerEModel.Client" Width="1.5" PointX="0.75" PointY="7.25" />
         <AssociationConnector Association="npruessnerEModel.FK_Event_Device" />
         <AssociationConnector Association="npruessnerEModel.FK_Schedule_Device" />
         <AssociationConnector Association="npruessnerEModel.FK_SensorData_Device" />
+        <EntityTypeShape EntityType="npruessnerEModel.Ecosystem" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="npruessnerEModel.Entity" Width="1.5" PointX="6" PointY="7.375" />
+        <AssociationConnector Association="npruessnerEModel.FK_Entity_Controller" />
         <AssociationConnector Association="npruessnerEModel.EntityAction" />
-        <EntityTypeShape EntityType="npruessnerEModel.Ecosystem" Width="1.5" PointX="7.375" PointY="7.75" />
+        <AssociationConnector Association="npruessnerEModel.UserEntity" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

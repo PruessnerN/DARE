@@ -171,7 +171,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DARESystemController.cs" />
+    <Compile Include="Controllers\EcosystemController.cs" />
+    <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\HashSaltController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -204,6 +205,9 @@
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Event.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetEntityAccess_Result.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Note.cs">
@@ -414,7 +418,7 @@
     <Content Include="Views\Account\UnauthorizedAccess.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\User\Privileges.cshtml" />
+    <Content Include="Views\User\UserAccess.cshtml" />
     <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
@@ -426,6 +430,11 @@
     <Content Include="Views\Devices\Details.cshtml" />
     <Content Include="Views\Devices\Edit.cshtml" />
     <Content Include="Views\Devices\Index.cshtml" />
+    <Content Include="Views\Entities\Create.cshtml" />
+    <Content Include="Views\Entities\Delete.cshtml" />
+    <Content Include="Views\Entities\Details.cshtml" />
+    <Content Include="Views\Entities\Edit.cshtml" />
+    <Content Include="Views\Entities\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

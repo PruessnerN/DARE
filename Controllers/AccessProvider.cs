@@ -9,119 +9,81 @@ using System.Web.Security;
 
 namespace DARE.Controllers
 {
-    public class AuthorizeUserAttribute : AuthorizeAttribute
-    {
-        AccessProvider pp = new AccessProvider();
-        npruessnerEEntities1 db = new npruessnerEEntities1();
-        // Custom property
-        public int Privilege { get; set; }
-
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
-        {
-            var isAuthorized = base.AuthorizeCore(httpContext);
-            if (!isAuthorized)
-            {
-                return false;
-            }
-
-            bool privileged = pp.HavePrivilege(db.ufn_GetUserID(httpContext.User.Identity.Name.ToString()), this.Privilege);
-            
-            if (privileged)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-
     public class AccessProvider
     {
         npruessnerEEntities1 db = new npruessnerEEntities1();
 
-        public void AddPrivilegeToUser(long? id, string permName)
+        public void AddAccessToUser(long? id, int entID)
         {
-            db.AddPrivilegeToUser(id, permName);
+            db.GiveEntityAccess(id, entID);
         }
 
-        public void CreatePrivilege(string roleName)
+        public string[] FindUsersInAccess(string roleName, string usernameToMatch)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeletePrivilege(string roleName, bool throwOnPopulatedRole)
+        public UserAccess[] GetUserAccess(long? id)
         {
-            throw new NotImplementedException();
-        }
-
-        public string[] FindUsersInPrivilege(string roleName, string usernameToMatch)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string[] GetAllPrivileges()
-        {
-            throw new NotImplementedException();
-        }
-
-        public UserPrivilege[] GetUserPrivileges(long? id)
-        {
-            int permCount = db.Entities.Count();
-            UserPrivilege[] userPriv = new UserPrivilege[permCount];
-            Entity[] priv = new Entity[permCount];
-
-            priv = db.Entities.SqlQuery("SELECT * FROM PRIVILEGE").ToArray();
-
-            for (int j = 0; j < permCount; j++)
+            Entity[] userEntityArray = db.Entities.Where(x => x.Users.Any(e => e.UserID == id)).ToArray();
+            Entity[] allEntities = GetAllEntities();
+            UserAccess[] userAccessArray = new UserAccess[allEntities.Count()];
+            int n = 0;
+            while (n < allEntities.Count())
             {
-                if (HavePrivilege(id, priv[j].EntityID))
+                foreach (var entity in allEntities)
                 {
-                    userPriv[j] = new UserPrivilege
+                    if (userEntityArray.Contains(entity))
                     {
-                        Name = priv[j].Name,
-                        IsSet = true,
-                        Description = priv[j].Description
-                    };
-                }
-                else
-                {
-                    userPriv[j] = new UserPrivilege
+                        userAccessArray[n] = new UserAccess
+                        {
+                            EntityID = entity.EntityID,
+                            Name = entity.Name,
+                            Description = entity.Description,
+                            IsSet = true
+                        };
+                        n++;
+                    }
+                    else
                     {
-                        Name = priv[j].Name,
-                        IsSet = false,
-                        Description = priv[j].Description
-                    };
+                        userAccessArray[n] = new UserAccess
+                        {
+                            EntityID = entity.EntityID,
+                            Name = entity.Name,
+                            Description = entity.Description,
+                            IsSet = false
+                        };
+                        n++;
+                    }
                 }
             }
-            return userPriv;
+            return userAccessArray;
         }
 
-        public string[] GetUsersInPrivileges(string roleName)
+        public string[] GetUsersInAccess(string roleName)
         {
             throw new NotImplementedException();
         }
 
-        public bool HavePrivilege(long? id, int priv)
+        public bool HaveAccess(long? id, int entID)
         {
-            return db.ufn_HavePrivilege(id, priv);
+            return db.ufn_HaveAccess(id, entID);
         }
 
-        public void RemovePrivilegeFromUser(long? id, string privName)
+        public void RemoveAccessFromUser(long? id, int entID)
         {
-            db.RemovePrivilegeFromUser(id, privName);
+            db.RemoveEntityAccess(id, entID);
         }
 
-        public bool PrivilegeExists(string privName)
+        public bool AccessExists(string privName)
         {
             throw new NotImplementedException();
         }
 
-        public Entity GetPrivilege(int privilegeID)
+        public Entity[] GetAllEntities()
         {
-            Entity perm = db.Entities.Find(privilegeID);
-            return perm;
+            Entity[] allEntities = db.Entities.ToArray();
+            return allEntities;
         }
     }
 }
