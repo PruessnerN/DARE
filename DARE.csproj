@@ -171,12 +171,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActionsController.cs" />
+    <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\EcosystemController.cs" />
-    <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\HashSaltController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\AccessProvider.cs" />
+    <Compile Include="Controllers\ThingsController.cs" />
     <Compile Include="Models\Action.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
@@ -201,13 +203,7 @@
     <Compile Include="Models\Ecosystem.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entity.cs">
-      <DependentUpon>DAREModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Event.cs">
-      <DependentUpon>DAREModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetEntityAccess_Result.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Note.cs">
@@ -220,6 +216,9 @@
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SensorData.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Thing.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
@@ -237,7 +236,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
-    <Compile Include="ViewModels\UserPrivilegeViewModel.cs" />
+    <Compile Include="ViewModels\UserThingViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker3.css" />
@@ -425,16 +424,22 @@
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\User\UserProfile.cshtml" />
     <Content Include="Views\User\UserProfileEdit.cshtml" />
-    <Content Include="Views\Devices\Create.cshtml" />
-    <Content Include="Views\Devices\Delete.cshtml" />
-    <Content Include="Views\Devices\Details.cshtml" />
-    <Content Include="Views\Devices\Edit.cshtml" />
-    <Content Include="Views\Devices\Index.cshtml" />
-    <Content Include="Views\Entities\Create.cshtml" />
-    <Content Include="Views\Entities\Delete.cshtml" />
-    <Content Include="Views\Entities\Details.cshtml" />
-    <Content Include="Views\Entities\Edit.cshtml" />
-    <Content Include="Views\Entities\Index.cshtml" />
+    <Content Include="Views\Clients\Create.cshtml" />
+    <Content Include="Views\Clients\Delete.cshtml" />
+    <Content Include="Views\Clients\Details.cshtml" />
+    <Content Include="Views\Clients\Edit.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\Things\Create.cshtml" />
+    <Content Include="Views\Things\Delete.cshtml" />
+    <Content Include="Views\Things\Details.cshtml" />
+    <Content Include="Views\Things\Edit.cshtml" />
+    <Content Include="Views\Things\Index.cshtml" />
+    <Content Include="Views\Actions\Create.cshtml" />
+    <Content Include="Views\Actions\Delete.cshtml" />
+    <Content Include="Views\Actions\Details.cshtml" />
+    <Content Include="Views\Actions\Edit.cshtml" />
+    <Content Include="Views\Actions\Index.cshtml" />
+    <Content Include="Views\Things\ControlThing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

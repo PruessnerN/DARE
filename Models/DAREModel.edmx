@@ -9,7 +9,8 @@
           <Key>
             <PropertyRef Name="ActionID" />
           </Key>
-          <Property Name="ActionID" Type="int" Nullable="false" />
+          <Property Name="ActionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ThingID" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" />
           <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
@@ -17,7 +18,7 @@
           <Key>
             <PropertyRef Name="ClientID" />
           </Key>
-          <Property Name="ClientID" Type="int" Nullable="false" />
+          <Property Name="ClientID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
           <Property Name="ClientCode" Type="nvarchar" MaxLength="100" />
@@ -37,29 +38,11 @@
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="FamilyName" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <EntityType Name="Entity">
-          <Key>
-            <PropertyRef Name="EntityID" />
-          </Key>
-          <Property Name="EntityID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientID" Type="int" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="StateDescriptor" Type="nvarchar" MaxLength="100" />
-        </EntityType>
-        <EntityType Name="EntityAction">
-          <Key>
-            <PropertyRef Name="EntityID" />
-            <PropertyRef Name="ActionID" />
-          </Key>
-          <Property Name="EntityID" Type="int" Nullable="false" />
-          <Property Name="ActionID" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="Event">
           <Key>
             <PropertyRef Name="EventID" />
           </Key>
-          <Property Name="EventID" Type="int" Nullable="false" />
+          <Property Name="EventID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DeviceID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
@@ -70,7 +53,7 @@
           <Key>
             <PropertyRef Name="NoteID" />
           </Key>
-          <Property Name="NoteID" Type="int" Nullable="false" />
+          <Property Name="NoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Subject" Type="nvarchar" MaxLength="200" />
@@ -93,7 +76,7 @@
           <Key>
             <PropertyRef Name="ScheduleID" />
           </Key>
-          <Property Name="ScheduleID" Type="int" Nullable="false" />
+          <Property Name="ScheduleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DeviceID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" />
           <Property Name="Description" Type="nvarchar(max)" />
@@ -103,12 +86,22 @@
           <Key>
             <PropertyRef Name="DataID" />
           </Key>
-          <Property Name="DataID" Type="int" Nullable="false" />
+          <Property Name="DataID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DeviceID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
           <Property Name="Data" Type="int" />
           <Property Name="Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Thing">
+          <Key>
+            <PropertyRef Name="ThingID" />
+          </Key>
+          <Property Name="ThingID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientID" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="StateDescriptor" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -133,14 +126,6 @@
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="TempAccessCode" Type="nvarchar" MaxLength="100" />
         </EntityType>
-        <EntityType Name="UserEntity">
-          <Key>
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="EntityID" />
-          </Key>
-          <Property Name="UserID" Type="bigint" Nullable="false" />
-          <Property Name="EntityID" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="UserRole">
           <Key>
             <PropertyRef Name="UserID" />
@@ -149,43 +134,37 @@
           <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="RoleID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserThing">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="ThingID" />
+          </Key>
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="ThingID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Action_Thing">
+          <End Role="Thing" Type="Self.Thing" Multiplicity="0..1" />
+          <End Role="Action" Type="Self.Action" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
+            </Principal>
+            <Dependent Role="Action">
+              <PropertyRef Name="ThingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Entity_Controller">
           <End Role="Client" Type="Self.Client" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Entity" Type="Self.Entity" Multiplicity="*" />
+          <End Role="Thing" Type="Self.Thing" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
               <PropertyRef Name="ClientID" />
             </Principal>
-            <Dependent Role="Entity">
+            <Dependent Role="Thing">
               <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EntityAction_Action">
-          <End Role="Action" Type="Self.Action" Multiplicity="1" />
-          <End Role="EntityAction" Type="Self.EntityAction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Action">
-              <PropertyRef Name="ActionID" />
-            </Principal>
-            <Dependent Role="EntityAction">
-              <PropertyRef Name="ActionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EntityAction_Entity">
-          <End Role="Entity" Type="Self.Entity" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="EntityAction" Type="Self.EntityAction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Entity">
-              <PropertyRef Name="EntityID" />
-            </Principal>
-            <Dependent Role="EntityAction">
-              <PropertyRef Name="EntityID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -242,25 +221,25 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserPermission_Permission">
-          <End Role="Entity" Type="Self.Entity" Multiplicity="1" />
-          <End Role="UserEntity" Type="Self.UserEntity" Multiplicity="*" />
+          <End Role="Thing" Type="Self.Thing" Multiplicity="1" />
+          <End Role="UserThing" Type="Self.UserThing" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Entity">
-              <PropertyRef Name="EntityID" />
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
             </Principal>
-            <Dependent Role="UserEntity">
-              <PropertyRef Name="EntityID" />
+            <Dependent Role="UserThing">
+              <PropertyRef Name="ThingID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserPermission_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="UserEntity" Type="Self.UserEntity" Multiplicity="*" />
+          <End Role="UserThing" Type="Self.UserThing" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserID" />
             </Principal>
-            <Dependent Role="UserEntity">
+            <Dependent Role="UserThing">
               <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
@@ -318,27 +297,16 @@
         <Function Name="DeleteUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
         </Function>
-        <Function Name="GetEntityAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="userID" Type="bigint" Mode="In" />
-          <ReturnType>
-            <CollectionType>
-              <RowType>
-                <Property Name="UserID" Type="bigint" Nullable="false" />
-                <Property Name="PrivilegeID" Type="int" Nullable="false" />
-              </RowType>
-            </CollectionType>
-          </ReturnType>
-        </Function>
-        <Function Name="GiveEntityAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="GiveThingAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
-          <Parameter Name="EntityID" Type="int" Mode="In" />
+          <Parameter Name="ThingID" Type="int" Mode="In" />
         </Function>
         <Function Name="LastLoginUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="username" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="RemoveEntityAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="RemoveThingAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
-          <Parameter Name="EntityID" Type="int" Mode="In" />
+          <Parameter Name="ThingID" Type="int" Mode="In" />
         </Function>
         <Function Name="SetupSystem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SystemName" Type="nvarchar" Mode="In" />
@@ -389,27 +357,22 @@
           <EntitySet Name="Action" EntityType="Self.Action" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ecosystem" EntityType="Self.Ecosystem" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Entity" EntityType="Self.Entity" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="EntityAction" EntityType="Self.EntityAction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Note" EntityType="Self.Note" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Schedule" EntityType="Self.Schedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SensorData" EntityType="Self.SensorData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Thing" EntityType="Self.Thing" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserEntity" EntityType="Self.UserEntity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserThing" EntityType="Self.UserThing" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Action_Thing" Association="Self.FK_Action_Thing">
+            <End Role="Thing" EntitySet="Thing" />
+            <End Role="Action" EntitySet="Action" />
+          </AssociationSet>
           <AssociationSet Name="FK_Entity_Controller" Association="Self.FK_Entity_Controller">
             <End Role="Client" EntitySet="Client" />
-            <End Role="Entity" EntitySet="Entity" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EntityAction_Action" Association="Self.FK_EntityAction_Action">
-            <End Role="Action" EntitySet="Action" />
-            <End Role="EntityAction" EntitySet="EntityAction" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EntityAction_Entity" Association="Self.FK_EntityAction_Entity">
-            <End Role="Entity" EntitySet="Entity" />
-            <End Role="EntityAction" EntitySet="EntityAction" />
+            <End Role="Thing" EntitySet="Thing" />
           </AssociationSet>
           <AssociationSet Name="FK_Event_Device" Association="Self.FK_Event_Device">
             <End Role="Client" EntitySet="Client" />
@@ -428,12 +391,12 @@
             <End Role="SensorData" EntitySet="SensorData" />
           </AssociationSet>
           <AssociationSet Name="FK_UserPermission_Permission" Association="Self.FK_UserPermission_Permission">
-            <End Role="Entity" EntitySet="Entity" />
-            <End Role="UserEntity" EntitySet="UserEntity" />
+            <End Role="Thing" EntitySet="Thing" />
+            <End Role="UserThing" EntitySet="UserThing" />
           </AssociationSet>
           <AssociationSet Name="FK_UserPermission_User" Association="Self.FK_UserPermission_User">
             <End Role="User" EntitySet="User" />
-            <End Role="UserEntity" EntitySet="UserEntity" />
+            <End Role="UserThing" EntitySet="UserThing" />
           </AssociationSet>
           <AssociationSet Name="FK_UserRole_Role" Association="Self.FK_UserRole_Role">
             <End Role="Role" EntitySet="Role" />
@@ -448,43 +411,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="npruessnerEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Action">
-          <Key>
-            <PropertyRef Name="ActionID" />
-          </Key>
-          <Property Name="ActionID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Entities" Relationship="npruessnerEModel.EntityAction" FromRole="Action" ToRole="Entity" />
-        </EntityType>
-        <EntityType Name="Event">
-          <Key>
-            <PropertyRef Name="EventID" />
-          </Key>
-          <Property Name="EventID" Type="Int32" Nullable="false" />
-          <Property Name="DeviceID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Event" ToRole="Client" />
-        </EntityType>
-        <EntityType Name="Note">
-          <Key>
-            <PropertyRef Name="NoteID" />
-          </Key>
-          <Property Name="NoteID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="Int64" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Subject" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Recipients" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Alert" Type="Boolean" />
-          <Property Name="PushNotification" Type="Boolean" />
-          <Property Name="CreationDate" Type="DateTime" Precision="3" />
-          <Property Name="AlertDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Note_User" FromRole="Note" ToRole="User" />
-        </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="RoleID" />
@@ -493,29 +419,6 @@
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Users" Relationship="Self.UserRole" FromRole="Role" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Schedule">
-          <Key>
-            <PropertyRef Name="ScheduleID" />
-          </Key>
-          <Property Name="ScheduleID" Type="Int32" Nullable="false" />
-          <Property Name="DeviceID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DateSequence" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Schedule_Device" FromRole="Schedule" ToRole="Client" />
-        </EntityType>
-        <EntityType Name="SensorData">
-          <Key>
-            <PropertyRef Name="DataID" />
-          </Key>
-          <Property Name="DataID" Type="Int32" Nullable="false" />
-          <Property Name="DeviceID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Data" Type="Int32" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="SensorData" ToRole="Client" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -539,40 +442,17 @@
           <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="TempAccessCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Notes" Relationship="Self.FK_Note_User" FromRole="User" ToRole="Note" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
-          <NavigationProperty Name="Entities" Relationship="npruessnerEModel.UserEntity" FromRole="User" ToRole="Entity" />
+          <NavigationProperty Name="Notes" Relationship="npruessnerEModel.FK_Note_User" FromRole="User" ToRole="Note" />
+          <NavigationProperty Name="Things" Relationship="npruessnerEModel.UserThing" FromRole="User" ToRole="Thing" />
         </EntityType>
-        <Association Name="FK_Note_User">
-          <End Role="User" Type="Self.User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Note" Type="Self.Note" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Note">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="UserRole">
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
         </Association>
         <EntityContainer Name="npruessnerEEntities1" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Actions" EntityType="Self.Action" />
-          <EntitySet Name="Events" EntityType="Self.Event" />
-          <EntitySet Name="Notes" EntityType="Self.Note" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
-          <EntitySet Name="Schedules" EntityType="Self.Schedule" />
-          <EntitySet Name="SensorDatas" EntityType="Self.SensorData" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_Note_User" Association="Self.FK_Note_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Note" EntitySet="Notes" />
-          </AssociationSet>
           <AssociationSet Name="UserRole" Association="Self.UserRole">
             <End Role="Role" EntitySet="Roles" />
             <End Role="User" EntitySet="Users" />
@@ -636,7 +516,20 @@
             <Parameter Name="LastName" Mode="In" Type="String" />
             <Parameter Name="RoleID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Ecosystems" EntityType="npruessnerEModel.Ecosystem" />
+          <FunctionImport Name="GiveThingAccess">
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="ThingID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RemoveThingAccess">
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="ThingID" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="Clients" EntityType="npruessnerEModel.Client" />
+          <EntitySet Name="Events" EntityType="npruessnerEModel.Event" />
+          <EntitySet Name="Notes" EntityType="npruessnerEModel.Note" />
+          <EntitySet Name="Schedules" EntityType="npruessnerEModel.Schedule" />
+          <EntitySet Name="SensorDatas" EntityType="npruessnerEModel.SensorData" />
           <AssociationSet Name="FK_Event_Device" Association="npruessnerEModel.FK_Event_Device">
             <End Role="Client" EntitySet="Clients" />
             <End Role="Event" EntitySet="Events" />
@@ -649,37 +542,44 @@
             <End Role="Client" EntitySet="Clients" />
             <End Role="SensorData" EntitySet="SensorDatas" />
           </AssociationSet>
-          <EntitySet Name="Ecosystems" EntityType="npruessnerEModel.Ecosystem" />
-          <EntitySet Name="Entities" EntityType="npruessnerEModel.Entity" />
+          <AssociationSet Name="FK_Note_User" Association="npruessnerEModel.FK_Note_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Note" EntitySet="Notes" />
+          </AssociationSet>
+          <EntitySet Name="Actions" EntityType="npruessnerEModel.Action" />
+          <EntitySet Name="Things" EntityType="npruessnerEModel.Thing" />
+          <AssociationSet Name="FK_Action_Thing" Association="npruessnerEModel.FK_Action_Thing">
+            <End Role="Thing" EntitySet="Things" />
+            <End Role="Action" EntitySet="Actions" />
+          </AssociationSet>
           <AssociationSet Name="FK_Entity_Controller" Association="npruessnerEModel.FK_Entity_Controller">
             <End Role="Client" EntitySet="Clients" />
-            <End Role="Entity" EntitySet="Entities" />
+            <End Role="Thing" EntitySet="Things" />
           </AssociationSet>
-          <AssociationSet Name="EntityAction" Association="npruessnerEModel.EntityAction">
-            <End Role="Action" EntitySet="Actions" />
-            <End Role="Entity" EntitySet="Entities" />
-          </AssociationSet>
-          <AssociationSet Name="UserEntity" Association="npruessnerEModel.UserEntity">
-            <End Role="Entity" EntitySet="Entities" />
+          <AssociationSet Name="UserThing" Association="npruessnerEModel.UserThing">
+            <End Role="Thing" EntitySet="Things" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
-          <FunctionImport Name="GiveEntityAccess">
-            <Parameter Name="UserID" Mode="In" Type="Int64" />
-            <Parameter Name="EntityID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="RemoveEntityAccess">
-            <Parameter Name="UserID" Mode="In" Type="Int64" />
-            <Parameter Name="EntityID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetEntityAccess" IsComposable="true" ReturnType="Collection(npruessnerEModel.GetEntityAccess_Result)">
-            <Parameter Name="userID" Mode="In" Type="Int64" />
-          </FunctionImport>
         </EntityContainer>
+        <EntityType Name="Ecosystem">
+          <Key>
+            <PropertyRef Name="SystemID" />
+          </Key>
+          <Property Name="SystemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateInitiated" Type="DateTime" Precision="3" />
+          <Property Name="HomeAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ZIP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FamilyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Client">
           <Key>
             <PropertyRef Name="ClientID" />
           </Key>
-          <Property Name="ClientID" Type="Int32" Nullable="false" />
+          <Property Name="ClientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ClientCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -687,7 +587,58 @@
           <NavigationProperty Name="Events" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Client" ToRole="Event" />
           <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Device" FromRole="Client" ToRole="Schedule" />
           <NavigationProperty Name="SensorDatas" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="Client" ToRole="SensorData" />
-          <NavigationProperty Name="Entities" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Client" ToRole="Entity" />
+          <NavigationProperty Name="Things" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Client" ToRole="Thing" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventID" />
+          </Key>
+          <Property Name="EventID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeviceID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Event" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="Note">
+          <Key>
+            <PropertyRef Name="NoteID" />
+          </Key>
+          <Property Name="NoteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Recipients" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Alert" Type="Boolean" />
+          <Property Name="PushNotification" Type="Boolean" />
+          <Property Name="CreationDate" Type="DateTime" Precision="3" />
+          <Property Name="AlertDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="npruessnerEModel.FK_Note_User" FromRole="Note" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Schedule">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+          </Key>
+          <Property Name="ScheduleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeviceID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateSequence" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Schedule_Device" FromRole="Schedule" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="SensorData">
+          <Key>
+            <PropertyRef Name="DataID" />
+          </Key>
+          <Property Name="DataID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeviceID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="Int32" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="SensorData" ToRole="Client" />
         </EntityType>
         <Association Name="FK_Event_Device">
           <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="1" />
@@ -727,131 +678,85 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Ecosystem">
+        <Association Name="FK_Note_User">
+          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="npruessnerEModel.Note" Role="Note" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Note">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Action">
           <Key>
-            <PropertyRef Name="SystemID" />
+            <PropertyRef Name="ActionID" />
           </Key>
-          <Property Name="SystemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DateInitiated" Type="DateTime" Precision="3" />
-          <Property Name="HomeAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ZIP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ActionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="FamilyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Thing" Relationship="npruessnerEModel.FK_Action_Thing" FromRole="Action" ToRole="Thing" />
         </EntityType>
-        <EntityType Name="Entity">
+        <EntityType Name="Thing">
           <Key>
-            <PropertyRef Name="EntityID" />
+            <PropertyRef Name="ThingID" />
           </Key>
-          <Property Name="EntityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ClientID" Type="Int32" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="StateDescriptor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Entity" ToRole="Client" />
-          <NavigationProperty Name="Actions" Relationship="npruessnerEModel.EntityAction" FromRole="Entity" ToRole="Action" />
-          <NavigationProperty Name="Users" Relationship="npruessnerEModel.UserEntity" FromRole="Entity" ToRole="User" />
+          <NavigationProperty Name="Actions" Relationship="npruessnerEModel.FK_Action_Thing" FromRole="Thing" ToRole="Action" />
+          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Thing" ToRole="Client" />
+          <NavigationProperty Name="Users" Relationship="npruessnerEModel.UserThing" FromRole="Thing" ToRole="User" />
         </EntityType>
+        <Association Name="FK_Action_Thing">
+          <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="0..1" />
+          <End Type="npruessnerEModel.Action" Role="Action" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
+            </Principal>
+            <Dependent Role="Action">
+              <PropertyRef Name="ThingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Entity_Controller">
           <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
+          <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Client">
               <PropertyRef Name="ClientID" />
             </Principal>
-            <Dependent Role="Entity">
+            <Dependent Role="Thing">
               <PropertyRef Name="ClientID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="EntityAction">
-          <End Type="npruessnerEModel.Action" Role="Action" Multiplicity="*" />
-          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
-        </Association>
-        <Association Name="UserEntity">
-          <End Type="npruessnerEModel.Entity" Role="Entity" Multiplicity="*" />
+        <Association Name="UserThing">
+          <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="*" />
           <End Type="npruessnerEModel.User" Role="User" Multiplicity="*" />
         </Association>
-        <ComplexType Name="GetEntityAccess_Result">
-          <Property Type="Int64" Name="UserID" Nullable="false" />
-          <Property Type="Int32" Name="PrivilegeID" Nullable="false" />
-        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="npruessnerEModelStoreContainer" CdmEntityContainer="npruessnerEEntities1">
-          <EntitySetMapping Name="Actions">
-            <EntityTypeMapping TypeName="npruessnerEModel.Action">
-              <MappingFragment StoreEntitySet="Action">
-                <ScalarProperty Name="ActionID" ColumnName="ActionID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Events">
-            <EntityTypeMapping TypeName="npruessnerEModel.Event">
-              <MappingFragment StoreEntitySet="Event">
-                <ScalarProperty Name="EventID" ColumnName="EventID" />
-                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Notes">
-            <EntityTypeMapping TypeName="npruessnerEModel.Note">
-              <MappingFragment StoreEntitySet="Note">
-                <ScalarProperty Name="NoteID" ColumnName="NoteID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Subject" ColumnName="Subject" />
-                <ScalarProperty Name="Recipients" ColumnName="Recipients" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="Alert" ColumnName="Alert" />
-                <ScalarProperty Name="PushNotification" ColumnName="PushNotification" />
-                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
-                <ScalarProperty Name="AlertDate" ColumnName="AlertDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="npruessnerEModel.Role">
               <MappingFragment StoreEntitySet="Role">
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Schedules">
-            <EntityTypeMapping TypeName="npruessnerEModel.Schedule">
-              <MappingFragment StoreEntitySet="Schedule">
-                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
-                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DateSequence" ColumnName="DateSequence" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SensorDatas">
-            <EntityTypeMapping TypeName="npruessnerEModel.SensorData">
-              <MappingFragment StoreEntitySet="SensorData">
-                <ScalarProperty Name="DataID" ColumnName="DataID" />
-                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -894,17 +799,6 @@
           <FunctionImportMapping FunctionImportName="LastLoginUpdate" FunctionName="npruessnerEModel.Store.LastLoginUpdate" />
           <FunctionImportMapping FunctionImportName="SetupSystem" FunctionName="npruessnerEModel.Store.SetupSystem" />
           <FunctionImportMapping FunctionImportName="UpdateUser" FunctionName="npruessnerEModel.Store.UpdateUser" />
-          <EntitySetMapping Name="Clients">
-            <EntityTypeMapping TypeName="npruessnerEModel.Client">
-              <MappingFragment StoreEntitySet="Client">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ClientCode" ColumnName="ClientCode" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Ecosystems">
             <EntityTypeMapping TypeName="npruessnerEModel.Ecosystem">
               <MappingFragment StoreEntitySet="Ecosystem">
@@ -920,44 +814,100 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Entities">
-            <EntityTypeMapping TypeName="npruessnerEModel.Entity">
-              <MappingFragment StoreEntitySet="Entity">
+          <FunctionImportMapping FunctionImportName="GiveThingAccess" FunctionName="npruessnerEModel.Store.GiveThingAccess" />
+          <FunctionImportMapping FunctionImportName="RemoveThingAccess" FunctionName="npruessnerEModel.Store.RemoveThingAccess" />
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="npruessnerEModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ClientCode" ColumnName="ClientCode" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="npruessnerEModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notes">
+            <EntityTypeMapping TypeName="npruessnerEModel.Note">
+              <MappingFragment StoreEntitySet="Note">
+                <ScalarProperty Name="AlertDate" ColumnName="AlertDate" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="PushNotification" ColumnName="PushNotification" />
+                <ScalarProperty Name="Alert" ColumnName="Alert" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Recipients" ColumnName="Recipients" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="NoteID" ColumnName="NoteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schedules">
+            <EntityTypeMapping TypeName="npruessnerEModel.Schedule">
+              <MappingFragment StoreEntitySet="Schedule">
+                <ScalarProperty Name="DateSequence" ColumnName="DateSequence" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SensorDatas">
+            <EntityTypeMapping TypeName="npruessnerEModel.SensorData">
+              <MappingFragment StoreEntitySet="SensorData">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+                <ScalarProperty Name="DataID" ColumnName="DataID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Actions">
+            <EntityTypeMapping TypeName="npruessnerEModel.Action">
+              <MappingFragment StoreEntitySet="Action">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ThingID" ColumnName="ThingID" />
+                <ScalarProperty Name="ActionID" ColumnName="ActionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Things">
+            <EntityTypeMapping TypeName="npruessnerEModel.Thing">
+              <MappingFragment StoreEntitySet="Thing">
                 <ScalarProperty Name="StateDescriptor" ColumnName="StateDescriptor" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+                <ScalarProperty Name="ThingID" ColumnName="ThingID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="EntityAction" TypeName="npruessnerEModel.EntityAction" StoreEntitySet="EntityAction">
-            <EndProperty Name="Entity">
-              <ScalarProperty Name="EntityID" ColumnName="EntityID" />
-            </EndProperty>
-            <EndProperty Name="Action">
-              <ScalarProperty Name="ActionID" ColumnName="ActionID" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="UserEntity" TypeName="npruessnerEModel.UserEntity" StoreEntitySet="UserEntity">
+          <AssociationSetMapping Name="UserThing" TypeName="npruessnerEModel.UserThing" StoreEntitySet="UserThing">
             <EndProperty Name="User">
               <ScalarProperty Name="UserID" ColumnName="UserID" />
             </EndProperty>
-            <EndProperty Name="Entity">
-              <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+            <EndProperty Name="Thing">
+              <ScalarProperty Name="ThingID" ColumnName="ThingID" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="GiveEntityAccess" FunctionName="npruessnerEModel.Store.GiveEntityAccess" />
-          <FunctionImportMapping FunctionImportName="RemoveEntityAccess" FunctionName="npruessnerEModel.Store.RemoveEntityAccess" />
-          <FunctionImportMapping FunctionImportName="GetEntityAccess" FunctionName="npruessnerEModel.Store.GetEntityAccess">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="npruessnerEModel.GetEntityAccess_Result">
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="PrivilegeID" ColumnName="PrivilegeID" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

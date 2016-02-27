@@ -109,11 +109,11 @@ namespace DARE.Controllers
                 User = db.Users.Find(id)
             };
 
-            var allEntitiesList = db.Entities.ToList();
-            viewmodel.AllEntities = allEntitiesList.Select(o => new SelectListItem
+            var allThingsList = db.Things.ToList();
+            viewmodel.AllThings = allThingsList.Select(o => new SelectListItem
             {
                 Text = o.Name,
-                Value = o.EntityID.ToString()
+                Value = o.ThingID.ToString()
             });
             return View(viewmodel);
         }
@@ -131,11 +131,11 @@ namespace DARE.Controllers
                     {
                         if (userAccess.UserAccessArray[i].IsSet == true)
                         {
-                            pp.AddAccessToUser(userAccess.User.UserID, userAccess.UserAccessArray[i].EntityID);
+                            pp.AddAccessToUser(userAccess.User.UserID, userAccess.UserAccessArray[i].ThingID);
                         }
                         else
                         {
-                            pp.RemoveAccessFromUser(userAccess.User.UserID, userAccess.UserAccessArray[i].EntityID);
+                            pp.RemoveAccessFromUser(userAccess.User.UserID, userAccess.UserAccessArray[i].ThingID);
                         }
                     }
                 }

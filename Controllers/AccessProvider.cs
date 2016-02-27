@@ -13,9 +13,9 @@ namespace DARE.Controllers
     {
         npruessnerEEntities1 db = new npruessnerEEntities1();
 
-        public void AddAccessToUser(long? id, int entID)
+        public void AddAccessToUser(long? id, int thingID)
         {
-            db.GiveEntityAccess(id, entID);
+            db.GiveThingAccess(id, thingID);
         }
 
         public string[] FindUsersInAccess(string roleName, string usernameToMatch)
@@ -25,21 +25,21 @@ namespace DARE.Controllers
 
         public UserAccess[] GetUserAccess(long? id)
         {
-            Entity[] userEntityArray = db.Entities.Where(x => x.Users.Any(e => e.UserID == id)).ToArray();
-            Entity[] allEntities = GetAllEntities();
-            UserAccess[] userAccessArray = new UserAccess[allEntities.Count()];
+            Thing[] userThingArray = db.Things.Where(x => x.Users.Any(e => e.UserID == id)).ToArray();
+            Thing[] allThings = GetAllThings();
+            UserAccess[] userAccessArray = new UserAccess[allThings.Count()];
             int n = 0;
-            while (n < allEntities.Count())
+            while (n < allThings.Count())
             {
-                foreach (var entity in allEntities)
+                foreach (var thing in allThings)
                 {
-                    if (userEntityArray.Contains(entity))
+                    if (userThingArray.Contains(thing))
                     {
                         userAccessArray[n] = new UserAccess
                         {
-                            EntityID = entity.EntityID,
-                            Name = entity.Name,
-                            Description = entity.Description,
+                            ThingID = thing.ThingID,
+                            Name = thing.Name,
+                            Description = thing.Description,
                             IsSet = true
                         };
                         n++;
@@ -48,9 +48,9 @@ namespace DARE.Controllers
                     {
                         userAccessArray[n] = new UserAccess
                         {
-                            EntityID = entity.EntityID,
-                            Name = entity.Name,
-                            Description = entity.Description,
+                            ThingID = thing.ThingID,
+                            Name = thing.Name,
+                            Description = thing.Description,
                             IsSet = false
                         };
                         n++;
@@ -65,25 +65,25 @@ namespace DARE.Controllers
             throw new NotImplementedException();
         }
 
-        public bool HaveAccess(long? id, int entID)
+        public bool HaveAccess(long? id, int thingID)
         {
-            return db.ufn_HaveAccess(id, entID);
+            return db.ufn_HaveAccess(id, thingID);
         }
 
-        public void RemoveAccessFromUser(long? id, int entID)
+        public void RemoveAccessFromUser(long? id, int thingID)
         {
-            db.RemoveEntityAccess(id, entID);
+            db.RemoveThingAccess(id, thingID);
         }
 
-        public bool AccessExists(string privName)
+        public bool AccessExists(int thingID)
         {
             throw new NotImplementedException();
         }
 
-        public Entity[] GetAllEntities()
+        public Thing[] GetAllThings()
         {
-            Entity[] allEntities = db.Entities.ToArray();
-            return allEntities;
+            Thing[] allThings = db.Things.ToArray();
+            return allThings;
         }
     }
 }

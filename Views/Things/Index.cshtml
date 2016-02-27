@@ -1,14 +1,14 @@
-﻿@model IEnumerable<DARE.Models.Entity>
+﻿@model IEnumerable<DARE.Models.Thing>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>List of Things</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New Thing", "Create", null, new { @class="red btn"})
 </p>
 <table class="table">
     <tr>
@@ -42,9 +42,10 @@
             @Html.DisplayFor(modelItem => item.Client.Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EntityID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EntityID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EntityID })
+            @Html.ActionLink("Edit", "Edit", new { id=item.ThingID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ThingID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ThingID }) |
+            @Html.ActionLink("Control", "ControlThing", new { id = item.ThingID })
         </td>
     </tr>
 }

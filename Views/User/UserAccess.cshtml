@@ -1,9 +1,9 @@
 ﻿@model DARE.ViewModels.UserAccessViewModel
 @{
-    ViewBag.Title = "Edit Privileges";
+    ViewBag.Title = "Edit Access";
 }
 <div class="header">
-    <h2>Edit Entities - @Model.User.FirstName @Model.User.LastName</h2>
+    <h2>Edit Access - @Model.User.FirstName @Model.User.LastName</h2>
 </div>
 @using (Html.BeginForm())
 {
@@ -19,10 +19,10 @@
                         @Html.Label(Model.UserAccessArray[i].Name, new { @class = "" })
                     </div>
                     <div class="col-md-2">
-                        @Html.DropDownListFor(model => Model.UserAccessArray[i].IsSet, new SelectList(DARE.ViewModels.EntityOptionList.options, "Value", "Text", Model.UserAccessArray[i].IsSet), new { @class = "form-control small" })
+                        @Html.DropDownListFor(model => Model.UserAccessArray[i].IsSet, new SelectList(DARE.ViewModels.ThingOptionList.options, "Value", "Text", Model.UserAccessArray[i].IsSet), new { @class = "form-control small" })
                         @Html.HiddenFor(model => model.UserAccessArray[i].Name)
                         @Html.HiddenFor(model => model.UserAccessArray[i].Description)
-                        @Html.HiddenFor(model => model.UserAccessArray[i].EntityID)
+                        @Html.HiddenFor(model => model.UserAccessArray[i].ThingID)
                     </div>
                     <div class="col-md-8">
                         <p>@Model.UserAccessArray[i].Description.ToString()</p>

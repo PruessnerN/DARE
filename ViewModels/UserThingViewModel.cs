@@ -9,7 +9,7 @@ namespace DARE.ViewModels
 {
     public class UserAccess
     {
-        public int EntityID { get; set; }
+        public int ThingID { get; set; }
         public string Name { get; set; }
         public bool IsSet { get; set; }
         public string Description { get; set; }
@@ -18,11 +18,11 @@ namespace DARE.ViewModels
     public class UserAccessViewModel
     {
         public UserAccess[] UserAccessArray { get; set; }
-        public IEnumerable<SelectListItem> AllEntities { get; set; }
+        public IEnumerable<SelectListItem> AllThings { get; set; }
         public User User { get; set; }
     }
 
-    public class EntityOptionList
+    public class ThingOptionList
     {
         public static List<SelectListItem> options = new List<SelectListItem>()
         {

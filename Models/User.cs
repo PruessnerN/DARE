@@ -17,9 +17,9 @@ namespace DARE.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.Notes = new HashSet<Note>();
             this.Roles = new HashSet<Role>();
-            this.Entities = new HashSet<Entity>();
+            this.Notes = new HashSet<Note>();
+            this.Things = new HashSet<Thing>();
         }
     
         public long UserID { get; set; }
@@ -42,10 +42,10 @@ namespace DARE.Models
         public string TempAccessCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Note> Notes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Entity> Entities { get; set; }
+        public virtual ICollection<Note> Notes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Thing> Things { get; set; }
     }
 }

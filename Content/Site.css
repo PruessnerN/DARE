@@ -93,7 +93,7 @@ textarea {
         left: -300px;
     }
 
-    #userIconParent>li>a {
+    .userIconParent>li>a {
         border-color: #252830 !important;
         -webkit-transition: all .25s ease-in-out;
         -moz-transition: all .25s ease-in-out;
@@ -123,7 +123,7 @@ textarea {
         -webkit-transform: translate(0, 0);
         transform: translate(0, 0);
     }
-    #userIconParent:hover {
+    .userIconParent:hover {
         text-decoration: none;
     }
     
@@ -740,6 +740,47 @@ textarea {
         margin: 30px auto 0 auto;
     }
 
+/*########## START THING STYLING ###########*/
+    .onoffswitch {
+        position: relative;
+        width: 55px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .onoffswitch-checkbox {
+        display: none;
+    }
+    .onoffswitch-label {
+        display: block; overflow: hidden; cursor: pointer;
+        height: 20px; padding: 0; line-height: 20px;
+        border: 0 solid #FFFFFF; border-radius: 30px;
+        background-color: #9E9E9E;
+    }
+    .onoffswitch-label:before {
+        content: "";
+        display: block; width: 30px; margin: -5px;
+        background: #FFFFFF;
+        position: absolute; top: 0; bottom: 0;
+        right: 31px;
+        border-radius: 30px;
+        box-shadow: 0 1px 10px 0 #757575;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label {
+        background-color: #F41710;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+       border-color: #F41710;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+        right: 0; 
+        background-color: #F41710; 
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    }
 }
 
 

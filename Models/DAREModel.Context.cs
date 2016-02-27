@@ -27,16 +27,16 @@ namespace DARE.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Action> Actions { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Ecosystem> Ecosystems { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<SensorData> SensorDatas { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Client> Clients { get; set; }
-        public virtual DbSet<Ecosystem> Ecosystems { get; set; }
-        public virtual DbSet<Entity> Entities { get; set; }
+        public virtual DbSet<Action> Actions { get; set; }
+        public virtual DbSet<Thing> Things { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
         {
@@ -253,40 +253,30 @@ namespace DARE.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateUser", userIDParameter, usernameParameter, emailParameter, passwordQuestionParameter, passwordAnswerParameter, dateOfBirthParameter, phoneNumberParameter, firstNameParameter, lastNameParameter, roleIDParameter);
         }
     
-        public virtual int GiveEntityAccess(Nullable<long> userID, Nullable<int> entityID)
+        public virtual int GiveThingAccess(Nullable<long> userID, Nullable<int> thingID)
         {
             var userIDParameter = userID.HasValue ?
                 new ObjectParameter("UserID", userID) :
                 new ObjectParameter("UserID", typeof(long));
     
-            var entityIDParameter = entityID.HasValue ?
-                new ObjectParameter("EntityID", entityID) :
-                new ObjectParameter("EntityID", typeof(int));
+            var thingIDParameter = thingID.HasValue ?
+                new ObjectParameter("ThingID", thingID) :
+                new ObjectParameter("ThingID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GiveEntityAccess", userIDParameter, entityIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GiveThingAccess", userIDParameter, thingIDParameter);
         }
     
-        public virtual int RemoveEntityAccess(Nullable<long> userID, Nullable<int> entityID)
+        public virtual int RemoveThingAccess(Nullable<long> userID, Nullable<int> thingID)
         {
             var userIDParameter = userID.HasValue ?
                 new ObjectParameter("UserID", userID) :
                 new ObjectParameter("UserID", typeof(long));
     
-            var entityIDParameter = entityID.HasValue ?
-                new ObjectParameter("EntityID", entityID) :
-                new ObjectParameter("EntityID", typeof(int));
+            var thingIDParameter = thingID.HasValue ?
+                new ObjectParameter("ThingID", thingID) :
+                new ObjectParameter("ThingID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RemoveEntityAccess", userIDParameter, entityIDParameter);
-        }
-    
-        [DbFunction("npruessnerEEntities1", "GetEntityAccess")]
-        public virtual IQueryable<GetEntityAccess_Result> GetEntityAccess(Nullable<long> userID)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("userID", userID) :
-                new ObjectParameter("userID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetEntityAccess_Result>("[npruessnerEEntities1].[GetEntityAccess](@userID)", userIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RemoveThingAccess", userIDParameter, thingIDParameter);
         }
     }
 }

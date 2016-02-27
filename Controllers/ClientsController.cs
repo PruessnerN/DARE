@@ -10,112 +10,107 @@ using DARE.Models;
 
 namespace DARE.Controllers
 {
-    public class EntitiesController : Controller
+    public class ClientsController : Controller
     {
         private npruessnerEEntities1 db = new npruessnerEEntities1();
-        private AccessProvider ap = new AccessProvider();
-        // GET: Entities
+
+        // GET: Clients
         public ActionResult Index()
         {
-            var entities = db.Entities.Include(e => e.Client);
-            return View(entities.ToList());
+            return View(db.Clients.ToList());
         }
 
-        // GET: Entities/Details/5
+        // GET: Clients/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Entity entity = db.Entities.Find(id);
-            if (entity == null)
+            Client client = db.Clients.Find(id);
+            if (client == null)
             {
                 return HttpNotFound();
             }
-            return View(entity);
+            return View(client);
         }
 
-        // GET: Entities/Create
+        // GET: Clients/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
             return View();
         }
 
-        // POST: Entities/Create
+        // POST: Clients/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EntityID,Name,Description,StateDescriptor,ClientID")] Entity entity)
+        public ActionResult Create([Bind(Include = "ClientID,Name,Type,ClientCode,Description")] Client client)
         {
             if (ModelState.IsValid)
             {
-                db.Entities.Add(entity);
+                db.Clients.Add(client);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name", entity.ClientID);
-            return View(entity);
+            return View(client);
         }
 
-        // GET: Entities/Edit/5
+        // GET: Clients/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Entity entity = db.Entities.Find(id);
-            if (entity == null)
+            Client client = db.Clients.Find(id);
+            if (client == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name", entity.ClientID);
-            return View(entity);
+            return View(client);
         }
 
-        // POST: Entities/Edit/5
+        // POST: Clients/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EntityID,Name,Description,StateDescriptor,ClientID")] Entity entity)
+        public ActionResult Edit([Bind(Include = "ClientID,Name,Type,ClientCode,Description")] Client client)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(entity).State = EntityState.Modified;
+                db.Entry(client).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name", entity.ClientID);
-            return View(entity);
+            return View(client);
         }
 
-        // GET: Entities/Delete/5
+        // GET: Clients/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Entity entity = db.Entities.Find(id);
-            if (entity == null)
+            Client client = db.Clients.Find(id);
+            if (client == null)
             {
                 return HttpNotFound();
             }
-            return View(entity);
+            return View(client);
         }
 
-        // POST: Entities/Delete/5
+        // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Entity entity = db.Entities.Find(id);
-            db.Entities.Remove(entity);
+            Client client = db.Clients.Find(id);
+            db.Clients.Remove(client);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

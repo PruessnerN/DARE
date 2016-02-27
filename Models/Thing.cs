@@ -12,24 +12,24 @@ namespace DARE.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Entity
+    public partial class Thing
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Entity()
+        public Thing()
         {
             this.Actions = new HashSet<Action>();
             this.Users = new HashSet<User>();
         }
     
-        public int EntityID { get; set; }
+        public int ThingID { get; set; }
         public Nullable<int> ClientID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string StateDescriptor { get; set; }
     
-        public virtual Client Client { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Action> Actions { get; set; }
+        public virtual Client Client { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
     }

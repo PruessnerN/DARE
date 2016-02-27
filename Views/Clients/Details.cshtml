@@ -1,4 +1,4 @@
-﻿@model DARE.Models.Device
+﻿@model DARE.Models.Client
 
 @{
     ViewBag.Title = "Details";
@@ -8,7 +8,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Device</h4>
+    <h4>Client</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -46,6 +46,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DeviceID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ClientID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
