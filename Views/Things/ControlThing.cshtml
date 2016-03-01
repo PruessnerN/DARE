@@ -8,7 +8,7 @@
     <h2>Control @Model.Name</h2>
 </div>
 <div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="pub()" checked>
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="if (document.getElementById('myonoffswitch').checked) { pub(1); } else { pub(0); }" >
     <label class="onoffswitch-label" for="myonoffswitch"></label>
 </div>
 
@@ -16,7 +16,8 @@
     $(document).ready(function () {
         pubnub = PUBNUB({
             publish_key: 'pub-c-2a63b4b0-ca5b-4f32-8db9-1c9a1d04ec33',
-            subscribe_key: 'sub-c-deb946f2-840e-11e5-9e96-02ee2ddab7fe'
+            subscribe_key: 'sub-c-deb946f2-840e-11e5-9e96-02ee2ddab7fe',
+            ssl: true
         });
 
         pubnub.subscribe({
@@ -25,8 +26,8 @@
         });
     });
 
-    function pub() {
-        var x = { "led1": "1" };
+    function pub(value) {
+        var x = { @Model.ThingID.ToString(): value.toString() };
         pubnub.publish({
             channel: "pruessner_tribe",
             message: x,

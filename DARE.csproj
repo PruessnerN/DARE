@@ -174,10 +174,12 @@
     <Compile Include="Controllers\ActionsController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\EcosystemController.cs" />
+    <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HashSaltController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\AccessProvider.cs" />
+    <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\ThingsController.cs" />
     <Compile Include="Models\Action.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
@@ -371,6 +373,7 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\prefixfree.min.js" />
+    <Content Include="Scripts\PubNub.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -440,6 +443,16 @@
     <Content Include="Views\Actions\Edit.cshtml" />
     <Content Include="Views\Actions\Index.cshtml" />
     <Content Include="Views\Things\ControlThing.cshtml" />
+    <Content Include="Views\Events\Create.cshtml" />
+    <Content Include="Views\Events\Delete.cshtml" />
+    <Content Include="Views\Events\Details.cshtml" />
+    <Content Include="Views\Events\Edit.cshtml" />
+    <Content Include="Views\Events\Index.cshtml" />
+    <Content Include="Views\Notes\Create.cshtml" />
+    <Content Include="Views\Notes\Delete.cshtml" />
+    <Content Include="Views\Notes\Details.cshtml" />
+    <Content Include="Views\Notes\Edit.cshtml" />
+    <Content Include="Views\Notes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

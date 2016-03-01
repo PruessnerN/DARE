@@ -147,7 +147,6 @@ textarea {
     }
 
         .nav-stacked > li:last-child {
-            border-top: none;
             border-bottom: 1px solid #252830;
             border-right: 0 none;
         }
