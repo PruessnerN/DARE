@@ -8,7 +8,7 @@
     <h2>Control @Model.Name</h2>
 </div>
 <div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="if (document.getElementById('myonoffswitch').checked) { pub(1); } else { pub(0); }" >
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="if (document.getElementById('myonoffswitch').checked) { turnOn(); } else { turnOff(); }" >
     <label class="onoffswitch-label" for="myonoffswitch"></label>
 </div>
 
@@ -22,12 +22,44 @@
 
         pubnub.subscribe({
             channel: "pruessner_tribe",
-            message: function (m) { console.log(m) }
+            message: function (m) { console.log(m) },
+            connect: getState(),
+            callback: function (m) { queryMessage(m) }
         });
-    });
-
-    function pub(value) {
-        var x = { @Model.ThingID.ToString(): value.toString() };
+    })
+    function queryMessage(m) {
+        if(m.id == "@Model.ThingID.ToString()") {
+            if(m.commands[0].hasOwnProperty("state")) {
+                if(m.commands[0].state == "1") {
+                    $('#myonoffswitch').prop('checked', true);
+                } else {
+                    $('#myonoffswitch').prop('checked', false);
+                }
+            }
+        }
+    }
+    function getState() {
+        var root = {"id":"@Model.ThingID.ToString()","commands":[{"getState":"1"}]};
+        pubnub.publish({
+            channel: "pruessner_tribe",
+            message: root,
+            callback: function(m) {console.log(m)}
+        })
+    }
+    function turnOn() {
+        var x = {"id":"@Model.ThingID.ToString()","commands":[{"action":"1"}]};
+        pubnub.publish({
+            channel: "pruessner_tribe",
+            message: x,
+            callback: function (m) { console.log(m) }
+        })
+        $('#myonoffswitch').disabled = true;
+        setTimeout(function () {
+            $('#myonoffswitch').disabled = false;
+        }, 3000)
+    }
+    function turnOff() {
+        var x = {"id":"@Model.ThingID.ToString()","commands":[{"action":"0"}]};
         pubnub.publish({
             channel: "pruessner_tribe",
             message: x,
