@@ -760,11 +760,15 @@ textarea {
     .onoffswitch-label:before {
         content: "";
         display: block; width: 30px; margin: -5px;
-        background: #FFFFFF;
+        background: lightgrey;
         position: absolute; top: 0; bottom: 0;
         right: 31px;
         border-radius: 30px;
         box-shadow: 0 1px 10px 0 #757575;
+        -moz-transition: all ease-in-out 1s;
+        -o-transition: all ease-in-out 1s;
+        -webkit-transition: all ease-in-out 1s;
+        transition: all ease-in-out 1s;
     }
     .onoffswitch-checkbox:checked + .onoffswitch-label {
         background-color: #F41710;
@@ -779,10 +783,10 @@ textarea {
             right: 0;
             background-color: #F41710;
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-            -moz-transition: all ease-in-out 2s;
-            -o-transition: all ease-in-out 2s;
-            -webkit-transition: all ease-in-out 2s;
-            transition: all ease-in-out 2s;
+            -moz-transition: all ease-in-out 1s;
+            -o-transition: all ease-in-out 1s;
+            -webkit-transition: all ease-in-out 1s;
+            transition: all ease-in-out 1s;
         }
 }
 

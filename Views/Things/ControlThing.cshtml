@@ -53,10 +53,10 @@
             message: x,
             callback: function (m) { console.log(m) }
         })
-        $('#myonoffswitch').disabled = true;
+        $("#myonoffswitch").attr("disabled", true);
         setTimeout(function () {
-            $('#myonoffswitch').disabled = false;
-        }, 3000)
+            $('#myonoffswitch').attr("disabled", false);
+        }, 2000)
     }
     function turnOff() {
         var x = {"id":"@Model.ThingID.ToString()","commands":[{"action":"0"}]};
@@ -65,5 +65,9 @@
             message: x,
             callback: function (m) { console.log(m) }
         })
+        $("#myonoffswitch").attr("disabled", true);
+        setTimeout(function () {
+            $('#myonoffswitch').attr("disabled", false);
+        }, 2000)
     }
 </script>
