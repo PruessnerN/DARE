@@ -18,10 +18,10 @@
             </li>
             @if (User.IsInRole("3"))
             {
-                <li class="userIconChild">@Html.ActionLink("Manage Users", "Index", "User")</li>
-            }
-            <li class="userIconChild">@Html.ActionLink("Messages", "Index", "Notes", null, null)</li>
-            <li class="userIconChild"><a id="" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                <li class="userIconChild">@Html.ActionLink("Manage Users", "Index", "User",null, new { @class= "moveRightAnim"})</li>
+                                     }
+            <li class="userIconChild">@Html.ActionLink("Messages", "Index", "Notes", null, new { @class= "moveRightAnim"})</li>
+            <li class="userIconChild"><a id="" class="moveRightAnim" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         </ul>
         <script type="text/javascript">
             $(document).ready(function () {

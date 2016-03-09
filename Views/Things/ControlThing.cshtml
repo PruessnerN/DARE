@@ -7,10 +7,31 @@
 <div class="header">
     <h2>Control @Model.Name</h2>
 </div>
-<div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="if (document.getElementById('myonoffswitch').checked) { turnOn(); } else { turnOff(); }" >
-    <label class="onoffswitch-label" for="myonoffswitch"></label>
-</div>
+@if (Model.ThingID == 9)
+{
+    <div id="temperatureDiv">
+        <div class="container">
+            <div class="de">
+                <div class="den">
+                    <div class="dene">
+                        <div class="denem">
+                            <div class="deneme">
+                                48<span>.0</span><strong>&deg;</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="onoffswitch">
+        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="if (document.getElementById('myonoffswitch').checked) { turnOn(); } else { turnOff(); }">
+        <label class="onoffswitch-label" for="myonoffswitch"></label>
+    </div>
+}
 
 <script>
     $(document).ready(function () {
@@ -28,26 +49,28 @@
         });
     })
     function queryMessage(m) {
-        if(m.id == "@Model.ThingID.ToString()") {
-            if(m.commands[0].hasOwnProperty("state")) {
-                if(m.commands[0].state == "1") {
+        if (m.id == "@Model.ThingID.ToString()") {
+            if (m.commands[0].hasOwnProperty("state")) {
+                if (m.commands[0].state == "1") {
                     $('#myonoffswitch').prop('checked', true);
-                } else {
+                } else if (m.commands[0].state == "0") {
                     $('#myonoffswitch').prop('checked', false);
                 }
+            } else if (m.commands[0].hasOwnProperty("temperature")) {
+                $('#deneme').val(m.commands[0].state);
             }
         }
     }
     function getState() {
-        var root = {"id":"@Model.ThingID.ToString()","commands":[{"getState":"1"}]};
+        var root = { "id": "@Model.ThingID.ToString()", "commands": [{ "getState": "1" }] };
         pubnub.publish({
             channel: "pruessner_tribe",
             message: root,
-            callback: function(m) {console.log(m)}
+            callback: function (m) { console.log(m) }
         })
     }
     function turnOn() {
-        var x = {"id":"@Model.ThingID.ToString()","commands":[{"action":"1"}]};
+        var x = { "id": "@Model.ThingID.ToString()", "commands": [{ "action": "1" }] };
         pubnub.publish({
             channel: "pruessner_tribe",
             message: x,
@@ -59,7 +82,7 @@
         }, 2000)
     }
     function turnOff() {
-        var x = {"id":"@Model.ThingID.ToString()","commands":[{"action":"0"}]};
+        var x = { "id": "@Model.ThingID.ToString()", "commands": [{ "action": "0" }] };
         pubnub.publish({
             channel: "pruessner_tribe",
             message: x,
