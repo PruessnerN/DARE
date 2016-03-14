@@ -15,16 +15,17 @@ namespace DARE.Models
     public partial class Note
     {
         public int NoteID { get; set; }
-        public long UserID { get; set; }
-        public string Name { get; set; }
+        public long SenderID { get; set; }
+        public long ReceiverID { get; set; }
         public string Subject { get; set; }
-        public string Recipients { get; set; }
         public string Message { get; set; }
+        public Nullable<bool> isNew { get; set; }
         public Nullable<bool> Alert { get; set; }
         public Nullable<bool> PushNotification { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public Nullable<System.DateTime> AlertDate { get; set; }
     
         public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

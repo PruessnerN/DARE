@@ -260,6 +260,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\CheatSheetAnimations.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\hover.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -375,6 +376,7 @@
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\gauge.min.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -469,7 +471,8 @@
     <Content Include="Views\Notes\Delete.cshtml" />
     <Content Include="Views\Notes\Details.cshtml" />
     <Content Include="Views\Notes\Edit.cshtml" />
-    <Content Include="Views\Notes\Index.cshtml" />
+    <Content Include="Views\Notes\Sent.cshtml" />
+    <Content Include="Views\Notes\Received.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

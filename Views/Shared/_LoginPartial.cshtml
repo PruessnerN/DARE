@@ -1,43 +1,27 @@
 ﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
-{
-    using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "" }))
-    {
-        @Html.AntiForgeryToken()
 
-        <ul id="userIconParent" class="nav nav-tabs nav-stacked">
-            <li style="border-top:none;">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    @Html.ActionLink(User.Identity.Name, "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
-                }
-                else
-                {
-                    @Html.ActionLink("User", "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
-                }
-            </li>
+@using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm" }))
+{
+    @Html.AntiForgeryToken()
+    <li class="userIconParent" style="border-bottom:1px solid #252830;">@Html.ActionLink(User.Identity.Name, "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Profile", @id = "", @class = "icon fa-user" })
+        <ul class="nav nav-tabs nav-stacked userIconChild">
             @if (User.IsInRole("3"))
             {
-                <li class="userIconChild">@Html.ActionLink("Manage Users", "Index", "User",null, new { @class= "moveRightAnim"})</li>
-                                     }
-            <li class="userIconChild">@Html.ActionLink("Messages", "Index", "Notes", null, new { @class= "moveRightAnim"})</li>
-            <li class="userIconChild"><a id="" class="moveRightAnim" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                <li>@Html.ActionLink("Manage Users", "Index", "User", null, new { @class = "moveRightAnim indent" })</li>
+            }
+            <li><a id="" class="moveRightAnim indent" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         </ul>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#userIconParent').on({
-                    'mouseenter': function () {
-                        $('.userIconChild').css("left", "0");
-                    }, 'mouseleave': function () {
-                        $('.userIconChild').css("left", "-300px");
-                    }
-                });
+    </li>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.userIconParent').on({
+                'mouseenter': function () {
+                    $(this).find('.userIconChild').stop().show("fast");
+                }, 'mouseleave': function () {
+                    $(this).find('.userIconChild').stop().hide("fast");
+                }
             });
-        </script>
-    }
-}
-else
-{
-    <h2>NOT AUTHENTICATED</h2>
+        });
+    </script>
 }
 

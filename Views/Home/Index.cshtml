@@ -2,20 +2,36 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<h1>DARE System Dashboard</h1>
+<div class="row">
+    <div id="tile1" class="col-md-4 tile" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div id="draggable1" class="draggable" draggable="true" ondragstart="drag(event)">
+            <h3>1</h3>
+        </div>
+    </div>
+    <div id="tile2" class="col-md-4 tile" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div id="draggable2" class="draggable" draggable="true" ondragstart="drag(event)">
+            <h3>2</h3>
+        </div>
+    </div>
+    <div id="tile3" class="col-md-4 tile" ondrop="drop(event)" ondragover="allowDrop(event)">
+        
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4 tile">
-        
-    </div>
-    <div class="col-md-4 tile">
-        
-    </div>
-    <div class="col-md-4 tile">
-        
-    </div>
-</div>
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+        this.classList.add('dragOver');
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+</script>

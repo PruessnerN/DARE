@@ -32,11 +32,11 @@ namespace DARE.Models
         public virtual DbSet<Ecosystem> Ecosystems { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Event> Events { get; set; }
-        public virtual DbSet<Note> Notes { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<SensorData> SensorDatas { get; set; }
         public virtual DbSet<Action> Actions { get; set; }
         public virtual DbSet<Thing> Things { get; set; }
+        public virtual DbSet<Note> Notes { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
         {
@@ -277,6 +277,39 @@ namespace DARE.Models
                 new ObjectParameter("ThingID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("RemoveThingAccess", userIDParameter, thingIDParameter);
+        }
+    
+        public virtual int CreateNote(Nullable<long> senderID, Nullable<long> receiverID, string subject, string message, Nullable<bool> alert, Nullable<bool> pushNotification, Nullable<System.DateTime> alertDate)
+        {
+            var senderIDParameter = senderID.HasValue ?
+                new ObjectParameter("SenderID", senderID) :
+                new ObjectParameter("SenderID", typeof(long));
+    
+            var receiverIDParameter = receiverID.HasValue ?
+                new ObjectParameter("ReceiverID", receiverID) :
+                new ObjectParameter("ReceiverID", typeof(long));
+    
+            var subjectParameter = subject != null ?
+                new ObjectParameter("Subject", subject) :
+                new ObjectParameter("Subject", typeof(string));
+    
+            var messageParameter = message != null ?
+                new ObjectParameter("Message", message) :
+                new ObjectParameter("Message", typeof(string));
+    
+            var alertParameter = alert.HasValue ?
+                new ObjectParameter("Alert", alert) :
+                new ObjectParameter("Alert", typeof(bool));
+    
+            var pushNotificationParameter = pushNotification.HasValue ?
+                new ObjectParameter("PushNotification", pushNotification) :
+                new ObjectParameter("PushNotification", typeof(bool));
+    
+            var alertDateParameter = alertDate.HasValue ?
+                new ObjectParameter("AlertDate", alertDate) :
+                new ObjectParameter("AlertDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateNote", senderIDParameter, receiverIDParameter, subjectParameter, messageParameter, alertParameter, pushNotificationParameter, alertDateParameter);
         }
     }
 }

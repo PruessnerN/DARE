@@ -54,11 +54,11 @@
             <PropertyRef Name="NoteID" />
           </Key>
           <Property Name="NoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserID" Type="bigint" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="SenderID" Type="bigint" Nullable="false" />
+          <Property Name="ReceiverID" Type="bigint" Nullable="false" />
           <Property Name="Subject" Type="nvarchar" MaxLength="200" />
-          <Property Name="Recipients" Type="nvarchar" MaxLength="200" />
           <Property Name="Message" Type="ntext" />
+          <Property Name="isNew" Type="bit" />
           <Property Name="Alert" Type="bit" />
           <Property Name="PushNotification" Type="bit" />
           <Property Name="CreationDate" Type="datetime" />
@@ -190,7 +190,19 @@
               <PropertyRef Name="UserID" />
             </Principal>
             <Dependent Role="Note">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Note_User1">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Note" Type="Self.Note" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
               <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Note">
+              <PropertyRef Name="ReceiverID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -280,6 +292,15 @@
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="NewPassword" Type="nvarchar" Mode="In" />
           <Parameter Name="NewSalt" Type="binary" Mode="In" />
+        </Function>
+        <Function Name="CreateNote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SenderID" Type="bigint" Mode="In" />
+          <Parameter Name="ReceiverID" Type="bigint" Mode="In" />
+          <Parameter Name="Subject" Type="nvarchar" Mode="In" />
+          <Parameter Name="Message" Type="ntext" Mode="In" />
+          <Parameter Name="Alert" Type="bit" Mode="In" />
+          <Parameter Name="PushNotification" Type="bit" Mode="In" />
+          <Parameter Name="AlertDate" Type="datetime" Mode="In" />
         </Function>
         <Function Name="CreateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
@@ -382,6 +403,10 @@
             <End Role="User" EntitySet="User" />
             <End Role="Note" EntitySet="Note" />
           </AssociationSet>
+          <AssociationSet Name="FK_Note_User1" Association="Self.FK_Note_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="Note" EntitySet="Note" />
+          </AssociationSet>
           <AssociationSet Name="FK_Schedule_Device" Association="Self.FK_Schedule_Device">
             <End Role="Client" EntitySet="Client" />
             <End Role="Schedule" EntitySet="Schedule" />
@@ -443,9 +468,10 @@
           <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
           <Property Name="TempAccessCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
-          <NavigationProperty Name="Notes" Relationship="npruessnerEModel.FK_Note_User" FromRole="User" ToRole="Note" />
           <NavigationProperty Name="Things" Relationship="npruessnerEModel.UserThing" FromRole="User" ToRole="Thing" />
-        </EntityType>
+          <NavigationProperty Name="Notes" Relationship="npruessnerEModel.FK_Note_User" FromRole="User" ToRole="Note" />
+          <NavigationProperty Name="Notes1" Relationship="npruessnerEModel.FK_Note_User1" FromRole="User" ToRole="Note" />
+          </EntityType>
         <Association Name="UserRole">
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -527,7 +553,6 @@
           </FunctionImport>
           <EntitySet Name="Clients" EntityType="npruessnerEModel.Client" />
           <EntitySet Name="Events" EntityType="npruessnerEModel.Event" />
-          <EntitySet Name="Notes" EntityType="npruessnerEModel.Note" />
           <EntitySet Name="Schedules" EntityType="npruessnerEModel.Schedule" />
           <EntitySet Name="SensorDatas" EntityType="npruessnerEModel.SensorData" />
           <AssociationSet Name="FK_Event_Device" Association="npruessnerEModel.FK_Event_Device">
@@ -541,10 +566,6 @@
           <AssociationSet Name="FK_SensorData_Device" Association="npruessnerEModel.FK_SensorData_Device">
             <End Role="Client" EntitySet="Clients" />
             <End Role="SensorData" EntitySet="SensorDatas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Note_User" Association="npruessnerEModel.FK_Note_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Note" EntitySet="Notes" />
           </AssociationSet>
           <EntitySet Name="Actions" EntityType="npruessnerEModel.Action" />
           <EntitySet Name="Things" EntityType="npruessnerEModel.Thing" />
@@ -560,7 +581,25 @@
             <End Role="Thing" EntitySet="Things" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Notes" EntityType="npruessnerEModel.Note" />
+          <AssociationSet Name="FK_Note_User" Association="npruessnerEModel.FK_Note_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Note" EntitySet="Notes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Note_User1" Association="npruessnerEModel.FK_Note_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Note" EntitySet="Notes" />
+          </AssociationSet>
+          <FunctionImport Name="CreateNote">
+            <Parameter Name="SenderID" Mode="In" Type="Int64" />
+            <Parameter Name="ReceiverID" Mode="In" Type="Int64" />
+            <Parameter Name="Subject" Mode="In" Type="String" />
+            <Parameter Name="Message" Mode="In" Type="String" />
+            <Parameter Name="Alert" Mode="In" Type="Boolean" />
+            <Parameter Name="PushNotification" Mode="In" Type="Boolean" />
+            <Parameter Name="AlertDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          </EntityContainer>
         <EntityType Name="Ecosystem">
           <Key>
             <PropertyRef Name="SystemID" />
@@ -600,22 +639,6 @@
           <Property Name="Date" Type="DateTime" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Event" ToRole="Client" />
-        </EntityType>
-        <EntityType Name="Note">
-          <Key>
-            <PropertyRef Name="NoteID" />
-          </Key>
-          <Property Name="NoteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int64" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Subject" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Recipients" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Alert" Type="Boolean" />
-          <Property Name="PushNotification" Type="Boolean" />
-          <Property Name="CreationDate" Type="DateTime" Precision="3" />
-          <Property Name="AlertDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="User" Relationship="npruessnerEModel.FK_Note_User" FromRole="Note" ToRole="User" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -678,20 +701,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Note_User">
-          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="npruessnerEModel.Note" Role="Note" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Note">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Action">
           <Key>
             <PropertyRef Name="ActionID" />
@@ -745,7 +754,50 @@
           <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="*" />
           <End Type="npruessnerEModel.User" Role="User" Multiplicity="*" />
         </Association>
-      </Schema>
+        <EntityType Name="Note">
+          <Key>
+            <PropertyRef Name="NoteID" />
+          </Key>
+          <Property Name="NoteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SenderID" Type="Int64" Nullable="false" />
+          <Property Name="ReceiverID" Type="Int64" Nullable="false" />
+          <Property Name="Subject" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="isNew" Type="Boolean" />
+          <Property Name="Alert" Type="Boolean" />
+          <Property Name="PushNotification" Type="Boolean" />
+          <Property Name="CreationDate" Type="DateTime" Precision="3" />
+          <Property Name="AlertDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="npruessnerEModel.FK_Note_User" FromRole="Note" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="npruessnerEModel.FK_Note_User1" FromRole="Note" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Note_User">
+          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="npruessnerEModel.Note" Role="Note" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Note">
+              <PropertyRef Name="SenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Note_User1">
+          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1" />
+          <End Type="npruessnerEModel.Note" Role="Note" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Note">
+              <PropertyRef Name="ReceiverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -839,22 +891,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Notes">
-            <EntityTypeMapping TypeName="npruessnerEModel.Note">
-              <MappingFragment StoreEntitySet="Note">
-                <ScalarProperty Name="AlertDate" ColumnName="AlertDate" />
-                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
-                <ScalarProperty Name="PushNotification" ColumnName="PushNotification" />
-                <ScalarProperty Name="Alert" ColumnName="Alert" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="Recipients" ColumnName="Recipients" />
-                <ScalarProperty Name="Subject" ColumnName="Subject" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="NoteID" ColumnName="NoteID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Schedules">
             <EntityTypeMapping TypeName="npruessnerEModel.Schedule">
               <MappingFragment StoreEntitySet="Schedule">
@@ -907,6 +943,23 @@
               <ScalarProperty Name="ThingID" ColumnName="ThingID" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Notes">
+            <EntityTypeMapping TypeName="npruessnerEModel.Note">
+              <MappingFragment StoreEntitySet="Note">
+                <ScalarProperty Name="AlertDate" ColumnName="AlertDate" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="PushNotification" ColumnName="PushNotification" />
+                <ScalarProperty Name="Alert" ColumnName="Alert" />
+                <ScalarProperty Name="isNew" ColumnName="isNew" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="ReceiverID" ColumnName="ReceiverID" />
+                <ScalarProperty Name="SenderID" ColumnName="SenderID" />
+                <ScalarProperty Name="NoteID" ColumnName="NoteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateNote" FunctionName="npruessnerEModel.Store.CreateNote" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

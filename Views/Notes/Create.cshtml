@@ -4,31 +4,29 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Create</h2>
-
+<div class="header">
+    <h2>Create Note</h2>
+</div>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Note</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.UserID, "UserID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.SenderID, "SenderID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("UserID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+                @Html.DropDownList("SenderID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SenderID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ReceiverID, "ReceiverID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                @Html.DropDownList("ReceiverID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ReceiverID, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -37,14 +35,6 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Recipients, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Recipients, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Recipients, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -66,7 +56,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group hiddenFields">
             @Html.LabelFor(model => model.PushNotification, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
@@ -75,16 +65,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreationDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreationDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CreationDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
+        <div class="form-group hiddenFields">
             @Html.LabelFor(model => model.AlertDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.AlertDate, new { htmlAttributes = new { @class = "form-control" } })
@@ -94,16 +75,27 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                @Html.ActionLink("Back to List", "Received", null, new { @class="btn red"})
+                &emsp;
+                <input type="submit" value="Create" class="btn red" />
             </div>
         </div>
     </div>
 }
+<script>
+    $(document).ready(function () {
+        $('#Alert').on('change', function () {
+            var valueSelected = this.value;
+            if (valueSelected == "true") {
+                $('.hiddenFields').show("fast");
+            } else {
+                $('.hiddenFields').hide("fast");
+            }
+        });
+        $('#Alert').val("").change();
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
+    })
+</script>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<DARE.Models.Note>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="header">
+    <h2>Sent Notes&emsp;&emsp;@Html.ActionLink("Create Note", "Create", null, new { @class = "red btn" })</h2> 
+</div>
+<div id="messageWrapper">
+    @foreach (var note in Model)
+    {
+        <div class="noteTile">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">To <span style="color:#F41710;">@note.User1.FirstName</span></h3>
+                    <p class="panel-title">@note.CreationDate.Value.ToShortDateString()<br />@note.CreationDate.Value.ToShortTimeString()</p>
+                </div>
+                <div class="panel-body">
+                    <p>@note.Message</p>
+                </div>
+                <div class="noteOptions">
+                    <a href="/Notes/Create" class="glyphicon glyphicon-share-alt"></a>
+                    <br />
+                    <a href="@Url.Action("Delete", "Notes", new {@id=note.NoteID})" class="glyphicon glyphicon-trash"></a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $('.panel').on({
+            'mouseenter': function () {
+                $(this).find('.noteOptions').stop().show("fast");
+            }, 'mouseleave': function () {
+                $(this).find('.noteOptions').stop().hide("fast");
+            }
+        });
+    });
+</script>
+

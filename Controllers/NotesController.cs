@@ -15,9 +15,17 @@ namespace DARE.Controllers
         private npruessnerEEntities1 db = new npruessnerEEntities1();
 
         // GET: Notes
-        public ActionResult Index()
+        public ActionResult Sent()
         {
-            var notes = db.Notes.Include(n => n.User);
+            var userID = db.ufn_GetUserID(HttpContext.User.Identity.Name);
+            var notes = db.Notes.Where(n => n.SenderID == userID).Include(n => n.User).Include(n => n.User1).OrderBy(n => n.CreationDate);
+            return View(notes.ToList());
+        }
+
+        public ActionResult Received()
+        {
+            var userID = db.ufn_GetUserID(HttpContext.User.Identity.Name);
+            var notes = db.Notes.Where(n => n.ReceiverID == userID).Include(n => n.User).Include(n => n.User1).OrderBy(n => n.CreationDate);
             return View(notes.ToList());
         }
 
@@ -39,7 +47,8 @@ namespace DARE.Controllers
         // GET: Notes/Create
         public ActionResult Create()
         {
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "Username");
+            ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username");
+            ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username");
             return View();
         }
 
@@ -48,17 +57,12 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "NoteID,UserID,Name,Subject,Recipients,Message,Alert,PushNotification,CreationDate,AlertDate")] Note note)
+        public ActionResult Create([Bind(Include = "SenderID,ReceiverID,Subject,Message,Alert,PushNotification,AlertDate")] Note note)
         {
-            if (ModelState.IsValid)
-            {
-                db.Notes.Add(note);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "Username", note.UserID);
-            return View(note);
+            db.CreateNote(note.SenderID, note.ReceiverID, note.Subject, note.Message, note.Alert, note.PushNotification, note.AlertDate);
+            ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username", note.SenderID);
+            ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username", note.ReceiverID);
+            return RedirectToAction("Index");
         }
 
         // GET: Notes/Edit/5
@@ -73,7 +77,8 @@ namespace DARE.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "Username", note.UserID);
+            ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username", note.SenderID);
+            ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username", note.ReceiverID);
             return View(note);
         }
 
@@ -82,7 +87,7 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "NoteID,UserID,Name,Subject,Recipients,Message,Alert,PushNotification,CreationDate,AlertDate")] Note note)
+        public ActionResult Edit([Bind(Include = "NoteID,SenderID,ReceiverID,Subject,Message,isNew,Alert,PushNotification,CreationDate,AlertDate")] Note note)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +95,8 @@ namespace DARE.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "Username", note.UserID);
+            ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username", note.SenderID);
+            ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username", note.ReceiverID);
             return View(note);
         }
 

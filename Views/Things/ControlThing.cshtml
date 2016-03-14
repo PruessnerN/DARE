@@ -10,29 +10,42 @@
 @if (Model.ThingID == 9)
 {
     <div id="temperatureDiv">
-        <div class="container">
-            <div class="de">
-                <div class="den">
-                    <div class="dene">
-                        <div class="denem">
-                            <div class="deneme">
-                                48<span>.0</span><strong>&deg;</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <canvas id="gauge1" width="400" height="400"
+                data-type="canv-gauge"
+                data-title="Temperature"
+                data-min-value="-20"
+                data-max-value="120"
+                data-major-ticks="-20 -10 0 10 20 30 40 50 60 70 80 90 100 110 120"
+                data-minor-ticks="2"
+                data-stroke-ticks="true"
+                data-units="&deg; F"
+                data-value-format="2.2"
+                data-glow="true"
+                data-animation-delay="10"
+                data-animation-duration="300"
+                data-animation-fn="bounce"
+                data-colors-needle="#f00"
+                data-highlights="-20 10 #B853E0, 10 55 #00C8FF, 55 80 #4BED00, 80 100 #EDED00, 100 120 #ED0010"></canvas>
     </div>
 }
-else
+else if (Model.ThingID == 6 || Model.ThingID == 7)
 {
     <div class="onoffswitch">
         <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="if (document.getElementById('myonoffswitch').checked) { turnOn(); } else { turnOff(); }">
         <label class="onoffswitch-label" for="myonoffswitch"></label>
     </div>
-}
+} else if (Model.ThingID == 10)
+{
+    <div class="state">
 
+    </div>
+}
+<br />
+<div class="gettingState">
+    <p>Getting State...</p>
+</div>
+<br />
+@Html.ActionLink("Back To Things", "Index", null, new { @class = "red btn" })
 <script>
     $(document).ready(function () {
         pubnub = PUBNUB({
@@ -52,12 +65,26 @@ else
         if (m.id == "@Model.ThingID.ToString()") {
             if (m.commands[0].hasOwnProperty("state")) {
                 if (m.commands[0].state == "1") {
+                    $('.gettingState').html(" ");
                     $('#myonoffswitch').prop('checked', true);
                 } else if (m.commands[0].state == "0") {
+                    $('.gettingState').html(" ");
                     $('#myonoffswitch').prop('checked', false);
                 }
             } else if (m.commands[0].hasOwnProperty("temperature")) {
-                $('#deneme').val(m.commands[0].state);
+                $('.gettingState').html(" ");
+                var temp = m.commands[0].temperature;
+                temp = (temp * 1.8) + 32;
+                temp = temp.toPrecision(3);
+                Gauge.Collection.get('gauge1').setValue(temp);
+            } else if (m.commands[0].hasOwnProperty("doorState")) {
+                if (m.commands[0].doorState == "1") {
+                    $('.gettingState').html(" ");
+                    $('.gettingState').html("<h2 style='color:green;'>CLOSED</h2>");
+                } else if (m.commands[0].doorState == "0") {
+                    $('.gettingState').html(" ");
+                    $('.gettingState').html("<h2 style='color: red;'>OPEN</h2>");
+                }
             }
         }
     }

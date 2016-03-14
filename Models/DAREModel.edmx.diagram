@@ -11,18 +11,19 @@
         <EntityTypeShape EntityType="npruessnerEModel.Ecosystem" Width="1.5" PointX="7.75" PointY="8.75" />
         <EntityTypeShape EntityType="npruessnerEModel.Client" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="npruessnerEModel.Event" Width="1.5" PointX="3" PointY="7.625" />
-        <EntityTypeShape EntityType="npruessnerEModel.Note" Width="1.5" PointX="7.5" PointY="4" />
         <EntityTypeShape EntityType="npruessnerEModel.Schedule" Width="1.5" PointX="3" PointY="13.875" />
         <EntityTypeShape EntityType="npruessnerEModel.SensorData" Width="1.5" PointX="3" PointY="10.75" />
         <AssociationConnector Association="npruessnerEModel.FK_Event_Device" />
         <AssociationConnector Association="npruessnerEModel.FK_Schedule_Device" />
         <AssociationConnector Association="npruessnerEModel.FK_SensorData_Device" />
-        <AssociationConnector Association="npruessnerEModel.FK_Note_User" />
         <EntityTypeShape EntityType="npruessnerEModel.Action" Width="1.5" PointX="5.25" PointY="10.375" />
         <EntityTypeShape EntityType="npruessnerEModel.Thing" Width="1.5" PointX="3" PointY="4.25" />
         <AssociationConnector Association="npruessnerEModel.FK_Action_Thing" />
         <AssociationConnector Association="npruessnerEModel.FK_Entity_Controller" />
         <AssociationConnector Association="npruessnerEModel.UserThing" />
+        <EntityTypeShape EntityType="npruessnerEModel.Note" Width="1.5" PointX="7.5" PointY="4" />
+        <AssociationConnector Association="npruessnerEModel.FK_Note_User" />
+        <AssociationConnector Association="npruessnerEModel.FK_Note_User1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

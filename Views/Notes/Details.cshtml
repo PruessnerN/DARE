@@ -12,14 +12,6 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Subject)
         </dt>
 
@@ -28,19 +20,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Recipients)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Recipients)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Message)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Message)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isNew)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isNew)
         </dd>
 
         <dt>
@@ -81,6 +73,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.User.Username)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User1.Username)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User1.Username)
         </dd>
 
     </dl>
