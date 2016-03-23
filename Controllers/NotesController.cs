@@ -62,7 +62,7 @@ namespace DARE.Controllers
             db.CreateNote(note.SenderID, note.ReceiverID, note.Subject, note.Message, note.Alert, note.PushNotification, note.AlertDate);
             ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username", note.SenderID);
             ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username", note.ReceiverID);
-            return RedirectToAction("Index");
+            return RedirectToAction("Received");
         }
 
         // GET: Notes/Edit/5
@@ -93,7 +93,7 @@ namespace DARE.Controllers
             {
                 db.Entry(note).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Sent");
             }
             ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username", note.SenderID);
             ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username", note.ReceiverID);

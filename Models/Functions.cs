@@ -49,13 +49,13 @@ namespace DARE.Models
         }
 
         [DbFunction("npruessnerEModel.Store", "ufn_HaveAccess")]
-        public bool ufn_HaveAccess(long? userid, int entityid)
+        public bool ufn_HaveAccess(long? userid, int thingid)
         {
             List<ObjectParameter> parameters = new List<ObjectParameter>();
             parameters.Add(new ObjectParameter("UserID", userid));
-            parameters.Add(new ObjectParameter("EntityID", entityid));
+            parameters.Add(new ObjectParameter("ThingID", thingid));
             var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
-            bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HaveAccess(@UserID, @EntityID)").Execute(MergeOption.NoTracking).FirstOrDefault();
+            bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HaveAccess(@UserID, @ThingID)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
             return output;
         }
     }

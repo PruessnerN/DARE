@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/Content/hover.css" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="~/Scripts/jquery.thermometer.js" type="text/javascript"></script>
+    <script src="~/Scripts/HashFunction.js" type="text/javascript"></script>
     <script src="~/Scripts/gauge.min.js" type="text/javascript"></script>
     <script src="~/Scripts/PubNub.js"></script>
     @Styles.Render("~/Content/css")
@@ -33,6 +34,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav nav-tabs nav-stacked">
                     <li>@Html.ActionLink("Dashboard", "Index", "Home", null, new { @class = "moveRightAnim" })</li>
+                    <li>@Html.ActionLink("Clients", "Index", "Clients", null, new { @class = "moveRightAnim" })</li>
                     <li>@Html.ActionLink("Things", "Index", "Things", null, new { @class = "moveRightAnim" })</li>
                     <li>@Html.ActionLink("Actions", "Index", "Actions", null, new { @class = "moveRightAnim" })</li>
                     <li>@Html.ActionLink("Recent Events", "Index", "Events", null, new { @class = "moveRightAnim" })</li>

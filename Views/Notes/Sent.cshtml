@@ -17,12 +17,15 @@
                     <p class="panel-title">@note.CreationDate.Value.ToShortDateString()<br />@note.CreationDate.Value.ToShortTimeString()</p>
                 </div>
                 <div class="panel-body">
+                    <h4>@note.Subject</h4>
                     <p>@note.Message</p>
                 </div>
                 <div class="noteOptions">
-                    <a href="/Notes/Create" class="glyphicon glyphicon-share-alt"></a>
+                    <a href="/Notes/Create" data-toggle="tooltip" data-placement="left" title="Reply" class="glyphicon glyphicon-share-alt"></a>
                     <br />
-                    <a href="@Url.Action("Delete", "Notes", new {@id=note.NoteID})" class="glyphicon glyphicon-trash"></a>
+                    <a href="@Url.Action("Edit", "Notes", new {@id=note.NoteID})" data-toggle="tooltip" data-placement="left" title="Edit" class="glyphicon glyphicon-cog"></a>
+                    <br />
+                    <a href="@Url.Action("Delete", "Notes", new {@id=note.NoteID})" data-toggle="tooltip" data-placement="left" title="Delete" class="glyphicon glyphicon-trash"></a>
                 </div>
             </div>
         </div>
@@ -37,6 +40,11 @@
                 $(this).find('.noteOptions').stop().hide("fast");
             }
         });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     });
+
 </script>
 

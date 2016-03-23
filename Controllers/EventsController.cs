@@ -57,7 +57,7 @@ namespace DARE.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DeviceID = new SelectList(db.Clients, "ClientID", "Name", @event.DeviceID);
+            ViewBag.DeviceID = new SelectList(db.Clients, "ClientID", "Name", @event.ClientID);
             return View(@event);
         }
 
@@ -73,7 +73,7 @@ namespace DARE.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DeviceID = new SelectList(db.Clients, "ClientID", "Name", @event.DeviceID);
+            ViewBag.DeviceID = new SelectList(db.Clients, "ClientID", "Name", @event.ClientID);
             return View(@event);
         }
 
@@ -90,7 +90,7 @@ namespace DARE.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DeviceID = new SelectList(db.Clients, "ClientID", "Name", @event.DeviceID);
+            ViewBag.DeviceID = new SelectList(db.Clients, "ClientID", "Name", @event.ClientID);
             return View(@event);
         }
 

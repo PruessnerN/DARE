@@ -31,12 +31,12 @@ namespace DARE.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Ecosystem> Ecosystems { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
-        public virtual DbSet<Event> Events { get; set; }
-        public virtual DbSet<Schedule> Schedules { get; set; }
-        public virtual DbSet<SensorData> SensorDatas { get; set; }
         public virtual DbSet<Action> Actions { get; set; }
         public virtual DbSet<Thing> Things { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<SensorData> SensorDatas { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
         {
@@ -310,6 +310,41 @@ namespace DARE.Models
                 new ObjectParameter("AlertDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateNote", senderIDParameter, receiverIDParameter, subjectParameter, messageParameter, alertParameter, pushNotificationParameter, alertDateParameter);
+        }
+    
+        public virtual int DeleteThing(Nullable<int> thingID)
+        {
+            var thingIDParameter = thingID.HasValue ?
+                new ObjectParameter("ThingID", thingID) :
+                new ObjectParameter("ThingID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteThing", thingIDParameter);
+        }
+    
+        public virtual int CreateClient(string name, string type, string description)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var typeParameter = type != null ?
+                new ObjectParameter("Type", type) :
+                new ObjectParameter("Type", typeof(string));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("Description", description) :
+                new ObjectParameter("Description", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateClient", nameParameter, typeParameter, descriptionParameter);
+        }
+    
+        public virtual int DeleteClient(Nullable<int> clientID)
+        {
+            var clientIDParameter = clientID.HasValue ?
+                new ObjectParameter("ClientID", clientID) :
+                new ObjectParameter("ClientID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteClient", clientIDParameter);
         }
     }
 }

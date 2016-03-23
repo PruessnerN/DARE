@@ -15,7 +15,7 @@ namespace DARE.Models
     public partial class Event
     {
         public int EventID { get; set; }
-        public int DeviceID { get; set; }
+        public int ClientID { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public Nullable<System.DateTime> Date { get; set; }

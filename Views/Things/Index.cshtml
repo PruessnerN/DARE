@@ -19,9 +19,6 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.StateDescriptor)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Client.Name)
         </th>
         <th></th>
@@ -36,9 +33,6 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.StateDescriptor)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Client.Name)
         </td>
         <td>
@@ -51,3 +45,30 @@
 }
 
 </table>
+
+<div class="modal fade" style="margin-top: 100px;" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="color:#252830">
+            <div class="modal-header">
+                <h4 class="modal-title text-danger" id="myModalLabel">Warning!</h4>
+            </div>
+            <div class="modal-body">
+                <h4>
+                    @TempData["AccessDenied"]
+                </h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn red" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var success = @((TempData["AccessDenied"] != null).ToString().ToLower());
+        if(success) {
+            $('#myModal').modal('show');
+        }
+    })
+</script>

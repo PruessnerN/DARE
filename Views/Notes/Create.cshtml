@@ -8,10 +8,10 @@
     <h2>Create Note</h2>
 </div>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -41,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Message, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Message, new { @class = "form-control", @rows = "4", @cols = "20", @style = "color:black;" })
                 @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -68,14 +68,16 @@
         <div class="form-group hiddenFields">
             @Html.LabelFor(model => model.AlertDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.AlertDate, new { htmlAttributes = new { @class = "form-control" } })
+                <div class="input-group date" style="display:block;">
+                    <input type="text" readonly for="AlertDate" name="AlertDate" data-val-required="The Alert Date field is required." class="form-control" style="cursor: pointer;border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
+                </div>
                 @Html.ValidationMessageFor(model => model.AlertDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @Html.ActionLink("Back to List", "Received", null, new { @class="btn red"})
+                @Html.ActionLink("Back to List", "Received", null, new { @class = "btn red" })
                 &emsp;
                 <input type="submit" value="Create" class="btn red" />
             </div>
@@ -94,6 +96,11 @@
         });
         $('#Alert').val("").change();
 
+        $('.input-group.date input').datepicker({
+            format: "mm/dd/yyyy",
+            startView: 1,
+            autoclose: true
+        });
     })
 </script>
 @section Scripts {

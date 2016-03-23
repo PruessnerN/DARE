@@ -661,8 +661,8 @@ textarea {
     }
 
     .userSquare {
-        height: 250px;
-        width: 250px;
+        height: 250px !important;
+        width: 250px !important;
         float: left;
         -webkit-transition: -webkit-transform 1s;
         -moz-transition: -moz-transform 1s;
@@ -782,7 +782,7 @@ textarea {
     .text-danger {
         color: #F41710;
         font-weight: bold;
-        font-size: 1em;
+        font-size: 1.5em;
     }
     /*########## START USER PROFILE STYLING #########*/
     .profileInputGroup {
@@ -886,48 +886,75 @@ textarea {
         font-weight:bold;
     }*/
 
+    .clientConnected:after {
+        content: "CONNECTED";
+        color:white;
+        background-color:green;
+        padding:5px;
+        margin-left:20px;
+        cursor:default;
+        border-radius:4px;
+        font-size:0.7em;
+    }
+
+    .clientDisconnected:after {
+        content: "DISCONNECTED";
+        color:white;
+        background-color:#ED0010;
+        padding:5px;
+        margin-left:20px;
+        cursor:default;
+        border-radius:4px;
+        font-size:0.7em;
+    }
     /*########## START DASHBOARD STYLING ###########*/
     .tile {
-        width: 254px;
-        height: 254px;
+        width: 304px;
+        height: 304px;
         border: 2px solid grey;
         display: inline-block;
-        margin-right: 20px;
+        margin-right: 40px;
+        margin-bottom: 40px;
         padding: 0;
     }
 
     .draggable {
-        color: white;
-        background-color: rgba(33, 150,243, 0.3);
-        height: 250px;
-        width: 250px;
+        color: black;
+        background-color: white;
+        height: 300px;
+        width: 300px;
         position: absolute;
         display: block;
         margin: auto;
-        cursor: move;
         text-align: center;
     }
+    .draggable > .panel-heading {
+        cursor: move;
+    }
 
-    #draggable h3 {
+    .panel-heading > h4 {
         text-align: center;
-        padding: 0;
-        margin: 0;
+        font-size: 1.5em;
     }
 
     .dragOver {
-        border-style: dashed;
+        border: 2px dashed red;
     }
     /*########## MESSAGE BOARD STYLING ##########*/
 
     .noteTile {
         height: 250px;
-        width: 200px;
+        width: 300px;
         color: black;
         position: relative;
+        display:inline-block;
+        vertical-align:top;
+        margin-right: 100px;
     }
 
     .panel {
         width: 300px;
+        position: relative;
     }
 
     .panel-heading {
@@ -963,7 +990,7 @@ textarea {
     .noteOptions {
         background-color: #F5F5F5;
         position: absolute;
-        right: 202px;
+        right: 302px;
         top:0;
         display:none;
         border-radius:4px;
@@ -981,10 +1008,10 @@ textarea {
     }
     .noteOptions > a:hover {
         text-decoration: none;
-        -moz-transition: all ease-in-out 0.1s;
-        -o-transition: all ease-in-out 0.1s;
-        -webkit-transition: all ease-in-out 0.1s;
-        transition: all ease-in-out 0.1s;
+        -moz-transition: all ease-in-out 0.05s;
+        -o-transition: all ease-in-out 0.05s;
+        -webkit-transition: all ease-in-out 0.05s;
+        transition: all ease-in-out 0.05s;
         background-color: lightgrey;
         border-radius:4px;
     }

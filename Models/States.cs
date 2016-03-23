@@ -8,8 +8,6 @@ namespace DARE.Models
 {
     public class StatesClass
     {
-
-
         public static List<SelectListItem> States = new List<SelectListItem>()
     {
         new SelectListItem() {Text="Alabama", Value="AL"},

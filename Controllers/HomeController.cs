@@ -1,31 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using DARE.Models;
+using DARE.ViewModels;
+using Newtonsoft.Json;
+using System.Web.Services;
 
 namespace DARE.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
+        private npruessnerEEntities1 db = new npruessnerEEntities1();
+        private AccessProvider ap = new AccessProvider();
+
         public ActionResult Index()
         {
-            return View();
+            var userID = db.ufn_GetUserID(HttpContext.User.Identity.Name);
+            UserAccess[] userAccess = ap.GetUserAccess(userID);
+            List<Thing> thingList = new List<Thing>();
+            foreach(var thing in userAccess)
+            {
+                thingList.Add(db.Things.Find(thing.ThingID));
+            }
+            ViewBag.ClientList = new List<Client>(db.Clients);
+            return View(thingList);
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public string getThings(string clientCode)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            List<Thing> things = db.Things.Where(t => t.Client.ClientCode == clientCode).ToList();
+            var json = JsonConvert.SerializeObject(things);
+            return json;
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

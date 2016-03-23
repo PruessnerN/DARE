@@ -19,9 +19,9 @@ namespace DARE.Models
         public long ReceiverID { get; set; }
         public string Subject { get; set; }
         public string Message { get; set; }
-        public Nullable<bool> isNew { get; set; }
-        public Nullable<bool> Alert { get; set; }
-        public Nullable<bool> PushNotification { get; set; }
+        public bool isNew { get; set; }
+        public bool Alert { get; set; }
+        public bool PushNotification { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public Nullable<System.DateTime> AlertDate { get; set; }
     

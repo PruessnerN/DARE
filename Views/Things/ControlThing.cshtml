@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="header">
-    <h2>Control @Model.Name</h2>
+    <h2 id="deviceStatus" style="width:auto; display:inline-block">Control @Model.Name</h2> 
 </div>
 @if (Model.ThingID == 9)
 {
@@ -41,26 +41,37 @@ else if (Model.ThingID == 6 || Model.ThingID == 7)
     </div>
 }
 <br />
-<div class="gettingState">
-    <p>Getting State...</p>
-</div>
 <br />
 @Html.ActionLink("Back To Things", "Index", null, new { @class = "red btn" })
 <script>
     $(document).ready(function () {
+        var hash = Sha1.hash("@User.Identity.Name");
         pubnub = PUBNUB({
             publish_key: 'pub-c-2a63b4b0-ca5b-4f32-8db9-1c9a1d04ec33',
             subscribe_key: 'sub-c-deb946f2-840e-11e5-9e96-02ee2ddab7fe',
-            ssl: true
+            ssl: true,
+            uuid: hash
         });
 
         pubnub.subscribe({
             channel: "pruessner_tribe",
             message: function (m) { console.log(m) },
-            connect: getState(),
-            callback: function (m) { queryMessage(m) }
+            connect: getConnectedClients(),
+            callback: function (m) { queryMessage(m) },
+            presence: function (m) { presenceCheck(m) }
         });
     })
+    function presenceCheck(m) {
+        if (m.uuid == "@Model.Client.ClientCode") {
+            if (m.action == "join") {
+                $('#deviceStatus').removeClass("clientDisconnected");
+                $('#deviceStatus').addClass("clientConnected");
+            } else if (m.action == "leave") {
+                $('#deviceStatus').removeClass("clientConnected");
+                $('#deviceStatus').addClass("clientDisconnected");
+            }
+        }
+    }
     function queryMessage(m) {
         if (m.id == "@Model.ThingID.ToString()") {
             if (m.commands[0].hasOwnProperty("state")) {
@@ -80,10 +91,10 @@ else if (Model.ThingID == 6 || Model.ThingID == 7)
             } else if (m.commands[0].hasOwnProperty("doorState")) {
                 if (m.commands[0].doorState == "1") {
                     $('.gettingState').html(" ");
-                    $('.gettingState').html("<h2 style='color:green;'>CLOSED</h2>");
+                    $('.state').html("<h2 style='color:green;'>CLOSED</h2>");
                 } else if (m.commands[0].doorState == "0") {
                     $('.gettingState').html(" ");
-                    $('.gettingState').html("<h2 style='color: red;'>OPEN</h2>");
+                    $('.state').html("<h2 style='color: red;'>OPEN</h2>");
                 }
             }
         }
@@ -119,5 +130,21 @@ else if (Model.ThingID == 6 || Model.ThingID == 7)
         setTimeout(function () {
             $('#myonoffswitch').attr("disabled", false);
         }, 2000)
+    }
+    function getConnectedClients() {
+        pubnub.here_now({
+            channel: 'pruessner_tribe',
+            callback: function (m) {
+                console.log(m.uuids.toString());
+                console.log(m);
+                var connected = m.uuids.indexOf("@Model.Client.ClientCode");
+                if (connected == -1) {
+                    $('#deviceStatus').addClass("clientDisconnected");
+                } else {
+                    $('#deviceStatus').addClass("clientConnected");
+                    getState();
+                }
+            }
+        });
     }
 </script>

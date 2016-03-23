@@ -46,12 +46,11 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClientID,Name,Type,ClientCode,Description")] Client client)
+        public ActionResult Create([Bind(Include = "Name,Type,Description")] Client client)
         {
             if (ModelState.IsValid)
             {
-                db.Clients.Add(client);
-                db.SaveChanges();
+                db.CreateClient(client.Name, client.Type, client.Description);
                 return RedirectToAction("Index");
             }
 
@@ -109,9 +108,7 @@ namespace DARE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = db.Clients.Find(id);
-            db.Clients.Remove(client);
-            db.SaveChanges();
+            db.DeleteClient(id);
             return RedirectToAction("Index");
         }
 

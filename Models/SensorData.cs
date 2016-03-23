@@ -15,7 +15,7 @@ namespace DARE.Models
     public partial class SensorData
     {
         public int DataID { get; set; }
-        public int DeviceID { get; set; }
+        public int ClientID { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public Nullable<int> Data { get; set; }

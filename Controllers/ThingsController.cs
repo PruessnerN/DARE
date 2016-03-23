@@ -13,6 +13,7 @@ namespace DARE.Controllers
     public class ThingsController : Controller
     {
         private npruessnerEEntities1 db = new npruessnerEEntities1();
+        private AccessProvider ap = new AccessProvider();
 
         // GET: Things
         public ActionResult Index()
@@ -114,17 +115,24 @@ namespace DARE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Thing thing = db.Things.Find(id);
-            db.Things.Remove(thing);
-            db.SaveChanges();
+            db.DeleteThing(id);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult ControlThing(int id)
         {
-            Thing thing = db.Things.Find(id);
-            return View(thing);
+            var userID = db.ufn_GetUserID(HttpContext.User.Identity.Name);
+            if(ap.HaveAccess(userID, id))
+            {
+                Thing thing = db.Things.Find(id);
+                return View(thing);
+            }
+            else
+            {
+                TempData["AccessDenied"] = "You do not have permission to access this thing!";
+                return RedirectToAction("Index");
+            }
         }
 
         protected override void Dispose(bool disposing)

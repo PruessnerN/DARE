@@ -15,7 +15,7 @@ namespace DARE.Models
     public partial class Schedule
     {
         public int ScheduleID { get; set; }
-        public int DeviceID { get; set; }
+        public int ClientID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Nullable<System.DateTime> DateSequence { get; set; }
