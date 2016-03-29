@@ -7,122 +7,120 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DARE.Models;
-using PagedList;
+using Newtonsoft.Json;
+using DARE.ViewModels;
 
 namespace DARE.Controllers
 {
-    public class EventsController : Controller
+    public class SchedulesController : Controller
     {
         private npruessnerEEntities1 db = new npruessnerEEntities1();
 
-        // GET: Events
-        public ActionResult Index(int? pageNumber)
+        // GET: Schedules
+        public ActionResult Index()
         {
-            if(pageNumber == null)
-            {
-                pageNumber = 1;
-            }
-
-            var events = db.Events.Include(e => e.Thing).OrderByDescending(m => m.Date);
-            int pageSize = 10;
-            return View(events.ToPagedList(pageNumber.GetValueOrDefault(), pageSize));
+            var schedules = db.Schedules.Include(s => s.Thing);
+            return View(schedules.ToList());
         }
 
-        // GET: Events/Details/5
-        public ActionResult Details(int? id)
+        [HttpPost]
+        public string getActions(int thingid)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Event @event = db.Events.Find(id);
-            if (@event == null)
-            {
-                return HttpNotFound();
-            }
-            return View(@event);
+            List<ActionViewModel> actions = null;
+            actions = (from a in db.Actions
+                       where a.ThingID == thingid
+                       select new ActionViewModel
+                       {
+                           ActionID = a.ActionID,
+                           ThingID = a.ThingID,
+                           Name = a.Name,
+                           Description = a.Description
+                       }).ToList();
+            var json = JsonConvert.SerializeObject(actions);
+            return json;
         }
+            
 
-        // GET: Events/Create
+        // GET: Schedules/Create
         public ActionResult Create()
         {
             ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name");
             return View();
         }
 
-        // POST: Events/Create
+        // POST: Schedules/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EventID,ThingID,Action,Type,Date")] Event @event)
+        public ActionResult Create([Bind(Include = "ScheduleID,ThingID,ActionID,Name,CronExpression,Description")] Schedule schedule)
         {
             if (ModelState.IsValid)
             {
-                db.Events.Add(@event);
+                db.Schedules.Add(schedule);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", @event.ThingID);
-            return View(@event);
+            ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", schedule.ThingID);
+            return View(schedule);
         }
 
-        // GET: Events/Edit/5
+        // GET: Schedules/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
-            if (@event == null)
+            Schedule schedule = db.Schedules.Find(id);
+            if (schedule == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", @event.ThingID);
-            return View(@event);
+            ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", schedule.ThingID);
+            return View(schedule);
         }
 
-        // POST: Events/Edit/5
+        // POST: Schedules/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EventID,ThingID,Action,Type,Date")] Event @event)
+        public ActionResult Edit([Bind(Include = "ScheduleID,ThingID,ActionID,Name,CronExpression")] Schedule schedule)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(@event).State = EntityState.Modified;
+                db.Entry(schedule).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", @event.ThingID);
-            return View(@event);
+            ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", schedule.ThingID);
+            return View(schedule);
         }
 
-        // GET: Events/Delete/5
+        // GET: Schedules/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
-            if (@event == null)
+            Schedule schedule = db.Schedules.Find(id);
+            if (schedule == null)
             {
                 return HttpNotFound();
             }
-            return View(@event);
+            return View(schedule);
         }
 
-        // POST: Events/Delete/5
+        // POST: Schedules/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Event @event = db.Events.Find(id);
-            db.Events.Remove(@event);
+            Schedule schedule = db.Schedules.Find(id);
+            db.Schedules.Remove(schedule);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

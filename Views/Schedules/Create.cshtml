@@ -1,0 +1,93 @@
+﻿@model DARE.Models.Schedule
+
+@{
+    ViewBag.Title = "Create Schedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="header">
+    <h2>Create Schedule</h2>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Thing", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ThingID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ThingID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Action", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select name="ActionID" for="ActionID" id="selectAction"></select>
+                @Html.ValidationMessageFor(model => model.ActionID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Cron Expression", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CronExpression, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CronExpression, "", new { @class = "text-danger" })
+                To generate your cron expression, visit <a href="http://www.cronmaker.com" target="_blank">www.CronMaker.com</a> <br />
+                and paste the cron format results in the text box above.
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "red btn" })
+                &emsp;&emsp;
+                <input type="submit" value="Create" class="btn red" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#ThingID').change(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Schedules/getActions",
+                data: JSON.stringify({ thingid: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                success: function (data) {
+                    var actions = jQuery.parseJSON(data);
+                    console.log(actions);
+                    $('#selectAction').children().remove("option");
+                    $(actions).each(function () {
+                        $('#selectAction').append($("<option>").attr('value', this.ActionID).text(this.Name));
+                    });
+                }
+            });
+        })
+    })
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

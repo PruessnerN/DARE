@@ -24,6 +24,7 @@ namespace DARE.Controllers
         {
             return View(db.Users.ToList());
         }
+
         [Authorize]
         public ActionResult UserProfile()
         {

@@ -43,11 +43,10 @@
             <PropertyRef Name="EventID" />
           </Key>
           <Property Name="EventID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ThingID" Type="int" Nullable="false" />
+          <Property Name="Action" Type="nvarchar" MaxLength="50" />
           <Property Name="Type" Type="nvarchar" MaxLength="50" />
           <Property Name="Date" Type="datetime" />
-          <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Note">
           <Key>
@@ -77,10 +76,11 @@
             <PropertyRef Name="ScheduleID" />
           </Key>
           <Property Name="ScheduleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientID" Type="int" Nullable="false" />
+          <Property Name="ThingID" Type="int" Nullable="false" />
+          <Property Name="ActionID" Type="int" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="CronExpression" Type="nvarchar" MaxLength="100" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="DateSequence" Type="datetime" />
         </EntityType>
         <EntityType Name="SensorData">
           <Key>
@@ -168,15 +168,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Event_Device">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+        <Association Name="FK_Event_Thing">
+          <End Role="Thing" Type="Self.Thing" Multiplicity="1" />
           <End Role="Event" Type="Self.Event" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
             </Principal>
             <Dependent Role="Event">
-              <PropertyRef Name="ClientID" />
+              <PropertyRef Name="ThingID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -206,17 +206,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Schedule_Device">
-          <End Role="Client" Type="Self.Client" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK_Schedule_Thing">
+          <End Role="Thing" Type="Self.Thing" Multiplicity="1" />
           <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
             </Principal>
             <Dependent Role="Schedule">
-              <PropertyRef Name="ClientID" />
+              <PropertyRef Name="ThingID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -406,8 +404,8 @@
             <End Role="Client" EntitySet="Client" />
             <End Role="Thing" EntitySet="Thing" />
           </AssociationSet>
-          <AssociationSet Name="FK_Event_Device" Association="Self.FK_Event_Device">
-            <End Role="Client" EntitySet="Client" />
+          <AssociationSet Name="FK_Event_Thing" Association="Self.FK_Event_Thing">
+            <End Role="Thing" EntitySet="Thing" />
             <End Role="Event" EntitySet="Event" />
           </AssociationSet>
           <AssociationSet Name="FK_Note_User" Association="Self.FK_Note_User">
@@ -418,8 +416,8 @@
             <End Role="User" EntitySet="User" />
             <End Role="Note" EntitySet="Note" />
           </AssociationSet>
-          <AssociationSet Name="FK_Schedule_Device" Association="Self.FK_Schedule_Device">
-            <End Role="Client" EntitySet="Client" />
+          <AssociationSet Name="FK_Schedule_Thing" Association="Self.FK_Schedule_Thing">
+            <End Role="Thing" EntitySet="Thing" />
             <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
           <AssociationSet Name="FK_SensorData_Device" Association="Self.FK_SensorData_Device">
@@ -495,16 +493,16 @@
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
           <FunctionImport Name="AuthenticateUser">
-          <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Hash" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="ChangePassword">
-          <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="NewPassword" Mode="In" Type="String" />
             <Parameter Name="NewSalt" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="CreateUser">
-          <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Email" Mode="In" Type="String" />
             <Parameter Name="Password" Mode="In" Type="String" />
             <Parameter Name="Salt" Mode="In" Type="Binary" />
@@ -523,7 +521,7 @@
           <Parameter Name="username" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SetupSystem">
-          <Parameter Name="SystemName" Mode="In" Type="String" />
+            <Parameter Name="SystemName" Mode="In" Type="String" />
             <Parameter Name="HomeAddress" Mode="In" Type="String" />
             <Parameter Name="City" Mode="In" Type="String" />
             <Parameter Name="State" Mode="In" Type="String" />
@@ -542,7 +540,7 @@
             <Parameter Name="LastName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="UpdateUser">
-          <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Email" Mode="In" Type="String" />
             <Parameter Name="PasswordQuestion" Mode="In" Type="String" />
@@ -555,11 +553,11 @@
           </FunctionImport>
           <EntitySet Name="Ecosystems" EntityType="npruessnerEModel.Ecosystem" />
           <FunctionImport Name="GiveThingAccess">
-          <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
             <Parameter Name="ThingID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="RemoveThingAccess">
-          <Parameter Name="UserID" Mode="In" Type="Int64" />
+            <Parameter Name="UserID" Mode="In" Type="Int64" />
             <Parameter Name="ThingID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Clients" EntityType="npruessnerEModel.Client" />
@@ -587,7 +585,7 @@
             <End Role="Note" EntitySet="Notes" />
           </AssociationSet>
           <FunctionImport Name="CreateNote">
-          <Parameter Name="SenderID" Mode="In" Type="Int64" />
+            <Parameter Name="SenderID" Mode="In" Type="Int64" />
             <Parameter Name="ReceiverID" Mode="In" Type="Int64" />
             <Parameter Name="Subject" Mode="In" Type="String" />
             <Parameter Name="Message" Mode="In" Type="String" />
@@ -599,27 +597,27 @@
           <Parameter Name="ThingID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="CreateClient">
-          <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Name" Mode="In" Type="String" />
             <Parameter Name="Type" Mode="In" Type="String" />
             <Parameter Name="Description" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="DeleteClient">
           <Parameter Name="ClientID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="Events" EntityType="npruessnerEModel.Event" />
-          <EntitySet Name="Schedules" EntityType="npruessnerEModel.Schedule" />
           <EntitySet Name="SensorDatas" EntityType="npruessnerEModel.SensorData" />
-          <AssociationSet Name="FK_Event_Device" Association="npruessnerEModel.FK_Event_Device">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Event" EntitySet="Events" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Schedule_Device" Association="npruessnerEModel.FK_Schedule_Device">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Schedule" EntitySet="Schedules" />
-          </AssociationSet>
           <AssociationSet Name="FK_SensorData_Device" Association="npruessnerEModel.FK_SensorData_Device">
             <End Role="Client" EntitySet="Clients" />
             <End Role="SensorData" EntitySet="SensorDatas" />
+          </AssociationSet>
+          <EntitySet Name="Events" EntityType="npruessnerEModel.Event" />
+          <AssociationSet Name="FK_Event_Thing" Association="npruessnerEModel.FK_Event_Thing">
+            <End Role="Thing" EntitySet="Things" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <EntitySet Name="Schedules" EntityType="npruessnerEModel.Schedule" />
+          <AssociationSet Name="FK_Schedule_Thing" Association="npruessnerEModel.FK_Schedule_Thing">
+            <End Role="Thing" EntitySet="Things" />
+            <End Role="Schedule" EntitySet="Schedules" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Ecosystem">
@@ -646,8 +644,6 @@
           <Property Name="ClientCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Things" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Client" ToRole="Thing" />
-          <NavigationProperty Name="Events" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Client" ToRole="Event" />
-          <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Device" FromRole="Client" ToRole="Schedule" />
           <NavigationProperty Name="SensorDatas" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="Client" ToRole="SensorData" />
         </EntityType>
         <EntityType Name="Action">
@@ -672,6 +668,8 @@
           <NavigationProperty Name="Actions" Relationship="npruessnerEModel.FK_Action_Thing" FromRole="Thing" ToRole="Action" />
           <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Thing" ToRole="Client" />
           <NavigationProperty Name="Users" Relationship="npruessnerEModel.UserThing" FromRole="Thing" ToRole="User" />
+          <NavigationProperty Name="Events" Relationship="npruessnerEModel.FK_Event_Thing" FromRole="Thing" ToRole="Event" />
+          <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Thing" FromRole="Thing" ToRole="Schedule" />
         </EntityType>
         <Association Name="FK_Action_Thing">
           <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="0..1" />
@@ -746,29 +744,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Event">
-          <Key>
-            <PropertyRef Name="EventID" />
-          </Key>
-          <Property Name="EventID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Event_Device" FromRole="Event" ToRole="Client" />
-        </EntityType>
-        <EntityType Name="Schedule">
-          <Key>
-            <PropertyRef Name="ScheduleID" />
-          </Key>
-          <Property Name="ScheduleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DateSequence" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_Schedule_Device" FromRole="Schedule" ToRole="Client" />
-        </EntityType>
         <EntityType Name="SensorData">
           <Key>
             <PropertyRef Name="DataID" />
@@ -781,32 +756,6 @@
           <Property Name="Date" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="SensorData" ToRole="Client" />
         </EntityType>
-        <Association Name="FK_Event_Device">
-          <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="1" />
-          <End Type="npruessnerEModel.Event" Role="Event" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="Event">
-              <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Schedule_Device">
-          <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="npruessnerEModel.Schedule" Role="Schedule" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="Schedule">
-              <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SensorData_Device">
           <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="1" />
           <End Type="npruessnerEModel.SensorData" Role="SensorData" Multiplicity="*" />
@@ -816,6 +765,53 @@
             </Principal>
             <Dependent Role="SensorData">
               <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventID" />
+          </Key>
+          <Property Name="EventID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingID" Type="Int32" Nullable="false" />
+          <Property Name="Action" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Thing" Relationship="npruessnerEModel.FK_Event_Thing" FromRole="Event" ToRole="Thing" />
+        </EntityType>
+        <Association Name="FK_Event_Thing">
+          <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="1" />
+          <End Type="npruessnerEModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="ThingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Schedule">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+          </Key>
+          <Property Name="ScheduleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingID" Type="Int32" Nullable="false" />
+          <Property Name="ActionID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CronExpression" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Thing" Relationship="npruessnerEModel.FK_Schedule_Thing" FromRole="Schedule" ToRole="Thing" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Schedule_Thing">
+          <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="1" />
+          <End Type="npruessnerEModel.Schedule" Role="Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="ThingID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -950,29 +946,6 @@
           <FunctionImportMapping FunctionImportName="DeleteThing" FunctionName="npruessnerEModel.Store.DeleteThing" />
           <FunctionImportMapping FunctionImportName="CreateClient" FunctionName="npruessnerEModel.Store.CreateClient" />
           <FunctionImportMapping FunctionImportName="DeleteClient" FunctionName="npruessnerEModel.Store.DeleteClient" />
-          <EntitySetMapping Name="Events">
-            <EntityTypeMapping TypeName="npruessnerEModel.Event">
-              <MappingFragment StoreEntitySet="Event">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="EventID" ColumnName="EventID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Schedules">
-            <EntityTypeMapping TypeName="npruessnerEModel.Schedule">
-              <MappingFragment StoreEntitySet="Schedule">
-                <ScalarProperty Name="DateSequence" ColumnName="DateSequence" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SensorDatas">
             <EntityTypeMapping TypeName="npruessnerEModel.SensorData">
               <MappingFragment StoreEntitySet="SensorData">
@@ -982,6 +955,29 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ClientID" ColumnName="ClientID" />
                 <ScalarProperty Name="DataID" ColumnName="DataID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="npruessnerEModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="ThingID" ColumnName="ThingID" />
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schedules">
+            <EntityTypeMapping TypeName="npruessnerEModel.Schedule">
+              <MappingFragment StoreEntitySet="Schedule">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CronExpression" ColumnName="CronExpression" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ActionID" ColumnName="ActionID" />
+                <ScalarProperty Name="ThingID" ColumnName="ThingID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

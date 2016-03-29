@@ -1,58 +1,53 @@
-﻿@model IEnumerable<DARE.Models.Event>
-
+﻿@model PagedList.IPagedList<DARE.Models.Event>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Events";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<div class="header">
+    <h2>Recent Events</h2>
+</div>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Summary
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Type)
+            Action
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Date)
+            Type
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Client.Name)
+            Thing
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @(item.Thing.Name + " " + item.Action + " on " + String.Format("{0: MMMM d}", item.Date) + " at " + item.Date.Value.ToShortTimeString())
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Action)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Type)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Date)
+            @item.Date.Value.ToShortDateString()
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EventID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EventID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EventID })
+            @Html.DisplayFor(modelItem => item.Thing.Name)
         </td>
     </tr>
 }
-
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, pageNumber => Url.Action("Index",
+    new { pageNumber, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

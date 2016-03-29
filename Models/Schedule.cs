@@ -15,11 +15,12 @@ namespace DARE.Models
     public partial class Schedule
     {
         public int ScheduleID { get; set; }
-        public int ClientID { get; set; }
+        public int ThingID { get; set; }
+        public Nullable<int> ActionID { get; set; }
         public string Name { get; set; }
+        public string CronExpression { get; set; }
         public string Description { get; set; }
-        public Nullable<System.DateTime> DateSequence { get; set; }
     
-        public virtual Client Client { get; set; }
+        public virtual Thing Thing { get; set; }
     }
 }

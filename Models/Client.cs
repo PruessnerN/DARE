@@ -18,8 +18,6 @@ namespace DARE.Models
         public Client()
         {
             this.Things = new HashSet<Thing>();
-            this.Events = new HashSet<Event>();
-            this.Schedules = new HashSet<Schedule>();
             this.SensorDatas = new HashSet<SensorData>();
         }
     
@@ -31,10 +29,6 @@ namespace DARE.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Thing> Things { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Event> Events { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Schedule> Schedules { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SensorData> SensorDatas { get; set; }
     }

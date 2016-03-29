@@ -15,12 +15,11 @@ namespace DARE.Models
     public partial class Event
     {
         public int EventID { get; set; }
-        public int ClientID { get; set; }
-        public string Name { get; set; }
+        public int ThingID { get; set; }
+        public string Action { get; set; }
         public string Type { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-        public string Description { get; set; }
     
-        public virtual Client Client { get; set; }
+        public virtual Thing Thing { get; set; }
     }
 }

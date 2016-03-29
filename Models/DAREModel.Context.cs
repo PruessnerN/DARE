@@ -34,9 +34,9 @@ namespace DARE.Models
         public virtual DbSet<Action> Actions { get; set; }
         public virtual DbSet<Thing> Things { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
+        public virtual DbSet<SensorData> SensorDatas { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
-        public virtual DbSet<SensorData> SensorDatas { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
         {

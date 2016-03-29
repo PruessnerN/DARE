@@ -31,10 +31,18 @@ namespace DARE.Controllers
         [HttpPost]
         public string getThings(string clientCode)
         {
-            List<Thing> things = db.Things.Where(t => t.Client.ClientCode == clientCode).ToList();
+            List<ThingViewModel> things = (from t in db.Things
+                                           where t.Client.ClientCode == clientCode
+                                           select new ThingViewModel
+                                           {
+                                               ThingID = t.ThingID,
+                                               ClientID = t.ClientID,
+                                               Name = t.Name,
+                                               Description = t.Description,
+                                               StateDescriptor = t.StateDescriptor
+                                           }).ToList();
             var json = JsonConvert.SerializeObject(things);
             return json;
         }
-
     }
 }
