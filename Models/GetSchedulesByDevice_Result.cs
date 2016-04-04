@@ -10,9 +10,8 @@
 namespace DARE.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Schedule
+    public partial class GetSchedulesByDevice_Result
     {
         public int ScheduleID { get; set; }
         public int ThingID { get; set; }
@@ -20,8 +19,5 @@ namespace DARE.Models
         public string Name { get; set; }
         public string CronExpression { get; set; }
         public string Description { get; set; }
-    
-        public virtual Thing Thing { get; set; }
-        public virtual Action Action { get; set; }
     }
 }

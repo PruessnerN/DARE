@@ -229,6 +229,9 @@
     <Compile Include="Models\Event.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetSchedulesByDevice_Result.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Note.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>

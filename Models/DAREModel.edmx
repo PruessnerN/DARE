@@ -102,6 +102,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="StateDescriptor" Type="nvarchar" MaxLength="100" />
+          <Property Name="Type" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -206,6 +207,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Schedule_Action">
+          <End Role="Action" Type="Self.Action" Multiplicity="0..1" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Action">
+              <PropertyRef Name="ActionID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="ActionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Schedule_Thing">
           <End Role="Thing" Type="Self.Thing" Multiplicity="1" />
           <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
@@ -296,6 +309,11 @@
           <Parameter Name="Type" Type="nvarchar" Mode="In" />
           <Parameter Name="Description" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="CreateEvent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ThingID" Type="int" Mode="In" />
+          <Parameter Name="Action" Type="nvarchar" Mode="In" />
+          <Parameter Name="Type" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="CreateNote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SenderID" Type="bigint" Mode="In" />
           <Parameter Name="ReceiverID" Type="bigint" Mode="In" />
@@ -327,12 +345,18 @@
         <Function Name="DeleteUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
         </Function>
+        <Function Name="GetSchedulesByDevice" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClientCode" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="GiveThingAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
           <Parameter Name="ThingID" Type="int" Mode="In" />
         </Function>
         <Function Name="LastLoginUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="username" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="NoteRead" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NoteID" Type="int" Mode="In" />
         </Function>
         <Function Name="RemoveThingAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
@@ -357,6 +381,9 @@
           <Parameter Name="FirstName" Type="nvarchar" Mode="In" />
           <Parameter Name="LastName" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="ufn_GetActionFromID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar">
+          <Parameter Name="ActionID" Type="int" Mode="In" />
+        </Function>
         <Function Name="ufn_GetRoleForUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
         </Function>
@@ -365,6 +392,9 @@
         </Function>
         <Function Name="ufn_GetUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bigint">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="ufn_GetUserNewMessages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="UserID" Type="bigint" Mode="In" />
         </Function>
         <Function Name="ufn_HaveAccess" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="bit">
           <Parameter Name="UserID" Type="bigint" Mode="In" />
@@ -415,6 +445,10 @@
           <AssociationSet Name="FK_Note_User1" Association="Self.FK_Note_User1">
             <End Role="User" EntitySet="User" />
             <End Role="Note" EntitySet="Note" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Schedule_Action" Association="Self.FK_Schedule_Action">
+            <End Role="Action" EntitySet="Action" />
+            <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
           <AssociationSet Name="FK_Schedule_Thing" Association="Self.FK_Schedule_Thing">
             <End Role="Thing" EntitySet="Thing" />
@@ -619,6 +653,21 @@
             <End Role="Thing" EntitySet="Things" />
             <End Role="Schedule" EntitySet="Schedules" />
           </AssociationSet>
+          <AssociationSet Name="FK_Schedule_Action" Association="npruessnerEModel.FK_Schedule_Action">
+            <End Role="Action" EntitySet="Actions" />
+            <End Role="Schedule" EntitySet="Schedules" />
+          </AssociationSet>
+          <FunctionImport Name="CreateEvent">
+            <Parameter Name="ThingID" Mode="In" Type="Int32" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+            <Parameter Name="Type" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetSchedulesByDevice" ReturnType="Collection(npruessnerEModel.GetSchedulesByDevice_Result)">
+          <Parameter Name="ClientCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="NoteRead">
+          <Parameter Name="NoteID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="Ecosystem">
           <Key>
@@ -655,6 +704,7 @@
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Thing" Relationship="npruessnerEModel.FK_Action_Thing" FromRole="Action" ToRole="Thing" />
+          <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Action" FromRole="Action" ToRole="Schedule" />
         </EntityType>
         <EntityType Name="Thing">
           <Key>
@@ -670,6 +720,7 @@
           <NavigationProperty Name="Users" Relationship="npruessnerEModel.UserThing" FromRole="Thing" ToRole="User" />
           <NavigationProperty Name="Events" Relationship="npruessnerEModel.FK_Event_Thing" FromRole="Thing" ToRole="Event" />
           <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Thing" FromRole="Thing" ToRole="Schedule" />
+          <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Action_Thing">
           <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="0..1" />
@@ -802,6 +853,7 @@
           <Property Name="CronExpression" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Thing" Relationship="npruessnerEModel.FK_Schedule_Thing" FromRole="Schedule" ToRole="Thing" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Action" Relationship="npruessnerEModel.FK_Schedule_Action" FromRole="Schedule" ToRole="Action" />
         </EntityType>
         <Association Name="FK_Schedule_Thing">
           <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="1" />
@@ -815,6 +867,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Schedule_Action">
+          <End Type="npruessnerEModel.Action" Role="Action" Multiplicity="0..1" />
+          <End Type="npruessnerEModel.Schedule" Role="Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Action">
+              <PropertyRef Name="ActionID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="ActionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetSchedulesByDevice_Result">
+          <Property Type="Int32" Name="ScheduleID" Nullable="false" />
+          <Property Type="Int32" Name="ThingID" Nullable="false" />
+          <Property Type="Int32" Name="ActionID" Nullable="true" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CronExpression" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Description" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -910,6 +982,7 @@
           <EntitySetMapping Name="Things">
             <EntityTypeMapping TypeName="npruessnerEModel.Thing">
               <MappingFragment StoreEntitySet="Thing">
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="StateDescriptor" ColumnName="StateDescriptor" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -981,6 +1054,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateEvent" FunctionName="npruessnerEModel.Store.CreateEvent" />
+          <FunctionImportMapping FunctionImportName="GetSchedulesByDevice" FunctionName="npruessnerEModel.Store.GetSchedulesByDevice">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="npruessnerEModel.GetSchedulesByDevice_Result">
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="ThingID" ColumnName="ThingID" />
+                <ScalarProperty Name="ActionID" ColumnName="ActionID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CronExpression" ColumnName="CronExpression" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="NoteRead" FunctionName="npruessnerEModel.Store.NoteRead" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

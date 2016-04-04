@@ -10,6 +10,7 @@ using DARE.Models;
 
 namespace DARE.Controllers
 {
+    [Authorize]
     public class NotesController : Controller
     {
         private npruessnerEEntities1 db = new npruessnerEEntities1();
@@ -27,6 +28,18 @@ namespace DARE.Controllers
             var userID = db.ufn_GetUserID(HttpContext.User.Identity.Name);
             var notes = db.Notes.Where(n => n.ReceiverID == userID).Include(n => n.User).Include(n => n.User1).OrderBy(n => n.CreationDate);
             return View(notes.ToList());
+        }
+
+        public ActionResult isRead(int noteId, string currentView)
+        {
+            db.NoteRead(noteId);
+            return RedirectToAction(currentView);
+        }
+
+        public int newMessageCount()
+        {
+           long userID = db.ufn_GetUserID(HttpContext.User.Identity.Name).GetValueOrDefault();
+           return db.ufn_GetUserNewMessages(userID);
         }
 
         // GET: Notes/Details/5

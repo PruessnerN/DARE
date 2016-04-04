@@ -1,28 +1,28 @@
 ﻿@model IEnumerable<DARE.Models.Schedule>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "List Of Schedules";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>List Of Schedules</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class="btn red" })
+    @Html.ActionLink("Create New Schedule", "Create", null, new { @class="btn red" })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayName("Action ID")
+            @Html.DisplayName("Action Name")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayName("Schedule Name")
         </th>
         <th>
             @Html.DisplayName("Cron Expression")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Thing.Name)
+            @Html.DisplayName("Thing Name")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
@@ -33,7 +33,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.ActionID)
+            @Html.DisplayFor(modelItem => item.Action.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)

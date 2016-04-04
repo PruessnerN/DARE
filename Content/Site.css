@@ -4,6 +4,10 @@
     color: #FFFFFF;
 }
 
+.badge {
+    background-color:#252830;
+    color:white;
+}
 select {
     color: #252830;
 }
@@ -978,6 +982,24 @@ textarea {
         margin-right: 100px;
     }
 
+    .newNote {
+        position: absolute;
+        cursor: pointer;
+        color: red;
+        bottom: 5px;
+        right: 5px;
+        font-family: 'Glyphicons Halflings';
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        height: 20px;
+        width:20px;
+    }
+    .newNote:hover {
+        text-decoration: none;
+        color:red;
+    }
+
     .panel {
         width: 300px;
         position: relative;
@@ -1042,6 +1064,7 @@ textarea {
         border-radius:4px;
     }
 }
+
 
 /*########## THERMOMETER STYLING ###########*/
 

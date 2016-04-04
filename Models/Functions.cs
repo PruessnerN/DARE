@@ -58,5 +58,15 @@ namespace DARE.Models
             bool output = lObjectContext.CreateQuery<bool>("npruessnerEModel.Store.ufn_HaveAccess(@UserID, @ThingID)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
             return output;
         }
+
+        [DbFunction("npruessnerEModel.Store", "ufn_GetUserNewMessages")]
+        public int ufn_GetUserNewMessages(long userid)
+        {
+            List<ObjectParameter> parameters = new List<ObjectParameter>();
+            parameters.Add(new ObjectParameter("UserID", userid));
+            var lObjectContext = ((IObjectContextAdapter)this).ObjectContext;
+            int output = lObjectContext.CreateQuery<int>("npruessnerEModel.Store.ufn_GetUserNewMessages(@UserID)", parameters.ToArray()).Execute(MergeOption.NoTracking).FirstOrDefault();
+            return output;
+        }
     }
 }

@@ -346,5 +346,40 @@ namespace DARE.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DeleteClient", clientIDParameter);
         }
+    
+        public virtual int CreateEvent(Nullable<int> thingID, string action, string type)
+        {
+            var thingIDParameter = thingID.HasValue ?
+                new ObjectParameter("ThingID", thingID) :
+                new ObjectParameter("ThingID", typeof(int));
+    
+            var actionParameter = action != null ?
+                new ObjectParameter("Action", action) :
+                new ObjectParameter("Action", typeof(string));
+    
+            var typeParameter = type != null ?
+                new ObjectParameter("Type", type) :
+                new ObjectParameter("Type", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateEvent", thingIDParameter, actionParameter, typeParameter);
+        }
+    
+        public virtual ObjectResult<GetSchedulesByDevice_Result> GetSchedulesByDevice(string clientCode)
+        {
+            var clientCodeParameter = clientCode != null ?
+                new ObjectParameter("ClientCode", clientCode) :
+                new ObjectParameter("ClientCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSchedulesByDevice_Result>("GetSchedulesByDevice", clientCodeParameter);
+        }
+    
+        public virtual int NoteRead(Nullable<int> noteID)
+        {
+            var noteIDParameter = noteID.HasValue ?
+                new ObjectParameter("NoteID", noteID) :
+                new ObjectParameter("NoteID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("NoteRead", noteIDParameter);
+        }
     }
 }

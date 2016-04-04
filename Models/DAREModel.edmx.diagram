@@ -24,6 +24,7 @@
         <AssociationConnector Association="npruessnerEModel.FK_Event_Thing" />
         <EntityTypeShape EntityType="npruessnerEModel.Schedule" Width="1.5" PointX="3.875" PointY="10.875" />
         <AssociationConnector Association="npruessnerEModel.FK_Schedule_Thing" />
+        <AssociationConnector Association="npruessnerEModel.FK_Schedule_Action" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

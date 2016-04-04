@@ -19,7 +19,8 @@ namespace DARE.Controllers
         // GET: Schedules
         public ActionResult Index()
         {
-            var schedules = db.Schedules.Include(s => s.Thing);
+            var schedules = db.Schedules.Include(s => s.Thing).Include(s => s.Action);
+            
             return View(schedules.ToList());
         }
 
@@ -87,7 +88,7 @@ namespace DARE.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ScheduleID,ThingID,ActionID,Name,CronExpression")] Schedule schedule)
+        public ActionResult Edit([Bind(Include = "ScheduleID,ThingID,ActionID,Name,CronExpression,Description")] Schedule schedule)
         {
             if (ModelState.IsValid)
             {

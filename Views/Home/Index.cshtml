@@ -3,9 +3,9 @@
 @{
     ViewBag.Title = "Dashboard";
 }
-
-<h1>DARE Dashboard</h1>
-<br />
+<div class="header">
+    <h1>Dashboard</h1>
+</div>
 <div class="row">
 
     @for (var i = 0; i < Model.Count; i++)
@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="panel-body">
-                    @if (Model[i].ThingID == 9)
+                    @if (Model[i].Type == "Thermometer")
                     {
                         <div id="temperatureDiv">
                             <canvas id="gauge@(Model[i].ThingID)" width="215" height="215"
@@ -38,14 +38,14 @@
                                     data-highlights="-20 10 #B853E0, 10 55 #00C8FF, 55 80 #4BED00, 80 100 #EDED00, 100 120 #ED0010"></canvas>
                         </div>
                     }
-                    else if (Model[i].ThingID == 6 || Model[i].ThingID == 7 || Model[i].ThingID == 8)
+                    else if (Model[i].Type == "Switch")
                     {
                         <div class="onoffswitch">
                             <input type="checkbox" name="onoffswitch@(Model[i].ThingID)" class="onoffswitch-checkbox" id="myonoffswitch@(Model[i].ThingID)" onclick="if (document.getElementById('myonoffswitch@(Model[i].ThingID)').checked) { turnOn('@Model[i].ThingID'); } else { turnOff('@Model[i].ThingID'); }">
                             <label class="onoffswitch-label" for="myonoffswitch@(Model[i].ThingID)"></label>
                         </div>
                     }
-                    else if (Model[i].ThingID == 10)
+                    else if (Model[i].Type == "Door Sensor")
                     {
                         <div class="state@(Model[i].ThingID)">
 
@@ -72,6 +72,7 @@
 
     function drop(ev) {
         ev.preventDefault();
+
         var data = ev.dataTransfer.getData("text");
         ev.target.appendChild(document.getElementById(data));
     }

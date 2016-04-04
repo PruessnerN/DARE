@@ -40,7 +40,7 @@
                     <li>@Html.ActionLink("Scheduler", "Index", "Schedules", null, new { @class = "moveRightAnim" })</li>
                     <li>@Html.ActionLink("Recent Events", "Index", "Events", null, new { @class = "moveRightAnim" })</li>
                     <li class="userIconParent">
-                        @Html.ActionLink("Notes", "Index", "Notes", null, new { @class = "moveRightAnim" })
+                        <a href="">Notes&nbsp;&nbsp;<span class="badge"></span></a>
                         <ul class="nav nav-tabs nav-stacked userIconChild">
                             <li>@Html.ActionLink("Received", "Received", "Notes", null, new { @class = "indent moveRightAnim" })</li>
                             <li>@Html.ActionLink("Sent", "Sent", "Notes", null, new { @class = "indent moveRightAnim" })</li>
@@ -50,6 +50,19 @@
                 </ul>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Notes/newMessageCount",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'text',
+                    success: function (data) {
+                        $('.badge').html(data);
+                    }
+                });
+            })
+        </script>
     </div>
     <div class="body-content">
         @RenderBody()

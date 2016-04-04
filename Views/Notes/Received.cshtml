@@ -1,13 +1,14 @@
 ﻿@model IEnumerable<DARE.Models.Note>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Received";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="header">
-    <h2>Received Notes&emsp;&emsp;@Html.ActionLink("Create Note", "Create", null, new { @class = "red btn" })</h2>
+    <h2>Received Notes</h2>
+    @Html.ActionLink("Create Note", "Create", null, new { @class = "red btn" })
 </div>
-<div id="messageWrapper">
+<div id="messageWrapper" style="margin-left:20px;">
     @foreach(var note in Model)
     {
         <div class="noteTile">
@@ -15,22 +16,29 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">From <span style="color:#F41710;">@note.User.FirstName</span></h3>
                     <p class="panel-title">@note.CreationDate.Value.ToShortDateString()<br />@note.CreationDate.Value.ToShortTimeString()</p>
+                    <div class="noteOptions">
+                        <a href="/Notes/Create" data-toggle="tooltip" data-placement="left" title="Reply" class="glyphicon glyphicon-share-alt"></a>
+                        <br />
+                        <a href="@Url.Action("Delete", "Notes", new {@id=note.NoteID})" data-toggle="tooltip" data-placement="left" title="Delete" class="glyphicon glyphicon-trash"></a>
+                    </div>
                 </div>
                 <div class="panel-body">
+                    <h4>@note.Subject</h4>
                     <p>@note.Message</p>
+                    @if (note.isNew)
+                    {
+                        <a class="newNote glyphicon-bookmark" href="@Url.Action("isRead","Notes", new { @noteId=note.NoteID, @currentView="Received"})" data-toggle="tooltip" data-placement="right" title="Mark Read">
+                        </a>
+                    }
                 </div>
-                <div class="noteOptions">
-                    <a href="/Notes/Create" data-toggle="tooltip" data-placement="left" title="Reply" class="glyphicon glyphicon-share-alt"></a>
-                    <br />
-                    <a href="@Url.Action("Delete", "Notes", new {@id=note.NoteID})" data-toggle="tooltip" data-placement="left" title="Delete" class="glyphicon glyphicon-trash"></a>
-                </div>
+                
             </div>
         </div>
     }
 </div>
 <script>
     $(document).ready(function () {
-        $('.panel').on({
+        $('.panel-heading').on({
             'mouseenter': function () {
                 $(this).find('.noteOptions').stop().show("fast");
             }, 'mouseleave': function () {
