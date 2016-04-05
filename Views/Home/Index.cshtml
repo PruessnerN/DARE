@@ -131,6 +131,14 @@
                     $('.gettingState').html(" ");
                     $('#myonoffswitch8').prop('checked', false);
                 }
+            } else if (m.id == 11) {
+                if (m.commands[0].state == "1") {
+                    $('.gettingState').html(" ");
+                    $('#myonoffswitch11').prop('checked', true);
+                } else if (m.commands[0].state == "0") {
+                    $('.gettingState').html(" ");
+                    $('#myonoffswitch11').prop('checked', false);
+                }
             }
             
         } else if (m.commands[0].hasOwnProperty("temperature")) {

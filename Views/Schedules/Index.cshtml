@@ -10,6 +10,7 @@
 <p>
     @Html.ActionLink("Create New Schedule", "Create", null, new { @class="btn red" })
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -56,3 +57,32 @@
 }
 
 </table>
+<p>
+    <button class="btn red" onclick="refreshClientSchedules()">Refresh Client Schedules</button>
+</p>
+<script>
+    $(document).ready(function() {
+        var hash = Sha1.hash("@User.Identity.Name");
+        pubnub = PUBNUB({
+            publish_key: 'pub-c-2a63b4b0-ca5b-4f32-8db9-1c9a1d04ec33',
+            subscribe_key: 'sub-c-deb946f2-840e-11e5-9e96-02ee2ddab7fe',
+            ssl: true,
+            uuid: hash
+        });
+
+        pubnub.subscribe({
+            channel: "pruessner_tribe",
+            message: function (m) { console.log(m) }
+        });
+    })
+
+    function refreshClientSchedules() {
+        var x = { "id": "allClients", "commands": [{ "refreshClientSchedules": "1" }] };
+        pubnub.publish({
+            channel: "pruessner_tribe",
+            message: x,
+            callback: function (m) { console.log(m) }
+        })
+    }
+    
+</script>
