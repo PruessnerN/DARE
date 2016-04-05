@@ -77,7 +77,7 @@
     })
 
     function refreshClientSchedules() {
-        var x = { "id": "allClients", "commands": [{ "refreshClientSchedules": "1" }] };
+        var x = { "id": "allClients", "commands": { "refreshClientSchedules": "1" } };
         pubnub.publish({
             channel: "pruessner_tribe",
             message: x,
