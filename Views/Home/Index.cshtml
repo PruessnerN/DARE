@@ -133,7 +133,7 @@
                     $('#myonoffswitch8').prop('checked', false);
                 }
             } else if (m.id == 11) {
-                if (m.commands[0].state == "1") {
+                if (m.commands.state == "1") {
                     $('.gettingState').html(" ");
                     $('#myonoffswitch11').prop('checked', true);
                 } else if (m.commands.state == "0") {

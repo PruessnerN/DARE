@@ -174,13 +174,26 @@ namespace DARE.ViewModels
 
         public int Role { get; set; }
     }
-
+    public class ForgotPasswordViewModel
+    {
+        [Required(ErrorMessage = "We need your email to send you a reset link!")]
+        [Display(Name = "Your account email")]
+        [EmailAddress(ErrorMessage = "Not a valid email.")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "We need your username to send you a reset link!")]
+        [Display(Name = "Your account username")]
+        [StringLength(50, ErrorMessage ="A username cannot exceed 50 characters.")]
+        public string Username { get; set; }
+    }
     public class ResetPasswordViewModel
     {
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        public string Username { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -194,14 +207,6 @@ namespace DARE.ViewModels
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
-    }
-
-    public class ForgotPasswordViewModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
     }
 
     public class SetPasswordViewModelAlternative

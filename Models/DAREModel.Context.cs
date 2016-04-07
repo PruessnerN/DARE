@@ -37,6 +37,7 @@ namespace DARE.Models
         public virtual DbSet<SensorData> SensorDatas { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<ResetPasswordRequest> ResetPasswordRequests { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
         {
@@ -380,6 +381,32 @@ namespace DARE.Models
                 new ObjectParameter("NoteID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("NoteRead", noteIDParameter);
+        }
+    
+        public virtual ObjectResult<ResetPassword_Result1> ResetPassword(string userName, string email)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ResetPassword_Result1>("ResetPassword", userNameParameter, emailParameter);
+        }
+    
+        public virtual ObjectResult<ValidateUser_Result> ValidateUser(string username, string email)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ValidateUser_Result>("ValidateUser", usernameParameter, emailParameter);
         }
     }
 }

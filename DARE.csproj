@@ -235,6 +235,15 @@
     <Compile Include="Models\Note.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ResetPasswordRequest.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResetPassword_Result.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResetPassword_Result1.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Role.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
@@ -248,6 +257,9 @@
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
+      <DependentUpon>DAREModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ValidateUser_Result.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
     <Compile Include="MyRoleProvider.cs" />
@@ -434,7 +446,6 @@
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
@@ -489,6 +500,8 @@
     <Content Include="Views\Schedules\Delete.cshtml" />
     <Content Include="Views\Schedules\Edit.cshtml" />
     <Content Include="Views\Schedules\Index.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ChangePasswordUnauthenticated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

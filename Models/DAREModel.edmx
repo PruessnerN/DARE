@@ -63,6 +63,16 @@
           <Property Name="CreationDate" Type="datetime" />
           <Property Name="AlertDate" Type="datetime" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ResetPasswordRequest">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="RequestID" Type="uniqueidentifier" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="RequestDateTime" Type="datetime" />
+        </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="RoleID" />
@@ -204,6 +214,18 @@
             </Principal>
             <Dependent Role="Note">
               <PropertyRef Name="ReceiverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResetPasswordRequest_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="ResetPasswordRequest" Type="Self.ResetPasswordRequest" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ResetPasswordRequest">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -362,6 +384,10 @@
           <Parameter Name="UserID" Type="bigint" Mode="In" />
           <Parameter Name="ThingID" Type="int" Mode="In" />
         </Function>
+        <Function Name="ResetPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="SetupSystem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SystemName" Type="nvarchar" Mode="In" />
           <Parameter Name="HomeAddress" Type="nvarchar" Mode="In" />
@@ -413,6 +439,10 @@
           <Parameter Name="LastName" Type="varchar" Mode="In" />
           <Parameter Name="RoleID" Type="int" Mode="In" />
         </Function>
+        <Function Name="ValidateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="npruessnerEModelStoreContainer">
           <EntitySet Name="Action" EntityType="Self.Action" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
@@ -426,6 +456,13 @@
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserThing" EntityType="Self.UserThing" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResetPasswordRequest" EntityType="Self.ResetPasswordRequest" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ResetPasswordRequest].[RequestID] AS [RequestID], 
+    [ResetPasswordRequest].[UserID] AS [UserID], 
+    [ResetPasswordRequest].[RequestDateTime] AS [RequestDateTime]
+    FROM [dbo].[ResetPasswordRequest] AS [ResetPasswordRequest]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Action_Thing" Association="Self.FK_Action_Thing">
             <End Role="Thing" EntitySet="Thing" />
             <End Role="Action" EntitySet="Action" />
@@ -445,6 +482,10 @@
           <AssociationSet Name="FK_Note_User1" Association="Self.FK_Note_User1">
             <End Role="User" EntitySet="User" />
             <End Role="Note" EntitySet="Note" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResetPasswordRequest_User" Association="Self.FK_ResetPasswordRequest_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ResetPasswordRequest" EntitySet="ResetPasswordRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_Schedule_Action" Association="Self.FK_Schedule_Action">
             <End Role="Action" EntitySet="Action" />
@@ -514,6 +555,7 @@
           <NavigationProperty Name="Things" Relationship="npruessnerEModel.UserThing" FromRole="User" ToRole="Thing" />
           <NavigationProperty Name="Notes" Relationship="npruessnerEModel.FK_Note_User" FromRole="User" ToRole="Note" />
           <NavigationProperty Name="Notes1" Relationship="npruessnerEModel.FK_Note_User1" FromRole="User" ToRole="Note" />
+          <NavigationProperty Name="ResetPasswordRequest" Relationship="npruessnerEModel.FK_ResetPasswordRequest_User" FromRole="User" ToRole="ResetPasswordRequest" />
           </EntityType>
         <Association Name="UserRole">
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
@@ -667,6 +709,19 @@
           </FunctionImport>
           <FunctionImport Name="NoteRead">
           <Parameter Name="NoteID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="ResetPasswordRequests" EntityType="npruessnerEModel.ResetPasswordRequest" />
+          <AssociationSet Name="FK_ResetPasswordRequest_User" Association="npruessnerEModel.FK_ResetPasswordRequest_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ResetPasswordRequest" EntitySet="ResetPasswordRequests" />
+          </AssociationSet>
+          <FunctionImport Name="ResetPassword" ReturnType="Collection(npruessnerEModel.ResetPassword_Result1)">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ValidateUser" ReturnType="Collection(npruessnerEModel.ValidateUser_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="Ecosystem">
@@ -887,6 +942,40 @@
           <Property Type="String" Name="CronExpression" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Description" Nullable="true" />
         </ComplexType>
+        <EntityType Name="ResetPasswordRequest">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="RequestID" Type="Guid" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="RequestDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="npruessnerEModel.FK_ResetPasswordRequest_User" FromRole="ResetPasswordRequest" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_ResetPasswordRequest_User">
+          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1" />
+          <End Type="npruessnerEModel.ResetPasswordRequest" Role="ResetPasswordRequest" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ResetPasswordRequest">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="ResetPassword_Result">
+          <Property Type="Int32" Name="ReturnCode" Nullable="false" />
+          <Property Type="Guid" Name="UniqueId" Nullable="true" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="ResetPassword_Result1">
+          <Property Type="Int32" Name="ReturnCode" Nullable="false" />
+          <Property Type="Guid" Name="UniqueId" Nullable="true" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="ValidateUser_Result">
+          <Property Type="Int32" Name="Valid" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1068,6 +1157,31 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="NoteRead" FunctionName="npruessnerEModel.Store.NoteRead" />
+          <EntitySetMapping Name="ResetPasswordRequests">
+            <EntityTypeMapping TypeName="npruessnerEModel.ResetPasswordRequest">
+              <MappingFragment StoreEntitySet="ResetPasswordRequest">
+                <ScalarProperty Name="RequestDateTime" ColumnName="RequestDateTime" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ResetPassword" FunctionName="npruessnerEModel.Store.ResetPassword">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="npruessnerEModel.ResetPassword_Result1">
+                <ScalarProperty Name="ReturnCode" ColumnName="ReturnCode" />
+                <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ValidateUser" FunctionName="npruessnerEModel.Store.ValidateUser" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="npruessnerEModel.ValidateUser_Result">
+                <ScalarProperty Name="Valid" ColumnName="Valid" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -30,7 +30,7 @@
             <i class="fa fa-user"></i>
             @Html.PasswordFor(m => m.Password, new { @class = "", @placeholder = "Password", @required = "true" })
             <i class="fa fa-key"></i>
-            <a href="#"><h5 class="underline" style="padding-top: 10px; color:grey">Forgot your password?</h5></a>
+            <a href="@Url.Action("ForgotPassword","Account")"><h5 class="underline" style="padding-top: 10px; color:grey">Forgot your password?</h5></a>
             <button onclick="ValidateUser();">
                 <i id="animation" class="spinner"></i>
                 <span id="submit" class="state">Submit</span>
@@ -78,8 +78,11 @@
                     error: function (reponse) {
                         $state.html('An unknown error has occurred!');
                         $this.addClass('loginError');
+                        $('#animation').removeClass('spinner');
+                        $('#animation').addClass('close');
                         setTimeout(function () {
                             $this.removeClass('ok loading loginError');
+                            $('#animation').removeClass('close');
                             $state.html('Submit');
                         }, 3000);
                     }

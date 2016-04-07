@@ -50,5 +50,6 @@ namespace DARE.Models
         public virtual ICollection<Note> Notes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Note> Notes1 { get; set; }
+        public virtual ResetPasswordRequest ResetPasswordRequest { get; set; }
     }
 }

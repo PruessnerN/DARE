@@ -11,6 +11,9 @@ using System.Data.Entity;
 using System.Text;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using System.Net.Mail;
 
 namespace DARE.Controllers
 {
@@ -43,13 +46,12 @@ namespace DARE.Controllers
             }
         }
 
-       
 
         [HttpPost]
         public int ValidateUser(string username, string password)
         {
             int count = CheckUser(username, password);
-            
+
             if (count == 1)
             {
                 FormsAuthentication.SetAuthCookie(username, false);
@@ -62,6 +64,106 @@ namespace DARE.Controllers
             else
             {
                 return 0;
+            }
+        }
+
+        //
+        // GET: Account/ForgotPassword
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var valid = db.ResetPassword(model.Username, model.Email).FirstOrDefault();
+                if(valid.ReturnCode == 1)
+                {
+                    User user = db.Users.Where(e => e.Email == model.Email && e.Username == model.Username).FirstOrDefault();
+                    // MailMessage class is present is System.Net.Mail namespace
+                    MailMessage mailMessage = new MailMessage("donotreply@DARE.net", user.Email);
+
+                    // StringBuilder class is present in System.Text namespace
+                    StringBuilder sbEmailBody = new StringBuilder();
+                    sbEmailBody.Append("Dear " + user.FirstName + ",<br/><br/>");
+                    sbEmailBody.Append("Please click on the following link to reset your password.");
+                    sbEmailBody.Append("<br/>"); sbEmailBody.Append("https://dare.local.net/Account/ChangePasswordUnauthenticated?uid=" + valid.UniqueId);
+                    sbEmailBody.Append("<br/><br/>");
+                    sbEmailBody.Append("<b>DARE System</b>");
+
+                    mailMessage.IsBodyHtml = true;
+
+                    mailMessage.Body = sbEmailBody.ToString();
+                    mailMessage.Subject = "Reset Your Password";
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+
+                    smtpClient.Credentials = new System.Net.NetworkCredential()
+                    {
+                        UserName = "nathanielipruessner@gmail.com",
+                        Password = "80dbknF9"
+                    };
+
+                    smtpClient.EnableSsl = true;
+                    smtpClient.Send(mailMessage);
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ViewBag.Message = "An unknown error occurred!";
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.Message = "An unknown error occurred!";
+                return View();
+            }
+        }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ChangePasswordUnauthenticated(Guid uid)
+        {
+            var valid = db.ResetPasswordRequests.Where(u => u.RequestID == uid).First();
+            if(valid != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ChangePasswordUnauthenticated(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var valid = db.ValidateUser(model.Username, model.Email).FirstOrDefault();
+            if ((model.Password == model.ConfirmPassword) && (valid.Valid != 0))
+            {
+                RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
+                byte[] salt = new byte[SALT_BYTE_SIZE];
+                csprng.GetBytes(salt);
+
+                var hashedPassword = Hash.CreateHash(model.Password, salt);
+                db.ChangePassword(model.Username, hashedPassword, salt);
+
+                return RedirectToAction("Login");
+            }
+            else {
+                ViewBag.Error = "Incorrect Information!";
+                return View();
             }
         }
 
@@ -102,7 +204,9 @@ namespace DARE.Controllers
         {
             return View();
         }
+
         // GET: /Manage/ChangePassword
+        [Authorize]
         public ActionResult ChangePassword()
         {
             return View();
