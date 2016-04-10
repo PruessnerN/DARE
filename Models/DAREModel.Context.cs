@@ -34,9 +34,9 @@ namespace DARE.Models
         public virtual DbSet<Action> Actions { get; set; }
         public virtual DbSet<Thing> Things { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
-        public virtual DbSet<SensorData> SensorDatas { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
+        public virtual DbSet<SensorData> SensorDatas { get; set; }
         public virtual DbSet<ResetPasswordRequest> ResetPasswordRequests { get; set; }
     
         public virtual int AuthenticateUser(string username, string hash)
@@ -407,6 +407,19 @@ namespace DARE.Models
                 new ObjectParameter("Email", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ValidateUser_Result>("ValidateUser", usernameParameter, emailParameter);
+        }
+    
+        public virtual int CreateSensorData(Nullable<int> thingID, Nullable<decimal> temperature)
+        {
+            var thingIDParameter = thingID.HasValue ?
+                new ObjectParameter("ThingID", thingID) :
+                new ObjectParameter("ThingID", typeof(int));
+    
+            var temperatureParameter = temperature.HasValue ?
+                new ObjectParameter("Temperature", temperature) :
+                new ObjectParameter("Temperature", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateSensorData", thingIDParameter, temperatureParameter);
         }
     }
 }

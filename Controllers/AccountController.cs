@@ -111,29 +111,31 @@ namespace DARE.Controllers
 
                     smtpClient.EnableSsl = true;
                     smtpClient.Send(mailMessage);
-                    return RedirectToAction("Login");
+                    return View("ForgotPasswordConfirmation");
                 }
                 else
                 {
-                    ViewBag.Message = "An unknown error occurred!";
-                    return View();
+                    return View("ForgotPasswordConfirmation");
                 }
             }
             else
             {
-                ViewBag.Message = "An unknown error occurred!";
-                return View();
+                return View("ForgotPasswordConfirmation");
             }
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public ActionResult ChangePasswordUnauthenticated(Guid uid)
         {
-            var valid = db.ResetPasswordRequests.Where(u => u.RequestID == uid).First();
-            if(valid != null)
+            ResetPasswordViewModel model = new ResetPasswordViewModel{
+                Code = uid
+            };
+            var valid = db.ResetPasswordRequests.Where(u => u.Guid == uid).FirstOrDefault();
+
+            if (valid.Guid == uid)
             {
-                return View();
+                return View(model);
             }
             else
             {
@@ -149,6 +151,14 @@ namespace DARE.Controllers
             {
                 return View();
             }
+
+            var goodUid = db.ResetPasswordRequests.Where(u => u.Guid == model.Code).FirstOrDefault();
+
+            if (goodUid.Guid != model.Code)
+            {
+                return View(model);
+            }
+
             var valid = db.ValidateUser(model.Username, model.Email).FirstOrDefault();
             if ((model.Password == model.ConfirmPassword) && (valid.Valid != 0))
             {

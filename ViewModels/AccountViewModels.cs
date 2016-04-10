@@ -206,7 +206,7 @@ namespace DARE.ViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public string Code { get; set; }
+        public Guid Code { get; set; }
     }
 
     public class SetPasswordViewModelAlternative

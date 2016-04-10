@@ -21,6 +21,7 @@ namespace DARE.Models
             this.Things = new HashSet<Thing>();
             this.Notes = new HashSet<Note>();
             this.Notes1 = new HashSet<Note>();
+            this.ResetPasswordRequests = new HashSet<ResetPasswordRequest>();
         }
     
         public long UserID { get; set; }
@@ -50,6 +51,7 @@ namespace DARE.Models
         public virtual ICollection<Note> Notes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Note> Notes1 { get; set; }
-        public virtual ResetPasswordRequest ResetPasswordRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ResetPasswordRequest> ResetPasswordRequests { get; set; }
     }
 }

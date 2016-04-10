@@ -13,4 +13,10 @@ namespace DARE.ViewModels
         public string Description { get; set; }
         public string StateDescriptor { get; set; }
     }
+
+    public class GraphDataViewModel
+    {
+        public Array Data { get; set; }
+        public Array Labels { get; set; }
+    }
 }

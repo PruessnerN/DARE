@@ -1,0 +1,58 @@
+﻿@model List<DARE.Models.SensorData>
+
+@{
+    ViewBag.Title = "Sensor Graphs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Temperature Graph</h2>
+
+<div class="chartBox">
+    <canvas id="request" width="450" height="200"></canvas>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "/SensorDatas/getChartData",
+            data: JSON.stringify({ thingID: 9 }),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'text',
+            success: function (data) {
+                var parsedData = jQuery.parseJSON(data);
+                renderGraph(parsedData.Labels, parsedData.Data);
+            }
+        });
+    })
+
+    var renderGraph = function (labels, points) {
+
+        var canvas = $("#request")[0].getContext("2d");
+
+        var data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "House Temperature",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(244, 23, 16, 1)",
+                    pointColor: "rgba(244, 23, 16, 1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: points
+                }
+            ]
+        };
+        var myChart = new Chart(canvas)
+                            .Line(data, {
+                                responsive: true,
+                                animation: true,
+                                scaleLabel: "<%=value%>°",
+                                scaleIntegersOnly: true,
+                                scaleFontSize: 14
+                            });
+
+    }
+</script>

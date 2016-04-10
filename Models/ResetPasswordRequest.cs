@@ -14,7 +14,8 @@ namespace DARE.Models
     
     public partial class ResetPasswordRequest
     {
-        public Nullable<System.Guid> RequestID { get; set; }
+        public int RequestID { get; set; }
+        public System.Guid Guid { get; set; }
         public long UserID { get; set; }
         public Nullable<System.DateTime> RequestDateTime { get; set; }
     

@@ -5,10 +5,10 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="31fa35fca5b542b1bd993e7b6d7f2096" Name="Diagram1" ZoomLevel="59">
-        <EntityTypeShape EntityType="npruessnerEModel.Role" Width="1.5" PointX="3" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="npruessnerEModel.Role" Width="1.5" PointX="1.5" PointY="13.125" IsExpanded="true" />
         <EntityTypeShape EntityType="npruessnerEModel.User" Width="1.5" PointX="5.25" PointY="7.625" IsExpanded="true" />
         <AssociationConnector Association="npruessnerEModel.UserRole" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="npruessnerEModel.Ecosystem" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="npruessnerEModel.Ecosystem" Width="1.5" PointX="0.75" PointY="4.25" />
         <EntityTypeShape EntityType="npruessnerEModel.Client" Width="1.5" PointX="0.75" PointY="7.625" />
         <EntityTypeShape EntityType="npruessnerEModel.Action" Width="1.5" PointX="5.25" PointY="13.625" />
         <EntityTypeShape EntityType="npruessnerEModel.Thing" Width="1.5" PointX="3" PointY="5.75" />
@@ -18,14 +18,14 @@
         <EntityTypeShape EntityType="npruessnerEModel.Note" Width="1.5" PointX="7.5" PointY="4.625" />
         <AssociationConnector Association="npruessnerEModel.FK_Note_User" />
         <AssociationConnector Association="npruessnerEModel.FK_Note_User1" />
-        <EntityTypeShape EntityType="npruessnerEModel.SensorData" Width="1.5" PointX="3" PointY="10.625" />
-        <AssociationConnector Association="npruessnerEModel.FK_SensorData_Device" />
         <EntityTypeShape EntityType="npruessnerEModel.Event" Width="1.5" PointX="5.25" PointY="4.75" />
         <AssociationConnector Association="npruessnerEModel.FK_Event_Thing" />
-        <EntityTypeShape EntityType="npruessnerEModel.Schedule" Width="1.5" PointX="7.5" PointY="9.5" />
+        <EntityTypeShape EntityType="npruessnerEModel.Schedule" Width="1.5" PointX="10.375" PointY="9.5" />
         <AssociationConnector Association="npruessnerEModel.FK_Schedule_Thing" />
         <AssociationConnector Association="npruessnerEModel.FK_Schedule_Action" />
-        <EntityTypeShape EntityType="npruessnerEModel.ResetPasswordRequest" Width="1.5" PointX="7.5" PointY="13.5" />
+        <EntityTypeShape EntityType="npruessnerEModel.SensorData" Width="1.5" PointX="3" PointY="3.125" />
+        <AssociationConnector Association="npruessnerEModel.FK_SensorData_Thing" />
+        <EntityTypeShape EntityType="npruessnerEModel.ResetPasswordRequest" Width="1.5" PointX="7.5" PointY="9.375" />
         <AssociationConnector Association="npruessnerEModel.FK_ResetPasswordRequest_User" />
         </Diagram>
     </edmx:Diagrams>

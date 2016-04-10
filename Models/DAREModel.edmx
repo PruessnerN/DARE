@@ -63,13 +63,12 @@
           <Property Name="CreationDate" Type="datetime" />
           <Property Name="AlertDate" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ResetPasswordRequest">
           <Key>
-            <PropertyRef Name="UserID" />
+            <PropertyRef Name="RequestID" />
           </Key>
-          <Property Name="RequestID" Type="uniqueidentifier" />
+          <Property Name="RequestID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Guid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="RequestDateTime" Type="datetime" />
         </EntityType>
@@ -97,10 +96,8 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
             <PropertyRef Name="DataID" />
           </Key>
           <Property Name="DataID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" />
-          <Property Name="Type" Type="nvarchar" MaxLength="50" />
-          <Property Name="Data" Type="int" />
+          <Property Name="ThingID" Type="int" Nullable="false" />
+          <Property Name="Temperature" Type="decimal" Precision="5" Scale="2" />
           <Property Name="Date" Type="datetime" />
         </EntityType>
         <EntityType Name="Thing">
@@ -219,7 +216,7 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
         </Association>
         <Association Name="FK_ResetPasswordRequest_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="ResetPasswordRequest" Type="Self.ResetPasswordRequest" Multiplicity="0..1" />
+          <End Role="ResetPasswordRequest" Type="Self.ResetPasswordRequest" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserID" />
@@ -253,15 +250,15 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SensorData_Device">
-          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+        <Association Name="FK_SensorData_Thing">
+          <End Role="Thing" Type="Self.Thing" Multiplicity="1" />
           <End Role="SensorData" Type="Self.SensorData" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
             </Principal>
             <Dependent Role="SensorData">
-              <PropertyRef Name="ClientID" />
+              <PropertyRef Name="ThingID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -344,6 +341,10 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <Parameter Name="Alert" Type="bit" Mode="In" />
           <Parameter Name="PushNotification" Type="bit" Mode="In" />
           <Parameter Name="AlertDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="CreateSensorData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ThingID" Type="int" Mode="In" />
+          <Parameter Name="Temperature" Type="decimal" Mode="In" />
         </Function>
         <Function Name="CreateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
@@ -449,6 +450,7 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <EntitySet Name="Ecosystem" EntityType="Self.Ecosystem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Note" EntityType="Self.Note" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResetPasswordRequest" EntityType="Self.ResetPasswordRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Schedule" EntityType="Self.Schedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SensorData" EntityType="Self.SensorData" Schema="dbo" store:Type="Tables" />
@@ -456,13 +458,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserThing" EntityType="Self.UserThing" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ResetPasswordRequest" EntityType="Self.ResetPasswordRequest" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [ResetPasswordRequest].[RequestID] AS [RequestID], 
-    [ResetPasswordRequest].[UserID] AS [UserID], 
-    [ResetPasswordRequest].[RequestDateTime] AS [RequestDateTime]
-    FROM [dbo].[ResetPasswordRequest] AS [ResetPasswordRequest]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Action_Thing" Association="Self.FK_Action_Thing">
             <End Role="Thing" EntitySet="Thing" />
             <End Role="Action" EntitySet="Action" />
@@ -495,8 +490,8 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
             <End Role="Thing" EntitySet="Thing" />
             <End Role="Schedule" EntitySet="Schedule" />
           </AssociationSet>
-          <AssociationSet Name="FK_SensorData_Device" Association="Self.FK_SensorData_Device">
-            <End Role="Client" EntitySet="Client" />
+          <AssociationSet Name="FK_SensorData_Thing" Association="Self.FK_SensorData_Thing">
+            <End Role="Thing" EntitySet="Thing" />
             <End Role="SensorData" EntitySet="SensorData" />
           </AssociationSet>
           <AssociationSet Name="FK_UserPermission_Permission" Association="Self.FK_UserPermission_Permission">
@@ -555,7 +550,7 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <NavigationProperty Name="Things" Relationship="npruessnerEModel.UserThing" FromRole="User" ToRole="Thing" />
           <NavigationProperty Name="Notes" Relationship="npruessnerEModel.FK_Note_User" FromRole="User" ToRole="Note" />
           <NavigationProperty Name="Notes1" Relationship="npruessnerEModel.FK_Note_User1" FromRole="User" ToRole="Note" />
-          <NavigationProperty Name="ResetPasswordRequest" Relationship="npruessnerEModel.FK_ResetPasswordRequest_User" FromRole="User" ToRole="ResetPasswordRequest" />
+          <NavigationProperty Name="ResetPasswordRequests" Relationship="npruessnerEModel.FK_ResetPasswordRequest_User" FromRole="User" ToRole="ResetPasswordRequest" />
           </EntityType>
         <Association Name="UserRole">
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
@@ -680,11 +675,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <FunctionImport Name="DeleteClient">
           <Parameter Name="ClientID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="SensorDatas" EntityType="npruessnerEModel.SensorData" />
-          <AssociationSet Name="FK_SensorData_Device" Association="npruessnerEModel.FK_SensorData_Device">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="SensorData" EntitySet="SensorDatas" />
-          </AssociationSet>
           <EntitySet Name="Events" EntityType="npruessnerEModel.Event" />
           <AssociationSet Name="FK_Event_Thing" Association="npruessnerEModel.FK_Event_Thing">
             <End Role="Thing" EntitySet="Things" />
@@ -710,11 +700,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <FunctionImport Name="NoteRead">
           <Parameter Name="NoteID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="ResetPasswordRequests" EntityType="npruessnerEModel.ResetPasswordRequest" />
-          <AssociationSet Name="FK_ResetPasswordRequest_User" Association="npruessnerEModel.FK_ResetPasswordRequest_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="ResetPasswordRequest" EntitySet="ResetPasswordRequests" />
-          </AssociationSet>
           <FunctionImport Name="ResetPassword" ReturnType="Collection(npruessnerEModel.ResetPassword_Result1)">
             <Parameter Name="UserName" Mode="In" Type="String" />
             <Parameter Name="Email" Mode="In" Type="String" />
@@ -723,6 +708,20 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Email" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="SensorDatas" EntityType="npruessnerEModel.SensorData" />
+          <AssociationSet Name="FK_SensorData_Thing" Association="npruessnerEModel.FK_SensorData_Thing">
+            <End Role="Thing" EntitySet="Things" />
+            <End Role="SensorData" EntitySet="SensorDatas" />
+          </AssociationSet>
+          <FunctionImport Name="CreateSensorData">
+            <Parameter Name="ThingID" Mode="In" Type="Int32" />
+            <Parameter Name="Temperature" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <EntitySet Name="ResetPasswordRequests" EntityType="npruessnerEModel.ResetPasswordRequest" />
+          <AssociationSet Name="FK_ResetPasswordRequest_User" Association="npruessnerEModel.FK_ResetPasswordRequest_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ResetPasswordRequest" EntitySet="ResetPasswordRequests" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Ecosystem">
           <Key>
@@ -748,7 +747,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <Property Name="ClientCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Things" Relationship="npruessnerEModel.FK_Entity_Controller" FromRole="Client" ToRole="Thing" />
-          <NavigationProperty Name="SensorDatas" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="Client" ToRole="SensorData" />
         </EntityType>
         <EntityType Name="Action">
           <Key>
@@ -776,6 +774,7 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <NavigationProperty Name="Events" Relationship="npruessnerEModel.FK_Event_Thing" FromRole="Thing" ToRole="Event" />
           <NavigationProperty Name="Schedules" Relationship="npruessnerEModel.FK_Schedule_Thing" FromRole="Thing" ToRole="Schedule" />
           <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SensorDatas" Relationship="npruessnerEModel.FK_SensorData_Thing" FromRole="Thing" ToRole="SensorData" />
         </EntityType>
         <Association Name="FK_Action_Thing">
           <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="0..1" />
@@ -850,30 +849,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="SensorData">
-          <Key>
-            <PropertyRef Name="DataID" />
-          </Key>
-          <Property Name="DataID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Data" Type="Int32" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Client" Relationship="npruessnerEModel.FK_SensorData_Device" FromRole="SensorData" ToRole="Client" />
-        </EntityType>
-        <Association Name="FK_SensorData_Device">
-          <End Type="npruessnerEModel.Client" Role="Client" Multiplicity="1" />
-          <End Type="npruessnerEModel.SensorData" Role="SensorData" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientID" />
-            </Principal>
-            <Dependent Role="SensorData">
-              <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Event">
           <Key>
             <PropertyRef Name="EventID" />
@@ -942,27 +917,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <Property Type="String" Name="CronExpression" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Description" Nullable="true" />
         </ComplexType>
-        <EntityType Name="ResetPasswordRequest">
-          <Key>
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="RequestID" Type="Guid" />
-          <Property Name="UserID" Type="Int64" Nullable="false" />
-          <Property Name="RequestDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="User" Relationship="npruessnerEModel.FK_ResetPasswordRequest_User" FromRole="ResetPasswordRequest" ToRole="User" />
-        </EntityType>
-        <Association Name="FK_ResetPasswordRequest_User">
-          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1" />
-          <End Type="npruessnerEModel.ResetPasswordRequest" Role="ResetPasswordRequest" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="ResetPasswordRequest">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="ResetPassword_Result">
           <Property Type="Int32" Name="ReturnCode" Nullable="false" />
           <Property Type="Guid" Name="UniqueId" Nullable="true" />
@@ -976,6 +930,50 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
         <ComplexType Name="ValidateUser_Result">
           <Property Type="Int32" Name="Valid" Nullable="false" />
         </ComplexType>
+        <EntityType Name="SensorData">
+          <Key>
+            <PropertyRef Name="DataID" />
+          </Key>
+          <Property Name="DataID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ThingID" Type="Int32" Nullable="false" />
+          <Property Name="Temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Thing" Relationship="npruessnerEModel.FK_SensorData_Thing" FromRole="SensorData" ToRole="Thing" />
+        </EntityType>
+        <Association Name="FK_SensorData_Thing">
+          <End Type="npruessnerEModel.Thing" Role="Thing" Multiplicity="1" />
+          <End Type="npruessnerEModel.SensorData" Role="SensorData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Thing">
+              <PropertyRef Name="ThingID" />
+            </Principal>
+            <Dependent Role="SensorData">
+              <PropertyRef Name="ThingID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ResetPasswordRequest">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Guid" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="RequestDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="npruessnerEModel.FK_ResetPasswordRequest_User" FromRole="ResetPasswordRequest" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_ResetPasswordRequest_User">
+          <End Type="npruessnerEModel.User" Role="User" Multiplicity="1" />
+          <End Type="npruessnerEModel.ResetPasswordRequest" Role="ResetPasswordRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ResetPasswordRequest">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1108,18 +1106,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
           <FunctionImportMapping FunctionImportName="DeleteThing" FunctionName="npruessnerEModel.Store.DeleteThing" />
           <FunctionImportMapping FunctionImportName="CreateClient" FunctionName="npruessnerEModel.Store.CreateClient" />
           <FunctionImportMapping FunctionImportName="DeleteClient" FunctionName="npruessnerEModel.Store.DeleteClient" />
-          <EntitySetMapping Name="SensorDatas">
-            <EntityTypeMapping TypeName="npruessnerEModel.SensorData">
-              <MappingFragment StoreEntitySet="SensorData">
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Data" ColumnName="Data" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="DataID" ColumnName="DataID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="npruessnerEModel.Event">
               <MappingFragment StoreEntitySet="Event">
@@ -1157,15 +1143,6 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="NoteRead" FunctionName="npruessnerEModel.Store.NoteRead" />
-          <EntitySetMapping Name="ResetPasswordRequests">
-            <EntityTypeMapping TypeName="npruessnerEModel.ResetPasswordRequest">
-              <MappingFragment StoreEntitySet="ResetPasswordRequest">
-                <ScalarProperty Name="RequestDateTime" ColumnName="RequestDateTime" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="ResetPassword" FunctionName="npruessnerEModel.Store.ResetPassword">
             <ResultMapping>
               <ComplexTypeMapping TypeName="npruessnerEModel.ResetPassword_Result1">
@@ -1182,6 +1159,27 @@ warning 6002: The table/view 'npruessnerE.dbo.ResetPasswordRequest' does not hav
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="SensorDatas">
+            <EntityTypeMapping TypeName="npruessnerEModel.SensorData">
+              <MappingFragment StoreEntitySet="SensorData">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Temperature" ColumnName="Temperature" />
+                <ScalarProperty Name="ThingID" ColumnName="ThingID" />
+                <ScalarProperty Name="DataID" ColumnName="DataID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateSensorData" FunctionName="npruessnerEModel.Store.CreateSensorData" />
+          <EntitySetMapping Name="ResetPasswordRequests">
+            <EntityTypeMapping TypeName="npruessnerEModel.ResetPasswordRequest">
+              <MappingFragment StoreEntitySet="ResetPasswordRequest">
+                <ScalarProperty Name="RequestDateTime" ColumnName="RequestDateTime" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Guid" ColumnName="Guid" />
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

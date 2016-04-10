@@ -15,12 +15,10 @@ namespace DARE.Models
     public partial class SensorData
     {
         public int DataID { get; set; }
-        public int ClientID { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public Nullable<int> Data { get; set; }
+        public int ThingID { get; set; }
+        public Nullable<decimal> Temperature { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     
-        public virtual Client Client { get; set; }
+        public virtual Thing Thing { get; set; }
     }
 }
