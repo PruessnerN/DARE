@@ -50,9 +50,9 @@ namespace DARE.Controllers
         public ActionResult Create([Bind(Include = "Name,Type,Description")] Client client)
         {
             if (ModelState.IsValid)
-            {
-                db.CreateClient(client.Name, client.Type, client.Description);
-                return RedirectToAction("Index");
+            {       
+                    db.CreateClient(client.Name, client.Type, client.Description);
+                    return RedirectToAction("Index");
             }
 
             return View(client);
@@ -96,6 +96,10 @@ namespace DARE.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            if(TempData["ErrorMessage"] != null)
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"];
+            }
             Client client = db.Clients.Find(id);
             if (client == null)
             {
@@ -109,7 +113,15 @@ namespace DARE.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            db.DeleteClient(id);
+            var things = db.Things.Where(m => m.ClientID == id).ToList();
+            if (things.Count < 1)
+            {
+                db.DeleteClient(id);
+            } else
+            {
+                TempData["ErrorMessage"] = "Error! There are things attached to this client. Please remove them in order to delete this client.";
+                return RedirectToAction("Delete", new { id = id});
+            }
             return RedirectToAction("Index");
         }
 

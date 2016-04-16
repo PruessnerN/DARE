@@ -240,6 +240,7 @@
     <Compile Include="Models\Note.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PartialClasses.cs" />
     <Compile Include="Models\ResetPasswordRequest.cs">
       <DependentUpon>DAREModel.tt</DependentUpon>
     </Compile>

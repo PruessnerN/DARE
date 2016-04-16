@@ -33,6 +33,16 @@ textarea {
     max-width: 280px;
 }
 
+.pagination > .active > a {
+    background-color: #F41710 !important;
+    border-color: #F41710 !important;
+    color: white !important;
+}
+
+.pagination > li > a {
+    color: #F41710 !important;
+}
+
 @media (min-width: 922px) {
     .navbar-left-custom {
         position: fixed;
@@ -654,6 +664,7 @@ textarea {
 
     .text-danger span {
         color: white;
+        font-size: 0.70em;
     }
 
     /*########## START USER PAGES STYLING ###########*/
