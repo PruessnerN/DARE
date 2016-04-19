@@ -509,10 +509,6 @@
     <Content Include="Views\Schedules\Index.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordUnauthenticated.cshtml" />
-    <Content Include="Views\SensorDatas\Create.cshtml" />
-    <Content Include="Views\SensorDatas\Delete.cshtml" />
-    <Content Include="Views\SensorDatas\Details.cshtml" />
-    <Content Include="Views\SensorDatas\Edit.cshtml" />
     <Content Include="Views\SensorDatas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

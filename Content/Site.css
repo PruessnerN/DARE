@@ -664,7 +664,14 @@ textarea {
 
     .text-danger span {
         color: white;
-        font-size: 0.70em;
+        font-size: 1em;
+        font-weight:bold;
+    }
+
+    .text-danger {
+        color: white;
+        font-size: 1em;
+        font-weight:bold;
     }
 
     /*########## START USER PAGES STYLING ###########*/
@@ -794,11 +801,7 @@ textarea {
         margin-top: 40px;
     }
 
-    .text-danger {
-        color: #F41710;
-        font-weight: bold;
-        font-size: 1.5em;
-    }
+    
     /*########## START USER PROFILE STYLING #########*/
     .profileInputGroup {
         display: inline-block !important;

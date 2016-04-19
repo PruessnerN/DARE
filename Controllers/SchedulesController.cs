@@ -58,11 +58,19 @@ namespace DARE.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Schedules.Add(schedule);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if(Quartz.CronExpression.IsValidExpression(schedule.CronExpression))
+                {
+                    db.Schedules.Add(schedule);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", schedule.ThingID);
+                    ModelState.AddModelError("CronExpression", "Please enter a valid cron expression.");
+                    return View(schedule);
+                }
             }
-
             ViewBag.ThingID = new SelectList(db.Things, "ThingID", "Name", schedule.ThingID);
             return View(schedule);
         }

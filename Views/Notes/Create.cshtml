@@ -11,19 +11,12 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    @Html.HiddenFor(model => model.SenderID)
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.SenderID, "SenderID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("SenderID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SenderID, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ReceiverID, "ReceiverID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ReceiverID, "Recipient", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ReceiverID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ReceiverID, "", new { @class = "text-danger" })
@@ -46,7 +39,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.Alert, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
@@ -54,9 +47,9 @@
                     @Html.ValidationMessageFor(model => model.Alert, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
+        </div>*@
 
-        <div class="form-group hiddenFields">
+        @*<div class="form-group hiddenFields">
             @Html.LabelFor(model => model.PushNotification, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
@@ -73,7 +66,7 @@
                 </div>
                 @Html.ValidationMessageFor(model => model.AlertDate, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -85,23 +78,23 @@
     </div>
 }
 <script>
-    $(document).ready(function () {
-        $('#Alert').on('change', function () {
-            var valueSelected = this.value;
-            if (valueSelected == "true") {
-                $('.hiddenFields').show("fast");
-            } else {
-                $('.hiddenFields').hide("fast");
-            }
-        });
-        $('#Alert').val("").change();
+    //$(document).ready(function () {
+    //    $('#Alert').on('change', function () {
+    //        var valueSelected = this.value;
+    //        if (valueSelected == "true") {
+    //            $('.hiddenFields').show("fast");
+    //        } else {
+    //            $('.hiddenFields').hide("fast");
+    //        }
+    //    });
+    //    $('#Alert').val("").change();
 
-        $('.input-group.date input').datepicker({
-            format: "mm/dd/yyyy",
-            startView: 1,
-            autoclose: true
-        });
-    })
+    //    $('.input-group.date input').datepicker({
+    //        format: "mm/dd/yyyy",
+    //        startView: 1,
+    //        autoclose: true
+    //    });
+    //})
 </script>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

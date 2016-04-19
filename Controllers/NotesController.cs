@@ -60,9 +60,12 @@ namespace DARE.Controllers
         // GET: Notes/Create
         public ActionResult Create()
         {
+            long id = db.ufn_GetUserID(HttpContext.User.Identity.Name).GetValueOrDefault();
             ViewBag.SenderID = new SelectList(db.Users, "UserID", "Username");
             ViewBag.ReceiverID = new SelectList(db.Users, "UserID", "Username");
-            return View();
+            Note model = new Note();
+            model.SenderID = id;
+            return View(model);
         }
 
         // POST: Notes/Create
@@ -136,7 +139,7 @@ namespace DARE.Controllers
             Note note = db.Notes.Find(id);
             db.Notes.Remove(note);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Received");
         }
 
         protected override void Dispose(bool disposing)

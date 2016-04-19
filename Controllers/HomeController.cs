@@ -18,12 +18,13 @@ namespace DARE.Controllers
         public ActionResult Index()
         {
             var userID = db.ufn_GetUserID(HttpContext.User.Identity.Name);
-            UserAccess[] userAccess = ap.GetUserAccess(userID);
-            List<Thing> thingList = new List<Thing>();
-            foreach(var thing in userAccess)
-            {
-                thingList.Add(db.Things.Find(thing.ThingID));
-            }
+            List<Thing> thingList = db.Things.Where(x => x.Users.Any(e => e.UserID == userID)).ToList();
+            //UserAccess[] userAccess = ap.GetUserAccess(userID);
+            //List<Thing> thingList = new List<Thing>();
+            //foreach(var thing in userAccess)
+            //{
+            //    thingList.Add(db.Things.Find(thing.ThingID));
+            //}
             ViewBag.ClientList = new List<Client>(db.Clients);
             return View(thingList);
         }

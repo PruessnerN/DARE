@@ -43,8 +43,10 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.CronExpression, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.CronExpression, "", new { @class = "text-danger" })
-                To generate your cron expression, visit <a href="http://www.cronmaker.com" target="_blank">www.CronMaker.com</a> <br />
-                and paste the cron format results in the text box above.
+                <p>
+                    To generate your cron expression, visit <a href="http://www.cronmaker.com" target="_blank">www.CronMaker.com</a> <br />
+                    and paste the cron format results in the text box above.
+                </p>
             </div>
         </div>
         <div class="form-group">
